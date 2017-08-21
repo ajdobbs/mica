@@ -17,12 +17,12 @@
 
 #include "TRef.h"
 
-#include "src/common_cpp/Analysis/AnalyserTrackerAngularMomentum.hh"
+#include "mica/AnalyserTrackerAngularMomentum.hh"
 #include "src/common_cpp/DataStructure/SciFiTrackPoint.hh"
 #include "src/common_cpp/DataStructure/SciFiHelicalPRTrack.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerAngularMomentum::AnalyserTrackerAngularMomentum() : mAnalysisStation(1),
                                                                    mAnalysisPlane(0),
@@ -36,8 +36,8 @@ AnalyserTrackerAngularMomentum::AnalyserTrackerAngularMomentum() : mAnalysisStat
   mHAngMomTKD->GetYaxis()->SetTitle("Radius (mm)");
 }
 
-bool AnalyserTrackerAngularMomentum::analyse(ReconEvent* const aReconEvent,
-                                             MCEvent* const aMCEvent) {
+bool AnalyserTrackerAngularMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
+                                             MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
@@ -49,7 +49,7 @@ bool AnalyserTrackerAngularMomentum::analyse(ReconEvent* const aReconEvent,
   for (auto trk : sfevt->scifitracks()) {
 
     // Access the SciFiSeed associate with this track
-    SciFiSeed* seed = ExtractSeed(trk);
+    MAUS::SciFiSeed* seed = ExtractSeed(trk);
     if (!seed)
       continue;
 
@@ -59,8 +59,8 @@ bool AnalyserTrackerAngularMomentum::analyse(ReconEvent* const aReconEvent,
       std::cerr << "Empty PR track TObject pointer, skipping track" << std::endl;
       continue;
     }
-    SciFiHelicalPRTrack* htrk =
-        dynamic_cast<SciFiHelicalPRTrack*>(pr_track_obj); // NOLINT(runtime/rtti)
+    MAUS::SciFiHelicalPRTrack* htrk =
+        dynamic_cast<MAUS::SciFiHelicalPRTrack*>(pr_track_obj); // NOLINT(runtime/rtti)
     if (!htrk) {
       std::cerr << "PR track dynamic cast failed, source pointer address "
                 << pr_track_obj << std::endl;
@@ -72,8 +72,8 @@ bool AnalyserTrackerAngularMomentum::analyse(ReconEvent* const aReconEvent,
     // and plane, and then fill the histograms
     for (auto tp : trk->scifitrackpoints()) {
       if ((tp->station() == mAnalysisStation) && (tp->plane() == mAnalysisPlane)) {
-        ThreeVector pos = tp->pos();
-        ThreeVector mom = tp->mom();
+        MAUS::ThreeVector pos = tp->pos();
+        MAUS::ThreeVector mom = tp->mom();
         double am = (pos.x() *  mom.y()) - (pos.y() * mom.x());
         if (tp->tracker() == 0) {
           mHAngMomTKU->Fill(am, radius);
@@ -94,8 +94,8 @@ void AnalyserTrackerAngularMomentum::draw(TVirtualPad* aPad) {
   mHAngMomTKD->Draw("COLZ");
 }
 
-SciFiSeed* AnalyserTrackerAngularMomentum::ExtractSeed(SciFiTrack* aTrack) const {
-  SciFiSeed* seed = aTrack->scifi_seed();
+MAUS::SciFiSeed* AnalyserTrackerAngularMomentum::ExtractSeed(MAUS::SciFiTrack* aTrack) const {
+  MAUS::SciFiSeed* seed = aTrack->scifi_seed();
   if (!seed) {
     std::cerr << "Empty seed pointer at: " << seed << std::endl;
   }
@@ -108,7 +108,7 @@ SciFiSeed* AnalyserTrackerAngularMomentum::ExtractSeed(SciFiTrack* aTrack) const
     return NULL;
   }
   if (!seed && seed_obj) {
-    seed = dynamic_cast<SciFiSeed*>(seed_obj); // NOLINT(runtime/rtti)
+    seed = dynamic_cast<MAUS::SciFiSeed*>(seed_obj); // NOLINT(runtime/rtti)
     if (!seed) {
       std::cerr << "Dynamic cast from SciFiSeed TObject failed" << std::endl;
       return NULL;
@@ -118,5 +118,4 @@ SciFiSeed* AnalyserTrackerAngularMomentum::ExtractSeed(SciFiTrack* aTrack) const
 }
 
 
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica

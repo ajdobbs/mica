@@ -23,10 +23,10 @@
 #include "TVirtualPad.h"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
-#include "src/common_cpp/Analysis/CutsBase.hh"
+#include "mica/CutsBase.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 /** @class AnalyserBase Base class for all analysers. Defines an interface via the draw and analyse
  *                      functions, which must be overidden in daughter classes. Client code calls
@@ -46,10 +46,10 @@ class AnalyserBase {
      *  @param aMCEvent The corresponding MC event
      *  @return Boolean indicating if the cuts passed and the analysis happened
      */
-    bool Analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent);
+    bool Analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
     /** @brief Analyse the given event, to be overidden by concrete daughter classes */
-    virtual bool analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) = 0;
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) = 0;
 
     /** @brief Check to see if a valid pad has been supplied, if not make a new one,
      *         then call draw
@@ -81,11 +81,11 @@ class AnalyserBase {
      *  @param aMCEvent The corresponding MC event
      *  @return Boolean indicating if the cuts passed
      */
-    bool ApplyCuts(ReconEvent* const aReconEvent, MCEvent* const aMCEvent);
+    bool ApplyCuts(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
     std::vector<CutsBase*> mCuts;
 };
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+
 
 #endif

@@ -20,7 +20,7 @@
 #include "TCanvas.h"
 #include "TLatex.h"
 
-#include "src/common_cpp/Analysis/AnalyserTrackerMC.hh"
+#include "mica/AnalyserTrackerMC.hh"
 #include "src/common_cpp/DataStructure/TOFEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiBasePRTrack.hh"
@@ -28,8 +28,8 @@
 #include "src/common_cpp/DataStructure/SciFiStraightPRTrack.hh"
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerMC::AnalyserTrackerMC() : mRefStation {1},
                                          mRefPlane {0},
@@ -44,7 +44,7 @@ AnalyserTrackerMC::~AnalyserTrackerMC() {
   clear_lookup();
 }
 
-bool AnalyserTrackerMC::analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
+bool AnalyserTrackerMC::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) {
   if (analyse_mc(aMCEvent)) {
     return analyse_recon(aReconEvent);
   } else {
@@ -53,7 +53,7 @@ bool AnalyserTrackerMC::analyse(ReconEvent* const aReconEvent, MCEvent* const aM
   return false;
 }
 
-bool AnalyserTrackerMC::analyse_mc(MCEvent* const aMCEvent) {
+bool AnalyserTrackerMC::analyse_mc(MAUS::MCEvent* const aMCEvent) {
   bool lookup_pass = make_lookup(aMCEvent);
   if (!lookup_pass) {
     std::cerr << "WARNING: AnalyserTrackerMC::analyse_mc: Failed to make SciFiLookup\n";
@@ -86,8 +86,9 @@ void AnalyserTrackerMC::clear_mc_data() {
 }
 
 std::map<int, std::vector<int> > \
-    AnalyserTrackerMC::calc_stations_hit_by_track(std::map<int, std::vector<SciFiHit*> >& hit_map,
-        int aNPlanes) {
+    AnalyserTrackerMC::calc_stations_hit_by_track(std::map<int,
+                                                           std::vector<MAUS::SciFiHit*> >& hit_map,
+                                                  int aNPlanes) {
   std::map<int, std::vector<int> > stations_hit_by_track; // stations_hit_by_track[trk_id]
   for (auto& station : hit_map) {
     // planes_hit_by_track[track_id][plane] = true or false - did track generate hit in this plane
@@ -104,16 +105,16 @@ std::map<int, std::vector<int> > \
   return stations_hit_by_track;
 }
 
-bool AnalyserTrackerMC::fill_mc_track_data(MCEvent* const aMCEvent) {
+bool AnalyserTrackerMC::fill_mc_track_data(MAUS::MCEvent* const aMCEvent) {
   if (!aMCEvent) return false;
 
   auto hits = aMCEvent->GetSciFiHits();
-  std::map<int, std::vector<SciFiHit*> > hit_map_tku;
-  std::map<int, std::vector<SciFiHit*> > hit_map_tkd;
+  std::map<int, std::vector<MAUS::SciFiHit*> > hit_map_tku;
+  std::map<int, std::vector<MAUS::SciFiHit*> > hit_map_tkd;
 
   // Sort scifi hits into a map from station number to a vector holding the hits for that station
   for (auto&& hit_ref : *hits) {
-    SciFiHit* hit = &hit_ref;
+    MAUS::SciFiHit* hit = &hit_ref;
     if (hit->GetChannelId()->GetTrackerNumber() == 0) {
       hit_map_tku[hit->GetChannelId()->GetStationNumber()].push_back(hit);
     } else if (hit->GetChannelId()->GetTrackerNumber() == 1) {
@@ -181,11 +182,10 @@ bool AnalyserTrackerMC::fill_mc_track_data(MCEvent* const aMCEvent) {
   return true;
 }
 
-bool AnalyserTrackerMC::make_lookup(MCEvent* const aMCEvent) {
+bool AnalyserTrackerMC::make_lookup(MAUS::MCEvent* const aMCEvent) {
   if (!aMCEvent) return false;
   if (mLookup) delete mLookup;
-  mLookup = new SciFiLookup();
+  mLookup = new MAUS::SciFiLookup();
   return mLookup->make_hits_map(aMCEvent);
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica

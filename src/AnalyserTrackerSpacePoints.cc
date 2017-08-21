@@ -15,12 +15,12 @@
  *
  */
 
-#include "src/common_cpp/Analysis/AnalyserTrackerSpacePoints.hh"
+#include "mica/AnalyserTrackerSpacePoints.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU(NULL),
                                                                      mHNpeTKD(NULL) {
@@ -42,7 +42,8 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU(NULL),
   mHPositionTKD->GetYaxis()->SetTitle("y (mm)");
 }
 
-bool AnalyserTrackerSpacePoints::analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
+bool AnalyserTrackerSpacePoints::analyse(MAUS::ReconEvent* const aReconEvent,
+                                         MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
@@ -81,5 +82,4 @@ void AnalyserTrackerSpacePoints::draw(TVirtualPad* aPad) {
   aPad->cd(6);
   mHNpeTKD->Draw();
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica

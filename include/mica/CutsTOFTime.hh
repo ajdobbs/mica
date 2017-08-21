@@ -20,23 +20,23 @@
 
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
-#include "src/common_cpp/Analysis/CutsBase.hh"
+#include "mica/CutsBase.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 class CutsTOFTime : public CutsBase {
   public:
     CutsTOFTime();
     virtual ~CutsTOFTime() {}
 
-    virtual bool Cut(ReconEvent* const aReconEvent, MCEvent* const aMCEvent);
+    virtual bool Cut(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
   private:
     double mLowerTimeCut;
     double mUpperTimeCut;
 };
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+
 
 #endif

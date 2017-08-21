@@ -23,14 +23,14 @@
 #include "TVirtualPad.h"
 #include "TH2.h"
 
-#include "src/common_cpp/Analysis/AnalyserBase.hh"
+#include "mica/AnalyserBase.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiSeed.hh"
 #include "src/common_cpp/DataStructure/SciFiTrack.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 /** @class AnalyserTrackerAngularMomentum Anayser class which produces plots of ang. mom. vs radius
  *  @author A. Dobbs
@@ -45,7 +45,7 @@ class AnalyserTrackerAngularMomentum : public AnalyserBase {
     AnalyserTrackerAngularMomentum();
     virtual ~AnalyserTrackerAngularMomentum() {}
 
-    virtual bool analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent);
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
     virtual void draw(TVirtualPad* aPad);
 
@@ -62,9 +62,9 @@ class AnalyserTrackerAngularMomentum : public AnalyserBase {
     TH2D* mHAngMomTKD;
 
     /** @brief Extract the seed associated with a SciFiTrack. Checks the validity of the pointer */
-    SciFiSeed* ExtractSeed(SciFiTrack* aTrack) const;
+    MAUS::SciFiSeed* ExtractSeed(MAUS::SciFiTrack* aTrack) const;
 };
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+
 
 #endif

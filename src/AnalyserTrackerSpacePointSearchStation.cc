@@ -15,12 +15,12 @@
  *
  */
 
-#include "src/common_cpp/Analysis/AnalyserTrackerSpacePointSearchStation.hh"
+#include "mica/AnalyserTrackerSpacePointSearchStation.hh"
 
 #include <string>
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerSpacePointSearchStation::AnalyserTrackerSpacePointSearchStation() {
   for (int i = 0; i < 5; ++i) {
@@ -39,8 +39,8 @@ AnalyserTrackerSpacePointSearchStation::AnalyserTrackerSpacePointSearchStation()
   }
 }
 
-bool AnalyserTrackerSpacePointSearchStation::analyse(ReconEvent* const aReconEvent,
-                                              MCEvent* const aMCEvent) {
+bool AnalyserTrackerSpacePointSearchStation::analyse(MAUS::ReconEvent* const aReconEvent,
+                                              MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
@@ -67,5 +67,5 @@ void AnalyserTrackerSpacePointSearchStation::draw(TVirtualPad* aPad) {
     mHAddOns[i]->Draw("COLZ");
   }
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+

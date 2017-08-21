@@ -18,16 +18,16 @@
 
 #include "TCanvas.h"
 
-#include "src/common_cpp/Analysis/AnalyserBase.hh"
+#include "mica/AnalyserBase.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserBase::AnalyserBase() {
   // Do nothing
 }
 
-bool AnalyserBase::ApplyCuts(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
+bool AnalyserBase::ApplyCuts(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) {
   for (auto cut : mCuts) {
     bool result = cut->Cut(aReconEvent, aMCEvent);
     if (!result)
@@ -36,7 +36,7 @@ bool AnalyserBase::ApplyCuts(ReconEvent* const aReconEvent, MCEvent* const aMCEv
   return true;
 }
 
-bool AnalyserBase::Analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
+bool AnalyserBase::Analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) {
   bool result = ApplyCuts(aReconEvent, aMCEvent);
   if (!result)
     return false;
@@ -51,5 +51,5 @@ TVirtualPad* AnalyserBase::Draw(TVirtualPad* aPad) {
   draw(aPad);
   return aPad;
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+

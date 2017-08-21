@@ -21,17 +21,17 @@
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 class CutsBase {
   public:
     CutsBase() {}
     virtual ~CutsBase() {}
 
-    virtual bool Cut(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) = 0;
+    virtual bool Cut(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) = 0;
 };
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+
 
 #endif

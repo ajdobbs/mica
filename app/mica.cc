@@ -31,55 +31,50 @@
 #include "TVirtualPad.h"
 #include "TCanvas.h"
 
-#include "src/common_cpp/JsonCppStreamer/IRStream.hh"
+// #include "src/common_cpp/JsonCppStreamer/IRStream.hh"
 #include "src/common_cpp/DataStructure/Spill.hh"
 #include "src/common_cpp/DataStructure/Data.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 
-#include "src/common_cpp/Analysis/AnalyserBase.hh"
-#include "src/common_cpp/Analysis/AnalyserTrackerSpacePoints.hh"
-#include "src/common_cpp/Analysis/AnalyserTrackerPRSeedResidual.hh"
-#include "src/common_cpp/Analysis/AnalyserTrackerPRSeedNPEResidual.hh"
-#include "src/common_cpp/Analysis/AnalyserTrackerPRStats.hh"
-#include "src/common_cpp/Analysis/AnalyserTrackerAngularMomentum.hh"
-#include "src/common_cpp/Analysis/AnalyserTrackerPREfficiency.hh"
-#include "src/common_cpp/Analysis/AnalyserTrackerMCPurity.hh"
+#include "mica/AnalyserBase.hh"
+#include "mica/AnalyserTrackerSpacePoints.hh"
+#include "mica/AnalyserTrackerPRSeedResidual.hh"
+#include "mica/AnalyserTrackerPRSeedNPEResidual.hh"
+#include "mica/AnalyserTrackerPRStats.hh"
+#include "mica/AnalyserTrackerAngularMomentum.hh"
+#include "mica/AnalyserTrackerPREfficiency.hh"
+#include "mica/AnalyserTrackerMCPurity.hh"
 
 /** Access Tracker data using ROOT */
 
 int main(int argc, char *argv[]) {
   // Instantiate the analysers
-  std::vector<MAUS::Analysis::AnalyserBase*> analysers;
+  std::vector<mica::AnalyserBase*> analysers;
 
-  MAUS::Analysis::AnalyserTrackerSpacePoints* anlTSP =
-    new MAUS::Analysis::AnalyserTrackerSpacePoints();
+  mica::AnalyserTrackerSpacePoints* anlTSP = new mica::AnalyserTrackerSpacePoints();
   analysers.push_back(anlTSP);
 
-  MAUS::Analysis::AnalyserTrackerPRSeedResidual* anlTPSR =
-    new MAUS::Analysis::AnalyserTrackerPRSeedResidual();
+  mica::AnalyserTrackerPRSeedResidual* anlTPSR = new mica::AnalyserTrackerPRSeedResidual();
   anlTPSR->setLogScale(true);
   analysers.push_back(anlTPSR);
 
-  MAUS::Analysis::AnalyserTrackerPRSeedNPEResidual* anlTPSNR =
-    new MAUS::Analysis::AnalyserTrackerPRSeedNPEResidual();
+  mica::AnalyserTrackerPRSeedNPEResidual* anlTPSNR = new mica::AnalyserTrackerPRSeedNPEResidual();
   analysers.push_back(anlTPSNR);
 
-  MAUS::Analysis::AnalyserTrackerPRStats* anlTPRS = new MAUS::Analysis::AnalyserTrackerPRStats();
+  mica::AnalyserTrackerPRStats* anlTPRS = new mica::AnalyserTrackerPRStats();
   analysers.push_back(anlTPRS);
 
-  MAUS::Analysis::AnalyserTrackerAngularMomentum* anlTAM =
-    new MAUS::Analysis::AnalyserTrackerAngularMomentum();
+  mica::AnalyserTrackerAngularMomentum* anlTAM = new mica::AnalyserTrackerAngularMomentum();
   anlTAM->SetAnalysisStation(1);
   anlTAM->SetAnalysisPlane(0);
   analysers.push_back(anlTAM);
 
-  MAUS::Analysis::AnalyserTrackerPREfficiency* anlPRE =
-    new MAUS::Analysis::AnalyserTrackerPREfficiency();
+  mica::AnalyserTrackerPREfficiency* anlPRE = new mica::AnalyserTrackerPREfficiency();
   anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
   analysers.push_back(anlPRE);
 
-  // MAUS::Analysis::AnalyserTrackerMCPurity* anlMP = new MAUS::Analysis::AnalyserTrackerMCPurity();
+  // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
   // analysers.push_back(anlMP);
 
   // Set up ROOT app, input file, and MAUS data class

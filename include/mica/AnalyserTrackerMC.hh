@@ -26,11 +26,11 @@
 
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
-#include "src/common_cpp/Analysis/AnalyserBase.hh"
+#include "mica/AnalyserBase.hh"
 #include "src/common_cpp/Recon/SciFi/SciFiLookup.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 /** @struct Simple data container to hold tracker track info deduced from MC
  *  @author A. Dobbs
@@ -40,8 +40,8 @@ struct MCTrackData {
   int track_id;
   int pid;
   double energy;
-  ThreeVector pos;
-  ThreeVector mom;
+  MAUS::ThreeVector pos;
+  MAUS::ThreeVector mom;
   std::vector<int> stations_hit;
 };
 
@@ -60,19 +60,19 @@ class AnalyserTrackerMC : public AnalyserBase {
      *  @param[in] aMCEvent MCEvent to analyse, corresponding to aReconEvent
      *  @return Did the analysis succeed
      */
-    virtual bool analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent);
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
     /** @brief Analyse MC data, calls fill_mc_track_data and make_lookup
      *  @param[in] aMCEvent MCEvent to analyse
      *  @return Did the analysis succeed
      */
-    virtual bool analyse_mc(MCEvent* const aMCEvent);
+    virtual bool analyse_mc(MAUS::MCEvent* const aMCEvent);
 
     /** @brief Analyse the recon data, to be implemented in daughter classes
-     *  @param[in] aReconEvent ReconEvent to analyse, corresponding to aMCEvent
+     *  @param[in] aReconEvent MAUS::ReconEvent to analyse, corresponding to aMCEvent
      *  @return Did the analysis succeed
      */
-    virtual bool analyse_recon(ReconEvent* const aReconEvent) = 0;
+    virtual bool analyse_recon(MAUS::ReconEvent* const aReconEvent) = 0;
 
     /** @brief Delete the lookup table and set the member pointer to nullptr */
     virtual void clear_lookup();
@@ -86,7 +86,7 @@ class AnalyserTrackerMC : public AnalyserBase {
     virtual void draw(TVirtualPad* aPad) = 0;
 
     /** @brief Return the scifi MC lookup table */
-    SciFiLookup* GetLookup() const { return mLookup; }
+    MAUS::SciFiLookup* GetLookup() const { return mLookup; }
 
     /** @brief Return the calculated mc data for TkU */
     std::vector<MCTrackData*> GetMCDataTkU() const { return mMCDataTkU; }
@@ -106,7 +106,7 @@ class AnalyserTrackerMC : public AnalyserBase {
      *          that track generated hits in mNPlanes or more planes, for a single tracker
      */
     std::map<int, std::vector<int> > calc_stations_hit_by_track( \
-        std::map<int, std::vector<SciFiHit*> >& hit_map, int aNPlanes);
+        std::map<int, std::vector<MAUS::SciFiHit*> >& hit_map, int aNPlanes);
 
   private:
     int mRefStation; /// Reference surface to use
@@ -115,21 +115,21 @@ class AnalyserTrackerMC : public AnalyserBase {
     int mNPlanes;    /// # of planes hit per station hit for event to be classed as reconstructible
     std::vector<MCTrackData*> mMCDataTkU; /// AnalyserTrackerMC owns the memory
     std::vector<MCTrackData*> mMCDataTkD; /// AnalyserTrackerMC owns the memory
-    SciFiLookup* mLookup;                 /// AnalyserTrackerMC owns the memory
+    MAUS::SciFiLookup* mLookup;                 /// AnalyserTrackerMC owns the memory
 
     /** @brief Populate the mMCData members
-     *  @param[in] aMCEvent MCEvent to analyse
+     *  @param[in] aMCEvent MAUS::MCEvent to analyse
      *  @return Did the data members get populated successfully
      */
-    bool fill_mc_track_data(MCEvent* const aMCEvent);
+    bool fill_mc_track_data(MAUS::MCEvent* const aMCEvent);
 
     /** @brief Populate the lookup table member
      *  @param[in] aMCEvent MCEvent to analyse
      *  @return Was the lookup successfully created
      */
-    bool make_lookup(MCEvent* const aMCEvent);
+    bool make_lookup(MAUS::MCEvent* const aMCEvent);
 };
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+
 
 #endif

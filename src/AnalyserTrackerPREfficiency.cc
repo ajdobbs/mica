@@ -21,7 +21,7 @@
 #include "TCanvas.h"
 #include "TLatex.h"
 
-#include "src/common_cpp/Analysis/AnalyserTrackerPREfficiency.hh"
+#include "mica/AnalyserTrackerPREfficiency.hh"
 #include "src/common_cpp/DataStructure/TOFEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiBasePRTrack.hh"
@@ -29,8 +29,8 @@
 #include "src/common_cpp/DataStructure/SciFiStraightPRTrack.hh"
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerPREfficiency::AnalyserTrackerPREfficiency() : mCheckTOF(true),
                                                              mCheckTOFSpacePoints(true),
@@ -53,14 +53,15 @@ AnalyserTrackerPREfficiency::~AnalyserTrackerPREfficiency() {
   mOf1.close();
 }
 
-bool AnalyserTrackerPREfficiency::analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
+bool AnalyserTrackerPREfficiency::analyse(MAUS::ReconEvent* const aReconEvent,
+                                          MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
   ++mNEvents;
 
-  TOFEvent* tofevt = aReconEvent->GetTOFEvent();
-  SciFiEvent* sfevt = aReconEvent->GetSciFiEvent();
+  MAUS::TOFEvent* tofevt = aReconEvent->GetTOFEvent();
+  MAUS::SciFiEvent* sfevt = aReconEvent->GetSciFiEvent();
 
   // Check if we a good expected track event in TkU and separately in TkD
   // --------------------------------------------------------------------
@@ -113,10 +114,10 @@ bool AnalyserTrackerPREfficiency::analyse(ReconEvent* const aReconEvent, MCEvent
   // ------------------------------------------------------------
 
   // Sort by tracker
-  std::vector<SciFiBasePRTrack*> tku;
-  std::vector<SciFiBasePRTrack*> tkd;
+  std::vector<MAUS::SciFiBasePRTrack*> tku;
+  std::vector<MAUS::SciFiBasePRTrack*> tkd;
 
-  std::vector<SciFiHelicalPRTrack*> htrks = sfevt->helicalprtracks();
+  std::vector<MAUS::SciFiHelicalPRTrack*> htrks = sfevt->helicalprtracks();
   for (auto trk : htrks) {
     if (trk->get_tracker() == 0) {
       tku.push_back(trk);
@@ -124,7 +125,7 @@ bool AnalyserTrackerPREfficiency::analyse(ReconEvent* const aReconEvent, MCEvent
       tkd.push_back(trk);
     }
   }
-  std::vector<SciFiStraightPRTrack*> strks = sfevt->straightprtracks();
+  std::vector<MAUS::SciFiStraightPRTrack*> strks = sfevt->straightprtracks();
   for (auto trk : strks) {
     if (trk->get_tracker() == 0) {
       tku.push_back(trk);
@@ -159,7 +160,7 @@ void AnalyserTrackerPREfficiency::clear() {
   mTkD4to5ptTracks = 0;
 }
 
-void AnalyserTrackerPREfficiency::check_good_tk_event(SciFiEvent* evt, int trker_num,
+void AnalyserTrackerPREfficiency::check_good_tk_event(MAUS::SciFiEvent* evt, int trker_num,
                                                       bool& good4pt, bool& good5pt) {
   good4pt = false;
   good5pt = false;
@@ -208,7 +209,7 @@ void AnalyserTrackerPREfficiency::check_good_tk_event(SciFiEvent* evt, int trker
   return;
 }
 
-bool AnalyserTrackerPREfficiency::check_good_tof_event(TOFEvent* evt) {
+bool AnalyserTrackerPREfficiency::check_good_tof_event(MAUS::TOFEvent* evt) {
   // Do we care about TOF? If not return true
   if (!mCheckTOF && !mCheckTOFSpacePoints)
     return true;
@@ -222,9 +223,9 @@ bool AnalyserTrackerPREfficiency::check_good_tof_event(TOFEvent* evt) {
   // Check the TOF spacepoints - 1 and only 1 in TOF1 and 1 and only 1 in TOF2
   // Note: If we are checking the actual time-of-flight we need this to be true, so we do not
   // need to mCheckTOFSpacePoints, as we already know one of our two flags must be true
-  std::vector<TOFSpacePoint>*  tof1_spoints = \
+  std::vector<MAUS::TOFSpacePoint>*  tof1_spoints = \
       evt->GetTOFEventSpacePointPtr()->GetTOF1SpacePointArrayPtr();
-  std::vector<TOFSpacePoint>*  tof2_spoints = \
+  std::vector<MAUS::TOFSpacePoint>*  tof2_spoints = \
       evt->GetTOFEventSpacePointPtr()->GetTOF2SpacePointArrayPtr();
   if (!tof1_spoints || !tof2_spoints) {
     return false;
@@ -274,5 +275,4 @@ void AnalyserTrackerPREfficiency::draw(TVirtualPad* aPad) {
   tl.Draw();
   aPad->Update();
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica

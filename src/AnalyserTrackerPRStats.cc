@@ -15,12 +15,12 @@
  *
  */
 
-#include "src/common_cpp/Analysis/AnalyserTrackerPRStats.hh"
+#include "mica/AnalyserTrackerPRStats.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerPRStats::AnalyserTrackerPRStats() : mHCircleChiSqTKU(NULL),
                                                    mHCircleChiSqTKD(NULL),
@@ -37,7 +37,7 @@ AnalyserTrackerPRStats::AnalyserTrackerPRStats() : mHCircleChiSqTKU(NULL),
   mHSZChiSqTKD->GetXaxis()->SetTitle("SZ #chi^{2}_{\nu} ");
 }
 
-bool AnalyserTrackerPRStats::analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
+bool AnalyserTrackerPRStats::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
@@ -83,5 +83,5 @@ void AnalyserTrackerPRStats::draw(TVirtualPad* aPad) {
   aPad->GetPad(8)->SetLogy(1);
   mHSZChiSqTKD->Draw();
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+

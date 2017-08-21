@@ -17,18 +17,18 @@
 
 #include <map>
 
-#include "src/common_cpp/Analysis/AnalyserTrackerMCPurity.hh"
+#include "mica/AnalyserTrackerMCPurity.hh"
 #include "TLatex.h"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerMCPurity::AnalyserTrackerMCPurity() : mHTracksMatched(nullptr) {
   mHTracksMatched = new TH1I("hTracksMatched", "Recon Tracks Matched to MC Track IDs", 13, -3, 10);
 }
 
-bool AnalyserTrackerMCPurity::analyse_recon(ReconEvent* const aReconEvent) {
+bool AnalyserTrackerMCPurity::analyse_recon(MAUS::ReconEvent* const aReconEvent) {
   // std::cout << "Found " << GetMCDataTkU().size() << " TkU tracks & " << GetMCDataTkD().size() <<
   //              " TkD tracks\n";
 
@@ -59,9 +59,9 @@ void AnalyserTrackerMCPurity::draw(TVirtualPad* aPad) {
   aPad->Update();
 }
 
-int AnalyserTrackerMCPurity::find_mc_track_id(SciFiBasePRTrack* trk) {
-  std::vector<SciFiHit*> all_track_hits;
-  auto htrk = dynamic_cast<SciFiHelicalPRTrack*>(trk); // NOLINT
+int AnalyserTrackerMCPurity::find_mc_track_id(MAUS::SciFiBasePRTrack* trk) {
+  std::vector<MAUS::SciFiHit*> all_track_hits;
+  auto htrk = dynamic_cast<MAUS::SciFiHelicalPRTrack*>(trk); // NOLINT
   if (htrk) std::cerr << "Tk" << htrk->get_tracker() << " ";
   std::cerr << "Recon track at " << trk << " has " << trk->get_spacepoints_pointers().size()
             << " seed spacepoints\n";
@@ -86,7 +86,7 @@ int AnalyserTrackerMCPurity::find_mc_track_id(SciFiBasePRTrack* trk) {
   if (all_track_hits.size() == 0) return -1;
 
   // Sort track's scifi hits into map from station # to a vector holding the hits for that station
-  std::map<int, std::vector<SciFiHit*> > hit_map;
+  std::map<int, std::vector<MAUS::SciFiHit*> > hit_map;
   for (auto hit : all_track_hits) {
     hit_map[hit->GetChannelId()->GetStationNumber()].push_back(hit);
   }
@@ -109,5 +109,4 @@ int AnalyserTrackerMCPurity::find_mc_track_id(SciFiBasePRTrack* trk) {
   return mc_track_id;
 }
 
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica

@@ -25,17 +25,17 @@
 
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
-#include "src/common_cpp/Analysis/AnalyserBase.hh"
+#include "mica/AnalyserBase.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 class AnalyserTrackerSpacePointSearchStation : public AnalyserBase {
   public:
     AnalyserTrackerSpacePointSearchStation();
     ~AnalyserTrackerSpacePointSearchStation() {}
 
-    virtual bool analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent);
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
     virtual void draw(TVirtualPad* aPad);
 
@@ -43,7 +43,7 @@ class AnalyserTrackerSpacePointSearchStation : public AnalyserBase {
     std::vector<TH2D*> mHSeeds;
     std::vector<TH2D*> mHAddOns;
 };
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+
 
 #endif

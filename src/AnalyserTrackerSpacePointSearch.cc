@@ -15,10 +15,10 @@
  *
  */
 
-#include "src/common_cpp/Analysis/AnalyserTrackerSpacePointSearch.hh"
+#include "mica/AnalyserTrackerSpacePointSearch.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerSpacePointSearch::AnalyserTrackerSpacePointSearch() : mHSeeds(NULL), mHAddOns(NULL) {
   mHSeeds = new TH2D("hSeeds", "Seed Pull vs NPE", 100, 0, 30, 100, 0, 200);
@@ -30,8 +30,8 @@ AnalyserTrackerSpacePointSearch::AnalyserTrackerSpacePointSearch() : mHSeeds(NUL
   mHAddOns->GetYaxis()->SetTitle("NPE");
 }
 
-bool AnalyserTrackerSpacePointSearch::analyse(ReconEvent* const aReconEvent,
-                                              MCEvent* const aMCEvent) {
+bool AnalyserTrackerSpacePointSearch::analyse(MAUS::ReconEvent* const aReconEvent,
+                                              MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
@@ -64,5 +64,5 @@ void AnalyserTrackerSpacePointSearch::draw(TVirtualPad* aPad) {
   aPad->cd(6);
   mHAddOns->ProjectionY()->Draw();
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+

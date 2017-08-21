@@ -15,12 +15,12 @@
  *
  */
 
-#include "src/common_cpp/Analysis/AnalyserTrackerPRSeedResidual.hh"
+#include "mica/AnalyserTrackerPRSeedResidual.hh"
 
 #include <string>
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 AnalyserTrackerPRSeedResidual::AnalyserTrackerPRSeedResidual() : mLogScale {false} {
   for (int i = 0; i < 5; ++i) {
@@ -36,8 +36,8 @@ AnalyserTrackerPRSeedResidual::AnalyserTrackerPRSeedResidual() : mLogScale {fals
   }
 }
 
-bool AnalyserTrackerPRSeedResidual::analyse(ReconEvent* const aReconEvent,
-                                            MCEvent* const aMCEvent) {
+bool AnalyserTrackerPRSeedResidual::analyse(MAUS::ReconEvent* const aReconEvent,
+                                            MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
@@ -67,5 +67,5 @@ void AnalyserTrackerPRSeedResidual::draw(TVirtualPad* aPad) {
     mHResidualsTkD[i]->Draw();
   }
 }
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+

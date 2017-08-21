@@ -28,10 +28,10 @@
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
 #include "src/common_cpp/DataStructure/TOFEvent.hh"
-#include "src/common_cpp/Analysis/AnalyserBase.hh"
+#include "mica/AnalyserBase.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 /** @class AnalyserTrackerPREfficiency Analyser class which produces tracker pattern recognition
  *                                     efficiency results, uses reconstrcuted data only (no MC)
@@ -43,9 +43,9 @@ namespace Analysis {
  *  @var mAllowMultiHitStations Should we allow non-deal events to be considered, that is, events
  *       with more than one spacepoint per tracker station for a given tracker. Even when set to
  *       true we still require there not be enough spacepoints present to form two distinct tracks.
- *  @var mCheckTkU Should we check TkU criteria at all, or just pass the event as good? May want 
+ *  @var mCheckTkU Should we check TkU criteria at all, or just pass the event as good? May want
  *       to ignore TkU if we wanted to just check TkD for example.
- *  @var mCheckTkD Should we check TkD criteria at all, or just pass the event as good? May want 
+ *  @var mCheckTkD Should we check TkD criteria at all, or just pass the event as good? May want
  *       to ignore TkD if we wanted to just check TkU for example.
  *  @var mNEvents Counter, number of events analysed
  *  @var mTkUGoodEvents Counter, number of events where we expect a track in TkU
@@ -65,7 +65,7 @@ class AnalyserTrackerPREfficiency : public AnalyserBase {
     AnalyserTrackerPREfficiency();
     virtual ~AnalyserTrackerPREfficiency();
 
-    virtual bool analyse(ReconEvent* const aReconEvent, MCEvent* const aMCEvent);
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
     virtual void clear();
 
@@ -115,14 +115,14 @@ class AnalyserTrackerPREfficiency : public AnalyserBase {
      *  @param[out] good4pt Do we expect a 4pt track to be reconstructed, but NOT a 5pt track
      *  @param[out] good5pt Do we expect a 5pt track to be reconstructed
      */
-    void check_good_tk_event(SciFiEvent* evt, int trker_num, bool& good4pt, bool& good5pt);
+    void check_good_tk_event(MAUS::SciFiEvent* evt, int trker_num, bool& good4pt, bool& good5pt);
 
     /** @brief Check the TOFs to see if the event passes the choosen criteria for a good event
      *  @return Bool indicating if this is a good event
      */
-    bool check_good_tof_event(TOFEvent* evt);
+    bool check_good_tof_event(MAUS::TOFEvent* evt);
 };
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
+
 
 #endif

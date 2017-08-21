@@ -17,28 +17,28 @@
 
 #include <vector>
 
-#include "src/common_cpp/Analysis/CutsTOFTime.hh"
+#include "mica/CutsTOFTime.hh"
 
 #include "src/common_cpp/DataStructure/TOFEvent.hh"
 #include "src/common_cpp/DataStructure/TOFEventSpacePoint.hh"
 #include "src/common_cpp/DataStructure/TOFSpacePoint.hh"
 
-namespace MAUS {
-namespace Analysis {
+
+namespace mica {
 
 CutsTOFTime::CutsTOFTime() : mLowerTimeCut(27.0), mUpperTimeCut(50.0) {}
 
-bool CutsTOFTime::Cut(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
+bool CutsTOFTime::Cut(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) {
   if (!aReconEvent)
     return false;
 
-  TOFEvent* tofEvent = aReconEvent->GetTOFEvent();
+  MAUS::TOFEvent* tofEvent = aReconEvent->GetTOFEvent();
   if (!tofEvent)
     return false;
 
-  std::vector<TOFSpacePoint>* tof1Spoints =
+  std::vector<MAUS::TOFSpacePoint>* tof1Spoints =
       tofEvent->GetTOFEventSpacePointPtr()->GetTOF1SpacePointArrayPtr();
-  std::vector<TOFSpacePoint>* tof2Spoints =
+  std::vector<MAUS::TOFSpacePoint>* tof2Spoints =
       tofEvent->GetTOFEventSpacePointPtr()->GetTOF2SpacePointArrayPtr();
 
   if (tof1Spoints->size() != 1 || tof2Spoints->size() != 1)
@@ -51,5 +51,4 @@ bool CutsTOFTime::Cut(ReconEvent* const aReconEvent, MCEvent* const aMCEvent) {
   return false;
 }
 
-} // ~namespace Analysis
-} // ~namespace MAUS
+} // ~namespace mica
