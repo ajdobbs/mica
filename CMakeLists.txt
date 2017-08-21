@@ -28,5 +28,5 @@ target_link_libraries(mica ${ROOT_LIBRARIES} MausCpp)
 
 # Build the MICA app
 link_directories(${CMAKE_BINARY_DIR})
-add_executable(prog app/mica.cc)
-target_link_libraries(prog ${ROOT_LIBRARIES} MausCpp mica)
+add_executable(analysis app/mica.cc)
+target_link_libraries(analysis ${ROOT_LIBRARIES} MausCpp mica)
