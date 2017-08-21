@@ -1,6 +1,7 @@
 # MICA top level CMake build script - A. J. Dobbs
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 project(mica VERSION 0.1.0 LANGUAGES CXX)
+set (CMAKE_CXX_STANDARD 11)
 
 # Pull in ROOT
 list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
