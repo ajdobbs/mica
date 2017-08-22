@@ -1,19 +1,4 @@
-/* This file is part of MAUS: http://micewww.pp.rl.ac.uk/projects/maus
- *
- * MAUS is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * MAUS is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with MAUS.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
+/** The main application for the Muon Ionization Cooling Analysis (MICA) framework */
 
 // C / C++ headers
 #include <stdlib.h>
@@ -31,7 +16,6 @@
 #include "TVirtualPad.h"
 #include "TCanvas.h"
 
-// #include "src/common_cpp/JsonCppStreamer/IRStream.hh"
 #include "src/common_cpp/DataStructure/Spill.hh"
 #include "src/common_cpp/DataStructure/Data.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
@@ -45,8 +29,6 @@
 #include "mica/AnalyserTrackerAngularMomentum.hh"
 #include "mica/AnalyserTrackerPREfficiency.hh"
 #include "mica/AnalyserTrackerMCPurity.hh"
-
-/** Access Tracker data using ROOT */
 
 int main(int argc, char *argv[]) {
   // Instantiate the analysers
