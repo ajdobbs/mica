@@ -2,8 +2,7 @@
 
 Author - A. J. Dobbs
 
-MICA is an analysis framework for the Muon Ionization Cooling Experiment. It is dependent on the
-MICE reconstruction software, MAUS.
+MICA is an analysis framework for the Muon Ionization Cooling Experiment. It is dependent on the MICE reconstruction software, MAUS.
 
 ## Installation instructions
 
@@ -19,6 +18,12 @@ cd mica
 
 ```bash
 git clone git@github.com:ajdobbs/mica.git source
+```
+
+or, if you do not have a github login, clone anonymously with:
+
+```bash
+git clone https://github.com/ajdobbs/mica.git source
 ```
 
 * Source an existing MAUS installation (see http://micewww.pp.rl.ac.uk/projects/maus/wiki/Install)
@@ -41,7 +46,7 @@ cmake ../source/ -DCMAKE_INSTALL_PREFIX:PATH=/path/to/install/directory
 make -jN
 ```
 
-where the last argument is optional, specifying a custom installation directory, and N is the
+where the last argument to cmake is optional, specifying a custom installation directory, and N is the
 number of cores to build with.
 
 * To clean a build, simply delete everything in your build directory
@@ -69,4 +74,4 @@ Run an analysis with:
 ./bin/mica /path/to/maus/recon/data/maus_output.root
 ```
 
-The output can then be found in analysis.pdf.
+The output can then be found in ```analysis.pdf```.

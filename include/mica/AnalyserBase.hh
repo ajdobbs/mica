@@ -28,10 +28,11 @@
 
 namespace mica {
 
-/** @class AnalyserBase Base class for all analysers. Defines an interface via the draw and analyse
- *                      functions, which must be overidden in daughter classes. Client code calls
- *                      Draw and Analyse. Applies any cuts selected prior to passing events
- *                      to daughter routines.
+/** @class AnalyserBase
+ *    Base class for all analysers. Defines an interface via the draw and analyse
+ *    functions, which must be overidden in daughter classes. Client code calls
+ *    Draw and Analyse. Applies any cuts selected prior to passing events
+ *    to daughter routines.
  *  @author A. Dobbs
  *  @var mCuts The cuts to apply before admitting an event for analysis
  */

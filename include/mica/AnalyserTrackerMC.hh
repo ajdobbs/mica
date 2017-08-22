@@ -32,7 +32,8 @@
 
 namespace mica {
 
-/** @struct Simple data container to hold tracker track info deduced from MC
+/** @struct MCTrackData
+ *          Simple data container to hold tracker track info deduced from MC
  *  @author A. Dobbs
  */
 struct MCTrackData {

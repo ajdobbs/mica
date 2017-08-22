@@ -33,8 +33,9 @@
 
 namespace mica {
 
-/** @class AnalyserTrackerPREfficiency Analyser class which produces tracker pattern recognition
- *                                     efficiency results, uses reconstrcuted data only (no MC)
+/** @class AnalyserTrackerPREfficiency
+ *         Analyser class which produces tracker pattern recognition
+ *         efficiency results, uses reconstrcuted data only (no MC)
  *  @author A. Dobbs
  *  @var mCheckTOF Should we check time-of-flight between TOF1 and TOF2. Requires 1 and only 1
  *       spacepoint in both TOF1 and TOF2, so if set to true it will override mCheckTOFSpacePoints.

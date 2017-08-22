@@ -33,7 +33,8 @@
 
 namespace mica {
 
-/** @class AnalyserTrackerMCPurity Analyser class which calculates patrec purity
+/** @class AnalyserTrackerMCPurity
+ *         Analyser class which calculates pattern recognition purity.
  *  @author A. Dobbs
  */
 

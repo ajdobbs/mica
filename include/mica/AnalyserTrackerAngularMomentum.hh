@@ -32,7 +32,8 @@
 
 namespace mica {
 
-/** @class AnalyserTrackerAngularMomentum Anayser class which produces plots of ang. mom. vs radius
+/** @class AnalyserTrackerAngularMomentum
+ *         Anayser class which produces plots of ang. mom. vs radius
  *  @author A. Dobbs
  *  @var mAnalysisStation The tracker station to calculate all values at (default 1)
  *  @var mAnalysisPlane The tracker plane to calculate all values at (default 0)
