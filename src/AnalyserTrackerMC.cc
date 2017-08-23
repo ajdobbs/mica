@@ -60,8 +60,8 @@ bool AnalyserTrackerMC::analyse_mc(MAUS::MCEvent* const aMCEvent) {
   } else if (mLookup->get_hits_map().size() == 0) {
     lookup_pass = false;
   } else {
-    std::cerr << "INFO: AnalyserTrackerMC::analyse_mc: Lookup hit map size: "
-              << mLookup->get_hits_map().size() << std::endl;
+    // std::cerr << "INFO: AnalyserTrackerMC::analyse_mc: Lookup hit map size: "
+    //           << mLookup->get_hits_map().size() << std::endl;
   }
   if (!lookup_pass) return false;
 
@@ -149,9 +149,9 @@ bool AnalyserTrackerMC::fill_mc_track_data(MAUS::MCEvent* const aMCEvent) {
         }
       }
       if (!data) {
-        std::cerr << "WARNING: No hit present in TkU reference plane\n";
+        // std::cerr << "WARNING: No hit present in TkU reference plane\n";
       } else {
-        std::cerr << "INFO: Created MCTrackData for TkU\n";
+        // std::cerr << "INFO: Created MCTrackData for TkU\n";
       }
     }
   }
@@ -173,9 +173,9 @@ bool AnalyserTrackerMC::fill_mc_track_data(MAUS::MCEvent* const aMCEvent) {
         }
       }
       if (!data) {
-        std::cerr << "WARNING: No hit present in TkD reference plane\n";
+        // std::cerr << "WARNING: No hit present in TkD reference plane\n";
       } else {
-        std::cerr << "INFO: Created MCTrackData for TkD\n";
+        // std::cerr << "INFO: Created MCTrackData for TkD\n";
       }
     }
   }

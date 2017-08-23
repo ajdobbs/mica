@@ -60,8 +60,8 @@ int main(int argc, char *argv[]) {
   // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
   // analysers.push_back(anlMP);
 
-  // mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
-  // analysers.push_back(anlMCPRR);
+  mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
+  analysers.push_back(anlMCPRR);
 
   // Set up ROOT app, input file, and MAUS data class
   std::string infile = "";

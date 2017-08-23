@@ -19,6 +19,7 @@
 
 #include <cmath>
 
+#include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 #include "src/common_cpp/DataStructure/SciFiHelicalPRTrack.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
 
@@ -34,23 +35,30 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUPositionResi
                                                                mHTkDPositionResidualsY{nullptr},
                                                                mHTkDMomentumResidualsT{nullptr},
                                                                mHTkDMomentumResidualsZ{nullptr}  {
-  mHTkUPositionResidualsX = new TH1D("hTkUPositionResidualsX", "TkU x Residuals", 100, -10, 10);
-  mHTkUPositionResidualsY = new TH1D("hTkUPositionResidualsY", "TkU y Residuals", 100, -10, 10);
+  mHTkUPositionResidualsX = new TH1D("hTkUPositionResidualsX", "TkU x Residuals", 100, -5, 5);
+  mHTkUPositionResidualsY = new TH1D("hTkUPositionResidualsY", "TkU y Residuals", 100, -5, 5);
   mHTkUMomentumResidualsT = new TH1D("hTkUMomentumResidualsT", "TkU pt Residuals", 100, -10, 10);
-  mHTkUMomentumResidualsZ = new TH1D("hTkUMomentumResidualsZ", "TkU pz Residuals", 100, -10, 10);
-  mHTkDPositionResidualsX = new TH1D("hTkDPositionResidualsX", "TkD x Residuals", 100, -10, 10);
-  mHTkDPositionResidualsY = new TH1D("hTkDPositionResidualsY", "TkD y Residuals", 100, -10, 10);
+  mHTkUMomentumResidualsZ = new TH1D("hTkUMomentumResidualsZ", "TkU pz Residuals", 100, -50, 200);
+  mHTkDPositionResidualsX = new TH1D("hTkDPositionResidualsX", "TkD x Residuals", 100, -5, 5);
+  mHTkDPositionResidualsY = new TH1D("hTkDPositionResidualsY", "TkD y Residuals", 100, -5, 5);
   mHTkDMomentumResidualsT = new TH1D("hTkDMomentumResidualsT", "TkD pt Residuals", 100, -10, 10);
-  mHTkDMomentumResidualsZ = new TH1D("hTkDMomentumResidualsZ", "TkD pz Residuals", 100, -10, 10);
+  mHTkDMomentumResidualsZ = new TH1D("hTkDMomentumResidualsZ", "TkD pz Residuals", 100, -50, 200);
 }
 
 bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconEvent) {
-  if (!aReconEvent)
+  if (!aReconEvent) {
+    clear_lookup();
+    clear_mc_data();
     return false;
+  }
+
 
   MAUS::SciFiEvent* sfevt = aReconEvent->GetSciFiEvent();
-  if (!sfevt)
+  if (!sfevt) {
+    clear_lookup();
+    clear_mc_data();
     return false;
+  }
 
   // Loop over all the scifi tracks in this event
   int nTkURecTracks = 0;
@@ -66,33 +74,70 @@ bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconE
       tkd_trk = trk;
     }
   }
+
+  // std::cout << "TkU Rec tracks: " << nTkURecTracks << ", TkD Rec tracks: " << nTkDRecTracks
+  //           << "TkU MC tracks: " << GetMCDataTkU().size() << ", TkD MC tracks: "
+  //           << GetMCDataTkD().size() << std::endl;
+
   // Require 1 recon and 1 MC track in each tracker
-  if (nTkURecTracks != 1 || nTkDRecTracks != 1)
+  if (nTkURecTracks != 1 || nTkDRecTracks != 1) {
+    clear_lookup();
+    clear_mc_data();
     return false;
-  if (GetMCDataTkU().size() != 1 || GetMCDataTkD().size() != 1)
+  }
+  if (GetMCDataTkU().size() != 1 || GetMCDataTkD().size() != 1) {
+    clear_lookup();
+    clear_mc_data();
     return false;
+  }
+
+  if (tku_trk->get_spacepoints_pointers().size() != 5 ||
+      tkd_trk->get_spacepoints_pointers().size() != 5) {
+    clear_lookup();
+    clear_mc_data();
+    return false;
+  }
 
   // At this point we should an event that is good to analyse
   // Calculate the recon postion at the reference station, and the recon momentum (average)
-  double tku_dx = tku_trk->get_reference_position().x() - GetMCDataTkU()[0]->pos.x();
-  double tku_dy = tku_trk->get_reference_position().y() - GetMCDataTkU()[0]->pos.y();
+  double tku_x = 0.0;
+  double tku_y = 0.0;
+  for (auto sp : tku_trk->get_spacepoints_pointers()) {
+    if (sp->get_station() == 1) {
+      tku_x = sp->get_position().x();
+      tku_y = sp->get_position().y();
+    }
+  }
+
+  double tkd_x = 0.0;
+  double tkd_y = 0.0;
+  for (auto sp : tkd_trk->get_spacepoints_pointers()) {
+    if (sp->get_station() == 1) {
+      tkd_x = sp->get_position().x();
+      tkd_y = sp->get_position().y();
+    }
+  }
+
+  std::cerr << tku_x << " " << GetMCDataTkU()[0]->pos.x() << std::endl;
+  double tku_dx = tku_x + GetMCDataTkU()[0]->pos.x();
+  double tku_dy = tku_y - GetMCDataTkU()[0]->pos.y();
 
   double tku_ptmc = sqrt(GetMCDataTkU()[0]->mom.x()*GetMCDataTkU()[0]->mom.x() +
                          GetMCDataTkU()[0]->mom.y()*GetMCDataTkU()[0]->mom.y());
   double tku_ptrec = 0.3*mBfield*tku_trk->get_R(); // 0.3 comes from mom being in MeV and rad in mm
 
   double tku_dpt = tku_ptrec - tku_ptmc;
-  double tku_dpz = (tku_ptrec / tku_trk->get_dsdz()) - GetMCDataTkU()[0]->mom.z();
+  double tku_dpz = (tku_ptrec / tku_trk->get_dsdz()) + GetMCDataTkU()[0]->mom.z();
 
-  double tkd_dx = tkd_trk->get_reference_position().x() - GetMCDataTkD()[0]->pos.x();
-  double tkd_dy = tkd_trk->get_reference_position().y() - GetMCDataTkD()[0]->pos.y();
+  double tkd_dx = tkd_x - GetMCDataTkD()[0]->pos.x();
+  double tkd_dy = tkd_y - GetMCDataTkD()[0]->pos.y();
 
   double tkd_ptmc = sqrt(GetMCDataTkD()[0]->mom.x()*GetMCDataTkD()[0]->mom.x() +
                          GetMCDataTkD()[0]->mom.y()*GetMCDataTkD()[0]->mom.y());
   double tkd_ptrec = 0.3*mBfield*tkd_trk->get_R(); // 0.3 comes from mom being in MeV and rad in mm
 
   double tkd_dpt = tkd_ptrec - tkd_ptmc;
-  double tkd_dpz = (tkd_ptrec / tkd_trk->get_dsdz()) - GetMCDataTkD()[0]->mom.z();
+  double tkd_dpz = (tkd_ptrec / tkd_trk->get_dsdz()) + GetMCDataTkD()[0]->mom.z();
 
   // Fill the histograms
   mHTkUPositionResidualsX->Fill(tku_dx);
@@ -105,6 +150,8 @@ bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconE
   mHTkDMomentumResidualsT->Fill(tkd_dpt);
   mHTkDMomentumResidualsZ->Fill(tkd_dpz);
 
+  clear_lookup();
+  clear_mc_data();
   return true;
 }
 
