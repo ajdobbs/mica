@@ -20,6 +20,7 @@ link_directories($ENV{MAUS_ROOT_DIR}/build)
 add_library(MicaCore SHARED src/AnalyserBase.cc
                         src/AnalyserTrackerAngularMomentum.cc
                         src/AnalyserTrackerMC.cc
+                        src/AnalyserTrackerMCPRResiduals.cc
                         src/AnalyserTrackerMCPurity.cc
                         src/AnalyserTrackerPREfficiency.cc
                         src/AnalyserTrackerPRSeedNPEResidual.cc
