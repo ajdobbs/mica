@@ -53,15 +53,15 @@ int main(int argc, char *argv[]) {
   anlTAM->SetAnalysisPlane(0);
   analysers.push_back(anlTAM);
 
+  mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
+  analysers.push_back(anlMCPRR);
+
   mica::AnalyserTrackerPREfficiency* anlPRE = new mica::AnalyserTrackerPREfficiency();
   anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
   analysers.push_back(anlPRE);
 
   // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
   // analysers.push_back(anlMP);
-
-  mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
-  analysers.push_back(anlMCPRR);
 
   // Set up ROOT app, input file, and MAUS data class
   std::string infile = "";
@@ -115,15 +115,21 @@ int main(int argc, char *argv[]) {
   } // ~Loop over all spills
 
   // Plot the results
-  for (size_t i = 0; i < analysers.size(); ++i) {
-    TVirtualPad* pad1 = analysers[i]->Draw();
-    pad1->Update();
+  std::vector<TVirtualPad*> pads;
+  for (auto an : analysers) {
+    an->Draw();
+    auto new_pads = an->GetPads();
+    pads.insert(std::end(pads), std::begin(new_pads), std::end(new_pads));
+  }
+  std::cout << "Found " << pads.size() << " canvases, saving to pdf." << std::endl;
+  for (size_t i = 0; i < pads.size(); ++i) {
+    pads[i]->Update();
     if (i == 0) {
-      pad1->SaveAs((outfile + "(").c_str(), "pdf");
-    } else if (i == (analysers.size() - 1)) {
-      pad1->SaveAs((outfile + ")").c_str(), "pdf");
+      pads[i]->SaveAs((outfile + "(").c_str(), "pdf");
+    } else if (i == (pads.size() - 1)) {
+      pads[i]->SaveAs((outfile + ")").c_str(), "pdf");
     } else {
-      pad1->SaveAs(outfile.c_str(), "pdf");
+      pads[i]->SaveAs(outfile.c_str(), "pdf");
     }
   }
 

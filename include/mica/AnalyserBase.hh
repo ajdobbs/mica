@@ -47,6 +47,12 @@ class AnalyserBase {
      */
     virtual void draw(TVirtualPad* aPad) = 0;
 
+    /** @brief Add a pad to the list of internal pad pointers */
+    void AddPad(TVirtualPad* aPad) { mPads.push_back(aPad); }
+
+    /** @brief Return all the pads */
+    std::vector<TVirtualPad*> const GetPads() { return mPads; }
+
     /** @brief Add a cut, only events which pass the cut will be processed
      *  @param aCut The cut to add
      */
@@ -67,6 +73,7 @@ class AnalyserBase {
      */
     bool ApplyCuts(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
+    std::vector<TVirtualPad*> mPads;
     std::vector<CutsBase*> mCuts;
 };
 } // ~namespace mica

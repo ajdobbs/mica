@@ -45,6 +45,9 @@ AnalyserTrackerMC::~AnalyserTrackerMC() {
 }
 
 bool AnalyserTrackerMC::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) {
+  if (!aMCEvent)
+    return false;
+
   if (analyse_mc(aMCEvent)) {
     return analyse_recon(aReconEvent);
   } else {

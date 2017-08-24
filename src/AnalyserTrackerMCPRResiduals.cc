@@ -19,6 +19,8 @@
 
 #include <cmath>
 
+#include "TCanvas.h"
+
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 #include "src/common_cpp/DataStructure/SciFiHelicalPRTrack.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
@@ -156,6 +158,7 @@ bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconE
 }
 
 void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
+  // Draw with a linear scale
   aPad->cd();
   aPad->Divide(4, 2);
   aPad->cd(1);
@@ -174,5 +177,36 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   mHTkDMomentumResidualsT->Draw();
   aPad->cd(8);
   mHTkDMomentumResidualsZ->Draw();
+
+  // Draw with a log scale
+  TVirtualPad* pad2 = new TCanvas();
+  pad2->Divide(4, 2);
+  pad2->cd(1);
+  pad2->GetPad(1)->SetLogy(1);
+  mHTkUPositionResidualsX->Draw();
+  pad2->cd(2);
+  pad2->GetPad(2)->SetLogy(1);
+  mHTkUPositionResidualsY->Draw();
+  pad2->cd(3);
+  pad2->GetPad(3)->SetLogy(1);
+  mHTkUMomentumResidualsT->Draw();
+  pad2->cd(4);
+  pad2->GetPad(4)->SetLogy(1);
+  mHTkUMomentumResidualsZ->Draw();
+  pad2->cd(5);
+  pad2->GetPad(5)->SetLogy(1);
+  mHTkDPositionResidualsX->Draw();
+  pad2->cd(6);
+  pad2->GetPad(6)->SetLogy(1);
+  mHTkDPositionResidualsY->Draw();
+  pad2->cd(7);
+  pad2->GetPad(7)->SetLogy(1);
+  mHTkDMomentumResidualsT->Draw();
+  pad2->cd(8);
+  pad2->GetPad(8)->SetLogy(1);
+  mHTkDMomentumResidualsZ->Draw();
+
+  AddPad(aPad);
+  AddPad(pad2);
 }
 } // ~namespace mica

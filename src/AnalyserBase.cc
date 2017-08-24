@@ -49,7 +49,11 @@ TVirtualPad* AnalyserBase::Draw(TVirtualPad* aPad) {
     aPad = new TCanvas();
   }
   draw(aPad);
+
+  // If the mPads vector is empty, add the current pad to the list
+  if (mPads.size() == 0)
+    AddPad(aPad);
+
   return aPad;
 }
 } // ~namespace mica
-
