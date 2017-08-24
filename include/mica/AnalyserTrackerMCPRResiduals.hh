@@ -18,13 +18,14 @@ namespace mica {
  *  @author A. Dobbs
  */
 
-class AnalyserTrackerMCPRResiduals : public AnalyserTrackerMC {
+class AnalyserTrackerMCPRResiduals : public AnalyserBase {
   public:
     AnalyserTrackerMCPRResiduals();
 
     virtual ~AnalyserTrackerMCPRResiduals() {}
 
-    virtual bool analyse_recon(MAUS::ReconEvent* const aReconEvent) override;
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
+                         MAUS::MCEvent* const aMCEvent) override;
 
     virtual void draw(TVirtualPad* aPad) override;
 

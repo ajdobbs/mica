@@ -21,6 +21,7 @@
 
 #include "TCanvas.h"
 
+#include "src/common_cpp/DataStructure/Hit.hh"
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
 #include "src/common_cpp/DataStructure/SciFiHelicalPRTrack.hh"
 #include "src/common_cpp/DataStructure/SciFiEvent.hh"
@@ -47,18 +48,39 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUPositionResi
   mHTkDMomentumResidualsZ = new TH1D("hTkDMomentumResidualsZ", "TkD pz Residuals", 100, -50, 200);
 }
 
-bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconEvent) {
-  if (!aReconEvent) {
-    clear_lookup();
-    clear_mc_data();
+bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
+                                           MAUS::MCEvent* const aMCEvent) {
+  if (!aReconEvent || !aMCEvent) {
     return false;
   }
 
+  // Find a hit from a muon in the tracker references plane for each tracker
+  MAUS::SciFiHit* tku_ref_hit = nullptr;
+  MAUS::SciFiHit* tkd_ref_hit = nullptr;
+  for (auto&& hitref : *(aMCEvent->GetSciFiHits())) {
+    MAUS::SciFiHit* hit = &hitref;
+    int pid = hit->GetParticleId();
+    if (pid != 13 && pid != -13)
+      continue;
+    if (hit->GetChannelId()->GetStationNumber() == 1 && \
+        hit->GetChannelId()->GetPlaneNumber() == 0) {
+      if (hit->GetChannelId()->GetTrackerNumber() == 0) {
+        tku_ref_hit = hit;
+      } else if (hit->GetChannelId()->GetTrackerNumber() == 1) {
+        tkd_ref_hit = hit;
+      }
+    }
+    if (tku_ref_hit && tkd_ref_hit)
+      break;
+  }
 
+  if (!tku_ref_hit || !tkd_ref_hit) {
+    return false;
+  }
+
+  // Access the SciFi Event
   MAUS::SciFiEvent* sfevt = aReconEvent->GetSciFiEvent();
   if (!sfevt) {
-    clear_lookup();
-    clear_mc_data();
     return false;
   }
 
@@ -81,22 +103,13 @@ bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconE
   //           << "TkU MC tracks: " << GetMCDataTkU().size() << ", TkD MC tracks: "
   //           << GetMCDataTkD().size() << std::endl;
 
-  // Require 1 recon and 1 MC track in each tracker
+  // Require 1 recon track in each tracker
   if (nTkURecTracks != 1 || nTkDRecTracks != 1) {
-    clear_lookup();
-    clear_mc_data();
-    return false;
-  }
-  if (GetMCDataTkU().size() != 1 || GetMCDataTkD().size() != 1) {
-    clear_lookup();
-    clear_mc_data();
     return false;
   }
 
   if (tku_trk->get_spacepoints_pointers().size() != 5 ||
       tkd_trk->get_spacepoints_pointers().size() != 5) {
-    clear_lookup();
-    clear_mc_data();
     return false;
   }
 
@@ -120,26 +133,25 @@ bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconE
     }
   }
 
-  std::cerr << tku_x << " " << GetMCDataTkU()[0]->pos.x() << std::endl;
-  double tku_dx = tku_x + GetMCDataTkU()[0]->pos.x();
-  double tku_dy = tku_y - GetMCDataTkU()[0]->pos.y();
+  double tku_dx = tku_x + tku_ref_hit->GetPosition().x();
+  double tku_dy = tku_y - tku_ref_hit->GetPosition().y();
 
-  double tku_ptmc = sqrt(GetMCDataTkU()[0]->mom.x()*GetMCDataTkU()[0]->mom.x() +
-                         GetMCDataTkU()[0]->mom.y()*GetMCDataTkU()[0]->mom.y());
+  double tku_ptmc = sqrt(tku_ref_hit->GetMomentum().x()*tku_ref_hit->GetMomentum().x() +
+                         tku_ref_hit->GetMomentum().y()*tku_ref_hit->GetMomentum().y());
   double tku_ptrec = 0.3*mBfield*tku_trk->get_R(); // 0.3 comes from mom being in MeV and rad in mm
 
   double tku_dpt = tku_ptrec - tku_ptmc;
-  double tku_dpz = (tku_ptrec / tku_trk->get_dsdz()) + GetMCDataTkU()[0]->mom.z();
+  double tku_dpz = (tku_ptrec / tku_trk->get_dsdz()) + tku_ref_hit->GetMomentum().z();
 
-  double tkd_dx = tkd_x - GetMCDataTkD()[0]->pos.x();
-  double tkd_dy = tkd_y - GetMCDataTkD()[0]->pos.y();
+  double tkd_dx = tkd_x - tkd_ref_hit->GetPosition().x();
+  double tkd_dy = tkd_y - tkd_ref_hit->GetPosition().y();
 
-  double tkd_ptmc = sqrt(GetMCDataTkD()[0]->mom.x()*GetMCDataTkD()[0]->mom.x() +
-                         GetMCDataTkD()[0]->mom.y()*GetMCDataTkD()[0]->mom.y());
+  double tkd_ptmc = sqrt(tkd_ref_hit->GetMomentum().x()*tkd_ref_hit->GetMomentum().x() +
+                         tkd_ref_hit->GetMomentum().y()*tkd_ref_hit->GetMomentum().y());
   double tkd_ptrec = 0.3*mBfield*tkd_trk->get_R(); // 0.3 comes from mom being in MeV and rad in mm
 
   double tkd_dpt = tkd_ptrec - tkd_ptmc;
-  double tkd_dpz = (tkd_ptrec / tkd_trk->get_dsdz()) + GetMCDataTkD()[0]->mom.z();
+  double tkd_dpz = (tkd_ptrec / tkd_trk->get_dsdz()) + tkd_ref_hit->GetMomentum().z();
 
   // Fill the histograms
   mHTkUPositionResidualsX->Fill(tku_dx);
@@ -152,8 +164,6 @@ bool AnalyserTrackerMCPRResiduals::analyse_recon(MAUS::ReconEvent* const aReconE
   mHTkDMomentumResidualsT->Fill(tkd_dpt);
   mHTkDMomentumResidualsZ->Fill(tkd_dpz);
 
-  clear_lookup();
-  clear_mc_data();
   return true;
 }
 
