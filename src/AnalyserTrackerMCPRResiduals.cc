@@ -20,6 +20,7 @@
 #include <cmath>
 
 #include "TCanvas.h"
+#include "TStyle.h"
 
 #include "src/common_cpp/DataStructure/Hit.hh"
 #include "src/common_cpp/DataStructure/SciFiSpacePoint.hh"
@@ -168,6 +169,8 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
 }
 
 void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
+  gStyle->SetOptStat(11111);
+
   // Draw with a linear scale
   aPad->cd();
   aPad->Divide(4, 2);

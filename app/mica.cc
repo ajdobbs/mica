@@ -84,7 +84,10 @@ int main(int argc, char *argv[]) {
   std::cerr << "Found " << nentries << " spills\n";
 
   // Loop over all spills
+  int spills_processed = 0;
+  int events_processed = 0;
   for (int i = 0; i < nentries; ++i) {
+    ++spills_processed;
     T->GetEntry(i);
     if (!data) {
       std::cout << "Data is NULL\n";
@@ -99,7 +102,6 @@ int main(int argc, char *argv[]) {
       // std::cout << "Spill is of type " << spill->GetDaqEventType() << ", not a usable spill\n";
       continue;
     }
-    std::cout << "Spill: " << spill->GetSpillNumber() << std::endl;
 
     // Call the analysers
     int event_counter = 0;
@@ -111,7 +113,10 @@ int main(int argc, char *argv[]) {
         an->Analyse(revt, mevt);
       }
       ++event_counter;
+      ++events_processed;
     }
+    std::cout << "Spills processed: " << spills_processed << " of " << nentries
+              << ", events processed: " << events_processed << std::endl;
   } // ~Loop over all spills
 
   // Plot the results
