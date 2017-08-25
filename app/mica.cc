@@ -10,6 +10,8 @@
 #include <vector>
 
 // ROOT headers
+#include "TROOT.h"
+#include "TStyle.h"
 #include "TObject.h"
 #include "TFile.h"
 #include "TTree.h"

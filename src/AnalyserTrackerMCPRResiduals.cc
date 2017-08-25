@@ -169,7 +169,7 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
 }
 
 void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
-  gStyle->SetOptStat(11111);
+  GetStyle()->SetOptStat(111111);
 
   // Draw with a linear scale
   aPad->cd();

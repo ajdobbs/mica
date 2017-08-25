@@ -4,6 +4,8 @@
 #include <vector>
 
 #include "TVirtualPad.h"
+#include "TStyle.h"
+
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "mica/CutsBase.hh"
@@ -23,7 +25,7 @@ namespace mica {
 class AnalyserBase {
   public:
     AnalyserBase();
-    virtual ~AnalyserBase() {}
+    virtual ~AnalyserBase();
 
     /** @brief Check the cuts, then if they are passed calls the daughter class analyse method
      *  @param aReconEvent The recon event
@@ -64,6 +66,8 @@ class AnalyserBase {
     /** @brief Set the cuts, only events which pass all the cuts will be processed */
     void SetCuts(std::vector<CutsBase*>& aCuts) { mCuts = aCuts; }
 
+    TStyle* GetStyle() { return mStyle; }
+
   private:
     /** @brief Apply the cuts held by the mCuts members to the event given as arguments, if they
      *         pass return true, otherwise false - no cuts just causes return true.
@@ -75,6 +79,8 @@ class AnalyserBase {
 
     std::vector<TVirtualPad*> mPads;
     std::vector<CutsBase*> mCuts;
+
+    TStyle* mStyle;
 };
 } // ~namespace mica
 
