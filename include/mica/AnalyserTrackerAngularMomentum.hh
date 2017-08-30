@@ -7,6 +7,7 @@
 #include "TH2.h"
 
 #include "mica/AnalyserBase.hh"
+#include "mica/IAnalyser.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiSeed.hh"
@@ -24,14 +25,17 @@ namespace mica {
  *  @var mHAngMomTKD Plot of ang. mom. vs radius for TkD
  */
 
-class AnalyserTrackerAngularMomentum : public AnalyserBase {
+class AnalyserTrackerAngularMomentum : public IAnalyser<AnalyserTrackerAngularMomentum> {
   public:
     AnalyserTrackerAngularMomentum();
     virtual ~AnalyserTrackerAngularMomentum() {}
 
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
+                         MAUS::MCEvent* const aMCEvent) override;
 
-    virtual void draw(TVirtualPad* aPad);
+    virtual void draw(TVirtualPad* aPad) override;
+
+    virtual void merge(AnalyserTrackerAngularMomentum* aAnalyser) override;
 
     int GetAnalysisStation() const { return mAnalysisStation; }
     void SetAnalysisStation(int aAnalysisStation) { mAnalysisStation = aAnalysisStation; }
