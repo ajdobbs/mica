@@ -29,12 +29,12 @@ std::vector<TVirtualPad*> AnalyserGroup::Draw() {
 }
 
 bool AnalyserGroup::Merge(AnalyserGroup* aAnalyserGroup) {
-  if (mAnalysers.size() != aAnalyserGroup.GetAnalysers().size())
+  if (mAnalysers.size() != aAnalyserGroup->GetAnalysers().size())
     return false;
 
   bool success = true;
   for (size_t i = 0; i < mAnalysers.size(); ++i) {
-    bool lSuccess = mAnalysers[i]->Merge(aAnalyserGroup.GetAnalysers()[i]);
+    bool lSuccess = mAnalysers[i]->Merge(aAnalyserGroup->GetAnalysers()[i]);
     if (!lSuccess) success = false;
   }
   return success;
