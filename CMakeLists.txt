@@ -37,6 +37,10 @@ link_directories(${CMAKE_BINARY_DIR})
 add_executable(mica app/mica.cc)
 target_link_libraries(mica ${ROOT_LIBRARIES} MausCpp MicaCore)
 
+# Build MultiMICA app
+add_executable(multimica app/multimica.cc)
+target_link_libraries(multimica ${ROOT_LIBRARIES} MausCpp MicaCore)
+
 # Specify where installing will place the output
 install(TARGETS mica MicaCore
         RUNTIME DESTINATION bin
