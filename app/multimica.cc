@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <thread>
 
 // ROOT headers
 #include "TROOT.h"
@@ -35,8 +36,9 @@
 #include "mica/AnalyserTrackerMCPRResiduals.hh"
 
 int main(int argc, char *argv[]) {
-  int nthreads = 2;
+  int nthreads = 4;
 
+  // Set up identical groups of analysers, one group for each thread
   std::vector<mica::AnalyserGroup*> groups;
   for (size_t i = 0; i < nthreads; ++i) {
     mica::AnalyserGroup* ag = new mica::AnalyserGroup();
@@ -47,9 +49,9 @@ int main(int argc, char *argv[]) {
     ag->AddAnalyser(anlTAM);
 
     mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
-    ag->AddAnalyser((anlMCPRR);
+    ag->AddAnalyser(anlMCPRR);
 
-    groups.push_back(ag)
+    groups.push_back(ag);
   }
 
   // Set up input file and output file
@@ -74,11 +76,33 @@ int main(int argc, char *argv[]) {
   int nentries = T->GetEntries();
   std::cerr << "Found " << nentries << " spills\n";
 
+  // Create a buffer for each thread
+  std::vector<std::vector<MAUS::Spill*> > buffers;
+  for (size_t ithread = 0; ithread < nthreads; ++ithread) {
+    std::vector<MAUS::Spill*> lSpills;
+    buffers.push_back(lSpills);
+  }
+
+  // Set up some inter-thread communication variables
+  bool tDataLeft = true; //  Tells all threads whether there is still any data left to process
+  std::vector<bool> tDataRequests; // Data requestor flag for each thread
+  for (int ithread = 0; ithread < nthreads; ++ithread) {
+    tDataRequests.push_back(true);
+  }
 
   // Define a lambda function to run the analysers in each thread
+  auto paraFunc = [](mica::AnalyserGroup* ag, std::vector<MAUS::Spill*>& buffer,
+                     bool& dataneeded, bool& dataleft) {
+    std::cout << "Thread " << std::this_thread::get_id() << " launching" << std::endl;
+    while (dataleft) {
+      // Communicate to main thread that this thread is ready for more data
+      dataneeded = true;
+      while (dataneeded) {
+        // Loop until more data is ready - ideally add condition variable here
+        if (!dataleft) break;
+      }
+      if (dataneeded) break;
 
-  auto paraFunc = [](mica::AnalyserGroup* ag, std::vector<MAUS::Spill*>* buffer) {
-    while (true) {
       // Loop over spills in the buffer
       for (auto spill : buffer) {
         if (spill == nullptr) {
@@ -86,50 +110,53 @@ int main(int argc, char *argv[]) {
           continue;
         }
         if (spill->GetDaqEventType() != "physics_event") {
-          delete spill;
           continue;
         }
-
         // Loop over events in the spill
+        int event_counter = 0;
         for (auto revt : (*(spill->GetReconEvents()))) {
           MAUS::MCEvent* mevt = nullptr;
           if (event_counter < static_cast<int>(spill->GetMCEvents()->size()))
             mevt = spill->GetMCEvents()->at(event_counter);
           ag->Analyse(revt, mevt);
+          ++event_counter;
         }
-        delete spill;
-      }
-
-      // Set the buffer size to zero to signal more data is needed
-      buffer->resize(0);
-      while (buffer->size() == 0) {
-        // Loop until more data is ready - ideally add condition variable here
       }
     }
-  }
-
-  // Create a buffer for each thread
-  int buffersize = 10;
-  int currententry = 0;
-  std::vector< std::vector<MAUS::Spill*>*> buffers
-  for (size_t i = 0; i < nthreads; ++i) {
-    buffers.push_back(new std::vector<MAUS::Spill*>())
-  }
+    std::cout << "Thread " << std::this_thread::get_id() << " terminating" << std::endl;
+  };
 
   // Launch the threads
+  std::vector<std::thread> threads;
+  for (int i = 0; i < nthreads; ++i) {
+    threads.push_back(std::thread(&paraFunc, groups[i], std::ref(buffers[i]),
+                                  std::ref(tDataRequests[i]), std::ref(tDataLeft)));
+  }
 
 
   // Continuously fill the buffers until all the spills are done
-  dataleft = true;
-  while (dataleft) {
-    for (auto buffer : buffers) {
-      if (!dataleft) break;
-      for (int i = currententry; i < buffersize; ++i) {
-        if (currententry >= nentries) {
-          dataleft = false
-          break;
+  int buffersize = 10;
+  int currententry = 0;
+  bool lDataLeft = true; // Is there data left - version local to main thread
+  while (lDataLeft) {
+    // Loop over the buffers
+    for (int ithread = 0; ithread < nthreads; ++ithread) {
+      if (!lDataLeft) break;
+      if (!tDataRequests[ithread]) continue; // This buffer is still being processed, move on
+
+      // Buffer needs refilling
+      // Clear this buffer's memory first
+      for (auto& sp : buffers[ithread]) {
+        if (sp) delete sp;
+        sp = nullptr;
+      }
+
+      for (int ispill = 0; ispill < buffersize; ++ispill) {
+        if (!lDataLeft) break;
+        if (currententry == (nentries - 1)) { // Reached the last entry, process it and then stop
+          lDataLeft = false;
         }
-        T->GetEntry(i);
+        T->GetEntry(currententry);
         if (!data) {
           std::cout << "Data is NULL\n";
           continue;
@@ -139,22 +166,31 @@ int main(int argc, char *argv[]) {
           std::cout << "Spill is NULL\n";
           continue;
         }
-        buffer->push_back(new Spill(*spill));
-        ++currententry
+        buffers[ithread][ispill] = new MAUS::Spill(*spill);
+        ++currententry;
       }
+      // Finished filling the buffer, tell the requesting thread
+      tDataRequests[ithread] = false;
+
+      // Move on to the next buffer, or break out if that was the last spill
+      if (!lDataLeft) break;
     }
+    if (!lDataLeft) break;
   }
 
-  // Kill the threads
-
-
-  // Plot the results
-  std::vector<TVirtualPad*> pads;
-  for (auto an : analysers) {
-    an->Draw();
-    auto new_pads = an->GetPads();
-    pads.insert(std::end(pads), std::begin(new_pads), std::end(new_pads));
+  // Tell the threads we have no more data left and wait for them to finish
+  tDataLeft = false;
+  for (auto& th : threads) {
+    th.join();
   }
+
+  // Merge the analysers (merge the rest into the first AnalyserGroup)
+  for (int ithread = 1; ithread < nthreads; ++i) {
+    groups[0]->Merge(groups[ithread]);
+  }
+
+  // Plot the results and save to file
+  std::vector<TVirtualPad*> pads = groups[0].Draw(); // Draws for each internal analyser
   std::cout << "Found " << pads.size() << " canvases, saving to pdf." << std::endl;
   for (size_t i = 0; i < pads.size(); ++i) {
     pads[i]->Update();
@@ -167,9 +203,15 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  // Wrap up
   std::cout << "File done" << std::endl;
-  for (auto an : analysers) {
-    delete an;
+  for (auto& gp : groups) {}
+    for (auto& an : gp->GetAnalysers()) {
+      if (an) delete an;
+      an = nullptr;
+    }
+    delete gp;
+    gp = nullptr;
   }
   return 0;
 }

@@ -12,9 +12,9 @@ class AnalyserGroup {
     AnalyserGroup() {};
     virtual ~AnalyserGroup() {}
 
-    AddAnalyser(AnalyserBase* aAnalyser) { mAnalysers.push_back(aAnalyser); }
+    void AddAnalyser(AnalyserBase* aAnalyser) { mAnalysers.push_back(aAnalyser); }
     std::vector<AnalyserBase*> GetAnalysers() const { return mAnalysers; }
-    SetAnalysers(std::vector<AnalyserBase*>& aAnalysers) { mAnalysers = aAnalysers; }
+    void SetAnalysers(std::vector<AnalyserBase*>& aAnalysers) { mAnalysers = aAnalysers; }
 
     bool Analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 

@@ -39,7 +39,7 @@ target_link_libraries(mica ${ROOT_LIBRARIES} MausCpp MicaCore)
 
 # Build MultiMICA app
 add_executable(multimica app/multimica.cc)
-target_link_libraries(multimica ${ROOT_LIBRARIES} MausCpp MicaCore)
+target_link_libraries(multimica ${ROOT_LIBRARIES} pthread MausCpp MicaCore)
 
 # Specify where installing will place the output
 install(TARGETS mica MicaCore
