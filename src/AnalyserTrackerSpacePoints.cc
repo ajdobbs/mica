@@ -6,7 +6,7 @@
 namespace mica {
 
 AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU(NULL),
-                                                                     mHNpeTKD(NULL) {
+                                                           mHNpeTKD(NULL) {
   mHNpeTKU = new TH1D("hNpeTKU", "NPE TkU", 100, 0, 200);
   mHNpeTKU->GetXaxis()->SetTitle("NPE");
   mHNpeTKD = new TH1D("hNpeTKD", "NPE TkD", 100, 0, 200);
@@ -64,5 +64,14 @@ void AnalyserTrackerSpacePoints::draw(TVirtualPad* aPad) {
   mHStationNumTKD->Draw();
   aPad->cd(6);
   mHNpeTKD->Draw();
+}
+
+void AnalyserTrackerSpacePoints::merge(AnalyserTrackerSpacePoints* aAnalyser) {
+  mHNpeTKU->Add(aAnalyser->mHNpeTKU);
+  mHNpeTKD->Add(aAnalyser->mHNpeTKD);
+  mHStationNumTKU->Add(aAnalyser->mHStationNumTKU);
+  mHStationNumTKD->Add(aAnalyser->mHStationNumTKD);
+  mHPositionTKU->Add(aAnalyser->mHPositionTKU);
+  mHPositionTKD->Add(aAnalyser->mHPositionTKD);
 }
 } // ~namespace mica

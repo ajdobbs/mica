@@ -8,12 +8,12 @@
 
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
-#include "mica/AnalyserBase.hh"
+#include "mica/IAnalyser.hh"
 
 
 namespace mica {
 
-class AnalyserTrackerSpacePoints : public AnalyserBase {
+class AnalyserTrackerSpacePoints :  public IAnalyser<AnalyserTrackerSpacePoints> {
   public:
     AnalyserTrackerSpacePoints();
     virtual ~AnalyserTrackerSpacePoints() {}
@@ -21,6 +21,8 @@ class AnalyserTrackerSpacePoints : public AnalyserBase {
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
     virtual void draw(TVirtualPad* aPad);
+
+    virtual void merge(AnalyserTrackerSpacePoints* aAnalyser) override;
 
   private:
     TH1D* mHNpeTKU;

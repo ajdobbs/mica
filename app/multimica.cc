@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 #include <thread>
+#include <atomic>
+#include <chrono>
 
 // ROOT headers
 #include "TROOT.h"
@@ -36,12 +38,15 @@
 #include "mica/AnalyserTrackerMCPRResiduals.hh"
 
 int main(int argc, char *argv[]) {
-  int nthreads = 3;
+  int nthreads = 4;
 
   // Set up identical groups of analysers, one group for each thread
   std::vector<mica::AnalyserGroup*> groups;
   for (size_t i = 0; i < nthreads; ++i) {
     mica::AnalyserGroup* ag = new mica::AnalyserGroup();
+
+    mica::AnalyserTrackerSpacePoints* anlTSP = new mica::AnalyserTrackerSpacePoints();
+    ag->AddAnalyser(anlTSP);
 
     mica::AnalyserTrackerAngularMomentum* anlTAM = new mica::AnalyserTrackerAngularMomentum();
     anlTAM->SetAnalysisStation(1);
@@ -77,7 +82,7 @@ int main(int argc, char *argv[]) {
   std::cerr << "Found " << nentries << " spills\n";
 
   // Create a buffer for each thread
-  int buffersize = 10;
+  int buffersize = 50;
   std::vector<std::vector<MAUS::Spill*> > buffers;
   for (size_t ithread = 0; ithread < nthreads; ++ithread) {
     std::vector<MAUS::Spill*> lSpills(buffersize);
@@ -98,11 +103,17 @@ int main(int argc, char *argv[]) {
     while (*dataleft) {
       // Communicate to main thread that this thread is ready for more data
       *dataneeded = true;
+      std::cout << "Thread " << std::this_thread::get_id() << " requesting data " << std::endl;
+      std::cout << "Thread " << std::this_thread::get_id() << " data needed: " << *dataneeded << ", dataleft: " << *dataleft << std::endl;
+      std::cout << "Thread " << std::this_thread::get_id() << " data needed: " << dataneeded << ", dataleft: " << dataleft << std::endl;
       while (*dataneeded) {
         // Loop until more data is ready - ideally add condition variable here
+        std::this_thread::sleep_for (std::chrono::milliseconds(10));
+        // std::cout << "Thread " << std::this_thread::get_id() << ", in while loop, data needed: " << *dataneeded << std::endl;
         if (!(*dataleft)) break;
       }
       if (*dataneeded) break;
+      std::cout << "Thread " << std::this_thread::get_id() << " data acquired" << std::endl;
 
       // Loop over spills in the buffer
       for (auto spill : buffer) {
@@ -113,6 +124,9 @@ int main(int argc, char *argv[]) {
         if (spill->GetDaqEventType() != "physics_event") {
           continue;
         }
+        std::cout << "Thread " << std::this_thread::get_id() << ", processing spill "
+                  << spill->GetSpillNumber() << std::endl;
+
         // Loop over events in the spill
         int event_counter = 0;
         for (auto revt : (*(spill->GetReconEvents()))) {
@@ -141,10 +155,18 @@ int main(int argc, char *argv[]) {
   while (lDataLeft) {
     // Loop over the buffers
     for (int ithread = 0; ithread < nthreads; ++ithread) {
+      // std::cout << "Main: thread " << ithread << " requesting data: "
+      //           << *tDataRequests[ithread] << std::endl;
       if (!lDataLeft) break;
-      if (!tDataRequests[ithread]) continue; // This buffer is still being processed, move on
+      if (!(*tDataRequests[ithread])) {
+        // std::cout << "Main: thread " << ithread << ", still processing buffer, looping" << std::endl;
+        std::this_thread::sleep_for (std::chrono::milliseconds(10));
+        continue; // This buffer is still being processed, move on
+      }
 
       // Buffer needs refilling
+      std::cout << "Main: thread " << ithread << " refilling buffer " << std::endl;
+
       // Clear this buffer's memory first
       for (auto& sp : buffers[ithread]) {
         if (sp) delete sp;
@@ -169,10 +191,13 @@ int main(int argc, char *argv[]) {
         }
         // std::cerr << buffers.size() << " " << buffers[ithread].size() << " " << ithread << " " << ispill << std::endl;
         buffers[ithread][ispill] = new MAUS::Spill(*spill);
+        // buffers[ithread][ispill] = spill;
         ++currententry;
       }
       // Finished filling the buffer, tell the requesting thread
       *(tDataRequests[ithread]) = false;
+      std::cout << "Main: telling thread " << ithread << " it has data: " << *(tDataRequests[ithread]) << std::endl;
+      std::cout << "Main: thread " << ithread << ", data needed pointer " << (tDataRequests[ithread]) << std::endl;
 
       // Move on to the next buffer, or break out if that was the last spill
       if (!lDataLeft) break;
