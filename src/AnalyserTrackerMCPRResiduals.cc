@@ -31,18 +31,51 @@
 
 namespace mica {
 
-AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUPositionResidualsX{nullptr},
+AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{nullptr},
+                                                               mHTkUMCPositionY{nullptr},
+                                                               mHTkUMCMomentumT{nullptr},
+                                                               mHTkUMCMomentumZ{nullptr},
+                                                               mHTkURecPositionX{nullptr},
+                                                               mHTkURecPositionY{nullptr},
+                                                               mHTkURecMomentumT{nullptr},
+                                                               mHTkURecMomentumZ{nullptr},
+                                                               mHTkUPositionResidualsX{nullptr},
                                                                mHTkUPositionResidualsY{nullptr},
                                                                mHTkUMomentumResidualsT{nullptr},
                                                                mHTkUMomentumResidualsZ{nullptr},
+                                                               mHTkDMCPositionX{nullptr},
+                                                               mHTkDMCPositionY{nullptr},
+                                                               mHTkDMCMomentumT{nullptr},
+                                                               mHTkDMCMomentumZ{nullptr},
+                                                               mHTkDRecPositionX{nullptr},
+                                                               mHTkDRecPositionY{nullptr},
+                                                               mHTkDRecMomentumT{nullptr},
+                                                               mHTkDRecMomentumZ{nullptr},
                                                                mHTkDPositionResidualsX{nullptr},
                                                                mHTkDPositionResidualsY{nullptr},
                                                                mHTkDMomentumResidualsT{nullptr},
                                                                mHTkDMomentumResidualsZ{nullptr}  {
+  mHTkUMCPositionX = new TH1D("hTkUMCPositionX", "TkU MC x ", 100, -170, 170);
+  mHTkUMCPositionY = new TH1D("hTkUMCPositionY", "TkU MC y ", 100, -170, 170);
+  mHTkUMCMomentumT = new TH1D("hTkUMCMomentumT", "TkU MC pt ", 100, 0, 100);
+  mHTkUMCMomentumZ = new TH1D("hTkUMCMomentumZ", "TkU MC pz ", 100, 0, 300);
+  mHTkURecPositionX = new TH1D("hTkURecPositionX", "TkU Recon x ", 100, -170, 170);
+  mHTkURecPositionY = new TH1D("hTkURecPositionY", "TkU Recon y ", 100, -170, 170);
+  mHTkURecMomentumT = new TH1D("hTkURecMomentumT", "TkU Recon pt ", 100, 0, 100);
+  mHTkURecMomentumZ = new TH1D("hTkURecMomentumZ", "TkU Recon pz ", 100, -300, 300);
   mHTkUPositionResidualsX = new TH1D("hTkUPositionResidualsX", "TkU x Residuals", 100, -5, 5);
   mHTkUPositionResidualsY = new TH1D("hTkUPositionResidualsY", "TkU y Residuals", 100, -5, 5);
   mHTkUMomentumResidualsT = new TH1D("hTkUMomentumResidualsT", "TkU pt Residuals", 100, -20, 20);
   mHTkUMomentumResidualsZ = new TH1D("hTkUMomentumResidualsZ", "TkU pz Residuals", 100, -50, 200);
+
+  mHTkDMCPositionX = new TH1D("hTkDMCPositionX", "TkD MC x ", 100, -170, 170);
+  mHTkDMCPositionY = new TH1D("hTkDMCPositionY", "TkD MC y ", 100, -170, 170);
+  mHTkDMCMomentumT = new TH1D("hTkDMCMomentumT", "TkD MC pt ", 100, 0, 100);
+  mHTkDMCMomentumZ = new TH1D("hTkDMCMomentumZ", "TkD MC pz ", 100, 0, 300);
+  mHTkDRecPositionX = new TH1D("hTkDRecPositionX", "TkU Recon x ", 100, -170, 170);
+  mHTkDRecPositionY = new TH1D("hTkDRecPositionY", "TkU Recon y ", 100, -170, 170);
+  mHTkDRecMomentumT = new TH1D("hTkDRecMomentumT", "TkU Recon pt ", 100, 0, 100);
+  mHTkDRecMomentumZ = new TH1D("hTkDRecMomentumZ", "TkU Recon pz ", 100, -300, 300);
   mHTkDPositionResidualsX = new TH1D("hTkDPositionResidualsX", "TkD x Residuals", 100, -5, 5);
   mHTkDPositionResidualsY = new TH1D("hTkDPositionResidualsY", "TkD y Residuals", 100, -5, 5);
   mHTkDMomentumResidualsT = new TH1D("hTkDMomentumResidualsT", "TkD pt Residuals", 100, -20, 20);
@@ -140,9 +173,10 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   double tku_ptmc = sqrt(tku_ref_hit->GetMomentum().x()*tku_ref_hit->GetMomentum().x() +
                          tku_ref_hit->GetMomentum().y()*tku_ref_hit->GetMomentum().y());
   double tku_ptrec = 0.3*mBfield*tku_trk->get_R(); // 0.3 comes from mom being in MeV and rad in mm
-
   double tku_dpt = tku_ptrec - tku_ptmc;
-  double tku_dpz = (tku_ptrec / tku_trk->get_dsdz()) + tku_ref_hit->GetMomentum().z();
+
+  double tku_pzrec = tku_ptrec / tku_trk->get_dsdz();
+  double tku_dpz =  tku_pzrec + tku_ref_hit->GetMomentum().z();
 
   double tkd_dx = tkd_x - tkd_ref_hit->GetPosition().x();
   double tkd_dy = tkd_y - tkd_ref_hit->GetPosition().y();
@@ -150,15 +184,36 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   double tkd_ptmc = sqrt(tkd_ref_hit->GetMomentum().x()*tkd_ref_hit->GetMomentum().x() +
                          tkd_ref_hit->GetMomentum().y()*tkd_ref_hit->GetMomentum().y());
   double tkd_ptrec = 0.3*mBfield*tkd_trk->get_R(); // 0.3 comes from mom being in MeV and rad in mm
-
   double tkd_dpt = tkd_ptrec - tkd_ptmc;
-  double tkd_dpz = (tkd_ptrec / tkd_trk->get_dsdz()) + tkd_ref_hit->GetMomentum().z();
+
+  double tkd_pzrec = tkd_ptrec / tkd_trk->get_dsdz();
+  double tkd_dpz = tkd_pzrec + tkd_ref_hit->GetMomentum().z();
 
   // Fill the histograms
+  mHTkUMCPositionX->Fill(tku_ref_hit->GetPosition().x());
+  mHTkUMCPositionY->Fill(tku_ref_hit->GetPosition().y());
+  mHTkUMCMomentumT->Fill(tku_ptmc);
+  mHTkUMCMomentumZ->Fill(tku_ref_hit->GetMomentum().z());
+
+  mHTkURecPositionX->Fill(tku_x);
+  mHTkURecPositionY->Fill(tku_y);
+  mHTkURecMomentumT->Fill(tku_ptrec);
+  mHTkURecMomentumZ->Fill(tku_pzrec);
+
   mHTkUPositionResidualsX->Fill(tku_dx);
   mHTkUPositionResidualsY->Fill(tku_dy);
   mHTkUMomentumResidualsT->Fill(tku_dpt);
   mHTkUMomentumResidualsZ->Fill(tku_dpz);
+
+  mHTkDMCPositionX->Fill(tkd_ref_hit->GetPosition().x());
+  mHTkDMCPositionY->Fill(tkd_ref_hit->GetPosition().y());
+  mHTkDMCMomentumT->Fill(tkd_ptmc);
+  mHTkDMCMomentumZ->Fill(tkd_ref_hit->GetMomentum().z());
+
+  mHTkDRecPositionX->Fill(tkd_x);
+  mHTkDRecPositionY->Fill(tkd_y);
+  mHTkDRecMomentumT->Fill(tkd_ptrec);
+  mHTkDRecMomentumZ->Fill(tkd_pzrec);
 
   mHTkDPositionResidualsX->Fill(tkd_dx);
   mHTkDPositionResidualsY->Fill(tkd_dy);
@@ -171,7 +226,49 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
 void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   GetStyle()->SetOptStat(111111);
 
-  // Draw with a linear scale
+  // Draw the MC distribution
+  TVirtualPad* padMC = new TCanvas();
+  padMC->cd();
+  padMC->Divide(4, 2);
+  padMC->cd(1);
+  mHTkUMCPositionX->Draw();
+  padMC->cd(2);
+  mHTkUMCPositionY->Draw();
+  padMC->cd(3);
+  mHTkUMCMomentumT->Draw();
+  padMC->cd(4);
+  mHTkUMCMomentumZ->Draw();
+  padMC->cd(5);
+  mHTkDMCPositionX->Draw();
+  padMC->cd(6);
+  mHTkDMCPositionY->Draw();
+  padMC->cd(7);
+  mHTkDMCMomentumT->Draw();
+  padMC->cd(8);
+  mHTkDMCMomentumZ->Draw();
+
+  // Draw the Recon distribution
+  TVirtualPad* padRec = new TCanvas();
+  padRec->cd();
+  padRec->Divide(4, 2);
+  padRec->cd(1);
+  mHTkURecPositionX->Draw();
+  padRec->cd(2);
+  mHTkURecPositionY->Draw();
+  padRec->cd(3);
+  mHTkURecMomentumT->Draw();
+  padRec->cd(4);
+  mHTkURecMomentumZ->Draw();
+  padRec->cd(5);
+  mHTkDRecPositionX->Draw();
+  padRec->cd(6);
+  mHTkDRecPositionY->Draw();
+  padRec->cd(7);
+  mHTkDRecMomentumT->Draw();
+  padRec->cd(8);
+  mHTkDRecMomentumZ->Draw();
+
+  // Draw the residuals with a linear scale
   aPad->cd();
   aPad->Divide(4, 2);
   aPad->cd(1);
@@ -191,7 +288,7 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   aPad->cd(8);
   mHTkDMomentumResidualsZ->Draw();
 
-  // Draw with a log scale
+  // Draw the residuals with a log scale
   TVirtualPad* pad2 = new TCanvas();
   pad2->Divide(4, 2);
   pad2->cd(1);
@@ -219,6 +316,8 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   pad2->GetPad(8)->SetLogy(1);
   mHTkDMomentumResidualsZ->Draw();
 
+  AddPad(padMC);
+  AddPad(padRec);
   AddPad(aPad);
   AddPad(pad2);
 }

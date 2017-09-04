@@ -32,10 +32,30 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
   private:
     const double mBfield = 3.0;
 
+    TH1D* mHTkUMCPositionX;
+    TH1D* mHTkUMCPositionY;
+    TH1D* mHTkUMCMomentumT;
+    TH1D* mHTkUMCMomentumZ;
+
+    TH1D* mHTkURecPositionX;
+    TH1D* mHTkURecPositionY;
+    TH1D* mHTkURecMomentumT;
+    TH1D* mHTkURecMomentumZ;
+
     TH1D* mHTkUPositionResidualsX;
     TH1D* mHTkUPositionResidualsY;
     TH1D* mHTkUMomentumResidualsT;
     TH1D* mHTkUMomentumResidualsZ;
+
+    TH1D* mHTkDMCPositionX;
+    TH1D* mHTkDMCPositionY;
+    TH1D* mHTkDMCMomentumT;
+    TH1D* mHTkDMCMomentumZ;
+
+    TH1D* mHTkDRecPositionX;
+    TH1D* mHTkDRecPositionY;
+    TH1D* mHTkDRecMomentumT;
+    TH1D* mHTkDRecMomentumZ;
 
     TH1D* mHTkDPositionResidualsX;
     TH1D* mHTkDPositionResidualsY;
