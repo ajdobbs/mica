@@ -8,6 +8,7 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <memory>
 
 // ROOT headers
 #include "TROOT.h"
@@ -123,13 +124,18 @@ int main(int argc, char *argv[]) {
 
   // Plot the results
   std::vector<TVirtualPad*> pads;
+  std::vector<std::shared_ptr<TStyle> > styles;
   for (auto an : analysers) {
     an->Draw();
     auto new_pads = an->GetPads();
     pads.insert(std::end(pads), std::begin(new_pads), std::end(new_pads));
+    for (size_t i = 0; i < new_pads.size(); ++i) {
+      styles.push_back(an->GetStyle());
+    }
   }
   std::cout << "Found " << pads.size() << " canvases, saving to pdf." << std::endl;
   for (size_t i = 0; i < pads.size(); ++i) {
+    if (styles[i]) styles[i]->cd();
     pads[i]->Update();
     if (i == 0) {
       pads[i]->SaveAs((outfile + "(").c_str(), "pdf");

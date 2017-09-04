@@ -57,6 +57,7 @@ bool AnalyserTrackerPRSeedResidual::analyse(MAUS::ReconEvent* const aReconEvent,
 }
 
 void AnalyserTrackerPRSeedResidual::draw(TVirtualPad* aPad) {
+  GetStyle()->SetOptStat(111111);
   aPad->Divide(5, 2);
   for (int i = 0; i < 5; ++i) {
     aPad->cd(i+1);
@@ -68,4 +69,3 @@ void AnalyserTrackerPRSeedResidual::draw(TVirtualPad* aPad) {
   }
 }
 } // ~namespace mica
-

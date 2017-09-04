@@ -2,6 +2,7 @@
 #define ANALYSERBASE_HH
 
 #include <vector>
+#include <memory>
 
 #include "TVirtualPad.h"
 #include "TStyle.h"
@@ -66,7 +67,7 @@ class AnalyserBase {
     /** @brief Set the cuts, only events which pass all the cuts will be processed */
     void SetCuts(std::vector<CutsBase*>& aCuts) { mCuts = aCuts; }
 
-    TStyle* GetStyle() { return mStyle; }
+    std::shared_ptr<TStyle> GetStyle() { return mStyle; }
 
   private:
     /** @brief Apply the cuts held by the mCuts members to the event given as arguments, if they
@@ -80,7 +81,7 @@ class AnalyserBase {
     std::vector<TVirtualPad*> mPads;
     std::vector<CutsBase*> mCuts;
 
-    TStyle* mStyle;
+    std::shared_ptr<TStyle> mStyle;
 };
 } // ~namespace mica
 

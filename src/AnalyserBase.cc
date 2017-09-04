@@ -25,11 +25,11 @@ namespace mica {
 
 AnalyserBase::AnalyserBase() {
   // Do nothing
-  mStyle = new TStyle(*gStyle);
+  mStyle = std::make_shared<TStyle>(*gStyle);
 }
 
 AnalyserBase::~AnalyserBase() {
-  if (mStyle) delete mStyle;
+  // if (mStyle) delete mStyle;
 }
 
 bool AnalyserBase::ApplyCuts(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) {

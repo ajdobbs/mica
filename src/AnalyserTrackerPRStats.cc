@@ -57,6 +57,7 @@ bool AnalyserTrackerPRStats::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::
 }
 
 void AnalyserTrackerPRStats::draw(TVirtualPad* aPad) {
+  GetStyle()->SetOptStat(111111);
   aPad->Divide(4, 2);
 
   aPad->cd(1);
@@ -84,4 +85,3 @@ void AnalyserTrackerPRStats::draw(TVirtualPad* aPad) {
   mHSZChiSqTKD->Draw();
 }
 } // ~namespace mica
-
