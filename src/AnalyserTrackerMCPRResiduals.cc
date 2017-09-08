@@ -43,6 +43,8 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
                                                                mHTkUPositionResidualsY{nullptr},
                                                                mHTkUMomentumResidualsT{nullptr},
                                                                mHTkUMomentumResidualsZ{nullptr},
+                                                               mHTkUPtResPt{nullptr},
+                                                               mHTkUPzResPt{nullptr},
                                                                mHTkDMCPositionX{nullptr},
                                                                mHTkDMCPositionY{nullptr},
                                                                mHTkDMCMomentumT{nullptr},
@@ -54,7 +56,9 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
                                                                mHTkDPositionResidualsX{nullptr},
                                                                mHTkDPositionResidualsY{nullptr},
                                                                mHTkDMomentumResidualsT{nullptr},
-                                                               mHTkDMomentumResidualsZ{nullptr}  {
+                                                               mHTkDMomentumResidualsZ{nullptr},
+                                                               mHTkDPtResPt{nullptr},
+                                                               mHTkDPzResPt{nullptr}   {
   mHTkUMCPositionX = new TH1D("hTkUMCPositionX", "TkU MC x ", 100, -170, 170);
   mHTkUMCPositionY = new TH1D("hTkUMCPositionY", "TkU MC y ", 100, -170, 170);
   mHTkUMCMomentumT = new TH1D("hTkUMCMomentumT", "TkU MC pt ", 100, 0, 100);
@@ -67,6 +71,8 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
   mHTkUPositionResidualsY = new TH1D("hTkUPositionResidualsY", "TkU y Residuals", 100, -5, 5);
   mHTkUMomentumResidualsT = new TH1D("hTkUMomentumResidualsT", "TkU pt Residuals", 100, -20, 20);
   mHTkUMomentumResidualsZ = new TH1D("hTkUMomentumResidualsZ", "TkU pz Residuals", 100, -50, 200);
+  mHTkUPtResPt = new TH2D("hTkUPtResPt", "TkU pt residuals vs ptmc", 100, 0, 100, 100, -20, 20);
+  mHTkUPzResPt = new TH2D("hTkUPzResPt", "TkU pz residuals vs ptmc", 100, 0, 100, 100, -300, 300);
 
   mHTkDMCPositionX = new TH1D("hTkDMCPositionX", "TkD MC x ", 100, -170, 170);
   mHTkDMCPositionY = new TH1D("hTkDMCPositionY", "TkD MC y ", 100, -170, 170);
@@ -80,6 +86,9 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
   mHTkDPositionResidualsY = new TH1D("hTkDPositionResidualsY", "TkD y Residuals", 100, -5, 5);
   mHTkDMomentumResidualsT = new TH1D("hTkDMomentumResidualsT", "TkD pt Residuals", 100, -20, 20);
   mHTkDMomentumResidualsZ = new TH1D("hTkDMomentumResidualsZ", "TkD pz Residuals", 100, -50, 200);
+
+  mHTkDPtResPt = new TH2D("hTkDPtResPt", "TkD pt residuals vs ptmc", 100, 0, 100, 100, -20, 20);
+  mHTkDPzResPt = new TH2D("hTkDPzResPt", "TkD pz residuals vs ptmc", 100, 0, 100, 100, -300, 300);
 }
 
 bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
@@ -185,6 +194,7 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   double tkd_pzrec = tkd_ptrec / tkd_trk->get_dsdz();
   double tkd_dpz = tkd_pzrec + tkd_ref_hit->GetMomentum().z();
 
+
   // Fill the histograms
   mHTkUMCPositionX->Fill(tku_ref_hit->GetPosition().x());
   mHTkUMCPositionY->Fill(tku_ref_hit->GetPosition().y());
@@ -201,6 +211,9 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   mHTkUMomentumResidualsT->Fill(tku_dpt);
   mHTkUMomentumResidualsZ->Fill(tku_dpz);
 
+  mHTkUPtResPt->Fill(tku_ptmc, tku_dpt);
+  mHTkUPzResPt->Fill(tku_ptmc, tku_dpz);
+
   mHTkDMCPositionX->Fill(tkd_ref_hit->GetPosition().x());
   mHTkDMCPositionY->Fill(tkd_ref_hit->GetPosition().y());
   mHTkDMCMomentumT->Fill(tkd_ptmc);
@@ -215,6 +228,9 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   mHTkDPositionResidualsY->Fill(tkd_dy);
   mHTkDMomentumResidualsT->Fill(tkd_dpt);
   mHTkDMomentumResidualsZ->Fill(tkd_dpz);
+
+  mHTkDPtResPt->Fill(tkd_ptmc, tkd_dpt);
+  mHTkDPzResPt->Fill(tkd_ptmc, tkd_dpz);
 
   return true;
 }
@@ -312,9 +328,23 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   pad2->GetPad(8)->SetLogy(1);
   mHTkDMomentumResidualsZ->Draw();
 
+  // Draw the graphs
+  TVirtualPad* pad2d = new TCanvas();
+  pad2d->Divide(2, 2);
+
+  pad2d->cd(1);
+  mHTkUPtResPt->Draw("COLZ");
+  pad2d->cd(2);
+  mHTkUPzResPt->Draw("COLZ");
+  pad2d->cd(3);
+  mHTkDPtResPt->Draw("COLZ");
+  pad2d->cd(4);
+  mHTkDPzResPt->Draw("COLZ");
+
   AddPad(padMC);
   AddPad(padRec);
   AddPad(aPad);
   AddPad(pad2);
+  AddPad(pad2d);
 }
 } // ~namespace mica

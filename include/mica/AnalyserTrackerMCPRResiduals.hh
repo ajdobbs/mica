@@ -9,8 +9,6 @@
 #include "mica/AnalyserTrackerMC.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 
-
-
 namespace mica {
 
 /** @class AnalyserTrackerMCPRResiduals
@@ -47,6 +45,9 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
     TH1D* mHTkUMomentumResidualsT;
     TH1D* mHTkUMomentumResidualsZ;
 
+    TH2D* mHTkUPtResPt;
+    TH2D* mHTkUPzResPt;
+
     TH1D* mHTkDMCPositionX;
     TH1D* mHTkDMCPositionY;
     TH1D* mHTkDMCMomentumT;
@@ -61,6 +62,9 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
     TH1D* mHTkDPositionResidualsY;
     TH1D* mHTkDMomentumResidualsT;
     TH1D* mHTkDMomentumResidualsZ;
+
+    TH2D* mHTkDPtResPt;
+    TH2D* mHTkDPzResPt;
 };
 } // ~namespace mica
 
