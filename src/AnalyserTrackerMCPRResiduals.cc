@@ -133,10 +133,6 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
     }
   }
 
-  // std::cout << "TkU Rec tracks: " << nTkURecTracks << ", TkD Rec tracks: " << nTkDRecTracks
-  //           << "TkU MC tracks: " << GetMCDataTkU().size() << ", TkD MC tracks: "
-  //           << GetMCDataTkD().size() << std::endl;
-
   // Require 1 recon track in each tracker
   if (nTkURecTracks != 1 || nTkDRecTracks != 1) {
     return false;
@@ -153,8 +149,8 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   double tku_y = 0.0;
   for (auto sp : tku_trk->get_spacepoints_pointers()) {
     if (sp->get_station() == 1) {
-      tku_x = sp->get_position().x();
-      tku_y = sp->get_position().y();
+      tku_x = sp->get_global_position().x();
+      tku_y = sp->get_global_position().y();
     }
   }
 
@@ -162,8 +158,8 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   double tkd_y = 0.0;
   for (auto sp : tkd_trk->get_spacepoints_pointers()) {
     if (sp->get_station() == 1) {
-      tkd_x = sp->get_position().x();
-      tkd_y = sp->get_position().y();
+      tkd_x = sp->get_global_position().x();
+      tkd_y = sp->get_global_position().y();
     }
   }
 
