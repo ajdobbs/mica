@@ -163,7 +163,7 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
     }
   }
 
-  double tku_dx = tku_x + tku_ref_hit->GetPosition().x();
+  double tku_dx = tku_x - tku_ref_hit->GetPosition().x();
   double tku_dy = tku_y - tku_ref_hit->GetPosition().y();
 
   double tku_ptmc = sqrt(tku_ref_hit->GetMomentum().x()*tku_ref_hit->GetMomentum().x() +
