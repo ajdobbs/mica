@@ -73,7 +73,7 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
   mHTkUPositionResidualsY = new TH1D("hTkUPositionResidualsY", "TkU y Residuals", 100, -5, 5);
   mHTkUMomentumResidualsT = new TH1D("hTkUMomentumResidualsT", "TkU pt Residuals", 100, -20, 20);
   mHTkUMomentumResidualsZ = new TH1D("hTkUMomentumResidualsZ", "TkU pz Residuals", 100, -50, 200);
-  mHTkUNTurnsResiduals = new TH1D("hTkUNTurnsResiduals", "TkU n turns Residuals", 10, -5, 5);
+  mHTkUNTurnsResiduals = new TH1D("hTkUNTurnsResiduals", "TkU n turns Residuals", 200, -25, 25);
   mHTkUPtResPt = new TH2D("hTkUPtResPt", "TkU pt residuals vs ptmc", 100, 0, 100, 100, -20, 20);
   mHTkUPzResPt = new TH2D("hTkUPzResPt", "TkU pz residuals vs ptmc", 100, 0, 100, 100, -300, 300);
 
@@ -89,7 +89,7 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
   mHTkDPositionResidualsY = new TH1D("hTkDPositionResidualsY", "TkD y Residuals", 100, -5, 5);
   mHTkDMomentumResidualsT = new TH1D("hTkDMomentumResidualsT", "TkD pt Residuals", 100, -20, 20);
   mHTkDMomentumResidualsZ = new TH1D("hTkDMomentumResidualsZ", "TkD pz Residuals", 100, -50, 200);
-  mHTkDNTurnsResiduals = new TH1D("hTkDNTurnsResiduals", "TkU n turns Residuals", 10, -5, 5);
+  mHTkDNTurnsResiduals = new TH1D("hTkDNTurnsResiduals", "TkU n turns Residuals", 200, -25, 25);
 
   mHTkDPtResPt = new TH2D("hTkDPtResPt", "TkD pt residuals vs ptmc", 100, 0, 100, 100, -20, 20);
   mHTkDPzResPt = new TH2D("hTkDPzResPt", "TkD pz residuals vs ptmc", 100, 0, 100, 100, -300, 300);
@@ -203,6 +203,7 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
                        * ((1.0/tku_pzrec)+(1.0/tku_ref_hit->GetMomentum().z()));
   double tkd_dnturns = ((0.3*mBfield*1100.0) / (2*pi))
                        * ((1.0/tkd_pzrec)+(1.0/tkd_ref_hit->GetMomentum().z()));
+  std::cerr << tku_dnturns << " " << tkd_dnturns << std::endl;
 
 
   // Fill the histograms
@@ -315,34 +316,44 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   mHTkDMomentumResidualsZ->Draw();
 
   // Draw the residuals with a log scale
-  TVirtualPad* pad2 = new TCanvas();
-  pad2->Divide(4, 2);
-  pad2->cd(1);
-  pad2->GetPad(1)->SetLogy(1);
+  TVirtualPad* padResidualsLog = new TCanvas();
+  padResidualsLog->Divide(4, 2);
+  padResidualsLog->cd(1);
+  padResidualsLog->GetPad(1)->SetLogy(1);
   mHTkUPositionResidualsX->Draw();
-  pad2->cd(2);
-  pad2->GetPad(2)->SetLogy(1);
+  padResidualsLog->cd(2);
+  padResidualsLog->GetPad(2)->SetLogy(1);
   mHTkUPositionResidualsY->Draw();
-  pad2->cd(3);
-  pad2->GetPad(3)->SetLogy(1);
+  padResidualsLog->cd(3);
+  padResidualsLog->GetPad(3)->SetLogy(1);
   mHTkUMomentumResidualsT->Draw();
-  pad2->cd(4);
-  pad2->GetPad(4)->SetLogy(1);
+  padResidualsLog->cd(4);
+  padResidualsLog->GetPad(4)->SetLogy(1);
   mHTkUMomentumResidualsZ->Draw();
-  pad2->cd(5);
-  pad2->GetPad(5)->SetLogy(1);
+  padResidualsLog->cd(5);
+  padResidualsLog->GetPad(5)->SetLogy(1);
   mHTkDPositionResidualsX->Draw();
-  pad2->cd(6);
-  pad2->GetPad(6)->SetLogy(1);
+  padResidualsLog->cd(6);
+  padResidualsLog->GetPad(6)->SetLogy(1);
   mHTkDPositionResidualsY->Draw();
-  pad2->cd(7);
-  pad2->GetPad(7)->SetLogy(1);
+  padResidualsLog->cd(7);
+  padResidualsLog->GetPad(7)->SetLogy(1);
   mHTkDMomentumResidualsT->Draw();
-  pad2->cd(8);
-  pad2->GetPad(8)->SetLogy(1);
+  padResidualsLog->cd(8);
+  padResidualsLog->GetPad(8)->SetLogy(1);
   mHTkDMomentumResidualsZ->Draw();
 
-  // Draw the graphs
+  // Draw the nturns residuals
+  TVirtualPad* padNTurns = new TCanvas();
+  padNTurns->Divide(2);
+  padNTurns->cd(1);
+  padNTurns->GetPad(1)->SetLogy(1);
+  mHTkUNTurnsResiduals->Draw();
+  padNTurns->cd(2);
+  padNTurns->GetPad(2)->SetLogy(1);
+  mHTkDNTurnsResiduals->Draw();
+
+  // Draw the 2D histograms
   TVirtualPad* pad2d = new TCanvas();
   pad2d->Divide(2, 2);
 
@@ -358,7 +369,8 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   AddPad(padMC);
   AddPad(padRec);
   AddPad(aPad);
-  AddPad(pad2);
+  AddPad(padResidualsLog);
+  AddPad(padNTurns);
   AddPad(pad2d);
 }
 } // ~namespace mica
