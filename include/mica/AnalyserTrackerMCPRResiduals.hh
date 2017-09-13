@@ -45,8 +45,6 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
     TH1D* mHTkUMomentumResidualsT;
     TH1D* mHTkUMomentumResidualsZ;
 
-    TH1D* mHTkUNTurnsResiduals;
-
     TH2D* mHTkUPtResPt;
     TH2D* mHTkUPzResPt;
 
@@ -64,8 +62,6 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
     TH1D* mHTkDPositionResidualsY;
     TH1D* mHTkDMomentumResidualsT;
     TH1D* mHTkDMomentumResidualsZ;
-
-    TH1D* mHTkDNTurnsResiduals;
 
     TH2D* mHTkDPtResPt;
     TH2D* mHTkDPzResPt;
