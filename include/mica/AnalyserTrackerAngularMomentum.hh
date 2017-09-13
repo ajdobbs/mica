@@ -1,3 +1,7 @@
+/* This file is part of the MICA (Muon Ionization Cooling Analysis) package.
+ * Author: A. Dobbs
+ */
+
 #ifndef ANALYSERTRACKERANGULARMOMENTUM_HH
 #define ANALYSERTRACKERANGULARMOMENTUM_HH
 

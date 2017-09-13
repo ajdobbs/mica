@@ -1,3 +1,7 @@
+/* This file is part of the MICA (Muon Ionization Cooling Analysis) package.
+ * Author: A. Dobbs
+ */
+
 #ifndef ANALYSERTRACKERPRSTATS_HH
 #define ANALYSERTRACKERPRSTATS_HH
 

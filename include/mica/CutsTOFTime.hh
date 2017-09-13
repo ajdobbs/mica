@@ -1,10 +1,13 @@
+/* This file is part of the MICA (Muon Ionization Cooling Analysis) package.
+ * Author: A. Dobbs
+ */
+
 #ifndef CUTSTOFTIME_HH
 #define CUTSTOFTIME_HH
 
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "mica/CutsBase.hh"
-
 
 namespace mica {
 
