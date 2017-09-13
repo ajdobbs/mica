@@ -15,7 +15,6 @@
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "mica/CutsBase.hh"
 
-
 namespace mica {
 
 /** @class AnalyserBase
@@ -24,9 +23,7 @@ namespace mica {
  *    Draw and Analyse. Applies any cuts selected prior to passing events
  *    to daughter routines.
  *  @author A. Dobbs
- *  @var mCuts The cuts to apply before admitting an event for analysis
  */
-
 class AnalyserBase {
   public:
     AnalyserBase();
@@ -39,7 +36,11 @@ class AnalyserBase {
      */
     bool Analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
-    /** @brief Analyse the given event, to be overidden by concrete daughter classes */
+    /** @brief Analyse the given event, to be overidden by concrete daughter classes
+     *  @param aReconEvent The recon event
+     *  @param aMCEvent The corresponding MC event
+     *  @return Boolean indicating if the cuts passed and the analysis happened
+     */
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) = 0;
 
     /** @brief Check to see if a valid pad has been supplied, if not make a new one,
@@ -71,6 +72,10 @@ class AnalyserBase {
     /** @brief Set the cuts, only events which pass all the cuts will be processed */
     void SetCuts(std::vector<CutsBase*>& aCuts) { mCuts = aCuts; }
 
+    /** @brief Return a pointer to the ROOT TStyle used
+      * to set the plotting style for this analyser
+      * @return pointer to the ROOT TStyle for this analyser
+      */
     std::shared_ptr<TStyle> GetStyle() { return mStyle; }
 
   private:
@@ -82,10 +87,9 @@ class AnalyserBase {
      */
     bool ApplyCuts(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
-    std::vector<TVirtualPad*> mPads;
-    std::vector<CutsBase*> mCuts;
-
-    std::shared_ptr<TStyle> mStyle;
+    std::vector<TVirtualPad*> mPads; ///< The canvas upon which the plots are drawn
+    std::vector<CutsBase*> mCuts; ///< The cuts to apply before admitting an event for analysis
+    std::shared_ptr<TStyle> mStyle; ///< The ROOT TStyle to be applied to the canvases
 };
 } // ~namespace mica
 

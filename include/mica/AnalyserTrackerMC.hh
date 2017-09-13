@@ -16,7 +16,6 @@
 #include "mica/AnalyserBase.hh"
 #include "src/common_cpp/Recon/SciFi/SciFiLookup.hh"
 
-
 namespace mica {
 
 /** @struct MCTrackData
@@ -24,16 +23,17 @@ namespace mica {
  *  @author A. Dobbs
  */
 struct MCTrackData {
-  int tracker;
-  int track_id;
-  int pid;
-  double energy;
-  MAUS::ThreeVector pos;
-  MAUS::ThreeVector mom;
-  std::vector<int> stations_hit;
+  int tracker; ///< The tracker number, 0 = TkU, 1 = TkD
+  int track_id; ///< The track id number
+  int pid; ///< The PGD particle id
+  double energy; ///< The track energy at the analysis plane
+  MAUS::ThreeVector pos; ///< The track position at the analysis plane
+  MAUS::ThreeVector mom; ///< The track momentum at the analysis plane
+  std::vector<int> stations_hit; ///< The tracker stations the track created hits in
 };
 
-/** @class AnalyserTrackerMCP Analyser class which calculates tracker data using MC info.
+/** @class AnalyserTrackerMC
+ *         Analyser class which calculates tracker data using MC info.
  *         Daughter classes then use that data for actual analysis. The data produced is held in
  *         MCTrackData members for TkU and TkD separately.
  *  @author A. Dobbs
@@ -97,13 +97,13 @@ class AnalyserTrackerMC : public AnalyserBase {
         std::map<int, std::vector<MAUS::SciFiHit*> >& hit_map, int aNPlanes);
 
   private:
-    int mRefStation; /// Reference surface to use
-    int mRefPlane;   /// Reference plane to use
-    int mNStations;  /// # of stations hit for event to be classed as reconstructible
-    int mNPlanes;    /// # of planes hit per station hit for event to be classed as reconstructible
-    std::vector<MCTrackData*> mMCDataTkU; /// AnalyserTrackerMC owns the memory
-    std::vector<MCTrackData*> mMCDataTkD; /// AnalyserTrackerMC owns the memory
-    MAUS::SciFiLookup* mLookup;                 /// AnalyserTrackerMC owns the memory
+    int mRefStation; ///< Reference surface to use
+    int mRefPlane;   ///< Reference plane to use
+    int mNStations;  ///< # of stations hit for event to be classed as reconstructible
+    int mNPlanes;    ///< # of planes hit per station hit for event to be classed as reconstructible
+    std::vector<MCTrackData*> mMCDataTkU; ///< MC data for TkU, AnalyserTrackerMC owns the memory
+    std::vector<MCTrackData*> mMCDataTkD; ///< MC data for TkD, AnalyserTrackerMC owns the memory
+    MAUS::SciFiLookup* mLookup;           ///< The Lookup table, AnalyserTrackerMC owns the memory
 
     /** @brief Populate the mMCData members
      *  @param[in] aMCEvent MAUS::MCEvent to analyse

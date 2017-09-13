@@ -10,14 +10,18 @@
 
 namespace mica {
 
+/** @class CutsBase
+ *         Base class for cuts, main Cut method returns true if event passes cut, false otherwise
+ *  @author A. Dobbs
+ */
 class CutsBase {
   public:
     CutsBase() {}
     virtual ~CutsBase() {}
 
+    /** @brief Apply the cut to the event, return true if passed, false if not */
     virtual bool Cut(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) = 0;
 };
 } // ~namespace mica
-
 
 #endif

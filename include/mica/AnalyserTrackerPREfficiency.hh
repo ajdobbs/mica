@@ -17,37 +17,13 @@
 #include "src/common_cpp/DataStructure/TOFEvent.hh"
 #include "mica/AnalyserBase.hh"
 
-
 namespace mica {
 
 /** @class AnalyserTrackerPREfficiency
  *         Analyser class which produces tracker pattern recognition
  *         efficiency results, uses reconstrcuted data only (no MC)
  *  @author A. Dobbs
- *  @var mCheckTOF Should we check time-of-flight between TOF1 and TOF2. Requires 1 and only 1
- *       spacepoint in both TOF1 and TOF2, so if set to true it will override mCheckTOFSpacePoints.
- *  @var mCheckTOFSpacePoints Should we check there is 1 and only 1 spacepoint in both TOF1 and
- *       TOF2? mCheckTOF being set to true will override this flag, & force it to be a requirement.
- *  @var mAllowMultiHitStations Should we allow non-deal events to be considered, that is, events
- *       with more than one spacepoint per tracker station for a given tracker. Even when set to
- *       true we still require there not be enough spacepoints present to form two distinct tracks.
- *  @var mCheckTkU Should we check TkU criteria at all, or just pass the event as good? May want
- *       to ignore TkU if we wanted to just check TkD for example.
- *  @var mCheckTkD Should we check TkD criteria at all, or just pass the event as good? May want
- *       to ignore TkD if we wanted to just check TkU for example.
- *  @var mNEvents Counter, number of events analysed
- *  @var mTkUGoodEvents Counter, number of events where we expect a track in TkU
- *  @var mTkU5ptTracks Counter, number of 5pt tracks actually reconstructed in TkU
- *  @var mTkU4to5ptTracks Counter, number of 4 or 5pt tracks actually reconstructed in TkU
- *  @var mTkDGoodEvents Counter, number of events where we expect a track in TkD
- *  @var mTkD5ptTracks Counter, number of 5pt tracks actually reconstructed in TkD
- *  @var mTkD4to5ptTracks Counter, number of 4 or 5pt tracks actually reconstructed in TkD
- *  @var mLowerTimeCut Minimum time-of-flight between TOF1 and TOF2 for event to be classed as good,
- *       if mCheckTOF is set true
- *  @var mUpperTimeCut Maximum time-of-flight between TOF1 and TOF2 for event to be classed as good,
- *       if mCheckTOF is set true
  */
-
 class AnalyserTrackerPREfficiency : public AnalyserBase {
   public:
     AnalyserTrackerPREfficiency();
@@ -55,46 +31,71 @@ class AnalyserTrackerPREfficiency : public AnalyserBase {
 
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
+    /** @brief Reset the internal counter variables to 0 */
     virtual void clear();
 
     virtual void draw(TVirtualPad* aPad);
 
+    /** @brief Return if we are checking time-of-flight between TOF1 and TOF2, overrules
+      * CheckTOFSpacePoints
+      */
     bool GetCheckTOF() const { return mCheckTOF; }
+
+    /** @brief Set if we are checking time-of-flight between TOF1 and TOF2
+     *  CheckTOFSpacePoints
+     */
     void SetCheckTOF(bool aBool) { mCheckTOF = aBool; }
 
+    /** @brief Return if we are checking TOF spacepoint, will be overruled if CheckTOF is true */
     bool GetCheckTOFSpacePoints() const { return mCheckTOFSpacePoints; }
+    /** @brief Set if we are checking TOF spacepoint, will be overruled if CheckTOF is true */
     void SetCheckTOFSpacePoints(bool aBool) { mCheckTOFSpacePoints = aBool; }
 
+    /** @brief Return if we allow non-ideal events to be considered */
     bool GetAllowMultiHitStations() const { return mAllowMultiHitStations; }
+    /** @brief Set if we allow non-ideal events to be considered */
     void SetAllowMultiHitStations(bool aBool) { mAllowMultiHitStations = aBool; }
 
+    /** Return if we are checking TkU criteria at all */
     bool GetCheckTkU() const { return mCheckTkU; }
+    /** Set if we are checking TkU criteria at all */
     void SetCheckTkU(bool aBool) { mCheckTkU = aBool; }
 
+    /** Return if we are checking TkD criteria at all */
     bool GetCheckTkD() const { return mCheckTkD; }
+    /** Set if we are checking TkD criteria at all */
     void SetCheckTkD(bool aBool) { mCheckTkD = aBool; }
 
   private:
-    bool mCheckTOF;
-    bool mCheckTOFSpacePoints;
-    bool mAllowMultiHitStations;
-    bool mCheckTkU;
-    bool mCheckTkD;
+    bool mCheckTOF; ///< Should we check time-of-flight between TOF1 and TOF2. Requires 1 and only 1
+                    ///< spacepoint in both TOF1 and TOF2, so if set to true it will override
+                    ///< mCheckTOFSpacePoints.
+    bool mCheckTOFSpacePoints; ///< Should we check there is 1 and only 1 spacepoint in both TOF1
+                               ///< and TOF2? mCheckTOF being set to true will override this flag,
+                               ///< and force it to be a requirement.
+    bool mAllowMultiHitStations; ///< Should we allow non-ideal events to be considered, that is,
+                                 ///< events with more than one spacepoint per tracker station for
+                                 ///< a given tracker. Even when set to true we still require there
+                                 ///< not be enough spacepoints present to form two distinct tracks.
+    bool mCheckTkU; ///< Should we check TkU criteria at all, or just pass the event as good? May
+                    ///< want to ignore TkU if we wanted to just check TkD for example.
+    bool mCheckTkD; ///< Should we check TkD criteria at all, or just pass the event as good? May
+                    ///< want to ignore TkD if we wanted to just check TkU for example.
 
-    int mNEvents;
+    int mNEvents; ///< Counter, number of events analysed
+    int mTkUGoodEvents; ///< Counter, number of events where we expect a track in TkU
+    int mTkU5ptTracks; ///< Counter, number of 5pt tracks actually reconstructed in TkU
+    int mTkU4to5ptTracks; ///< Counter, number of 4 or 5pt tracks actually reconstructed in TkU
+    int mTkDGoodEvents; ///< Counter, number of events where we expect a track in TkD
+    int mTkD5ptTracks; ///< Counter, number of 5pt tracks actually reconstructed in TkD
+    int mTkD4to5ptTracks; ///< Counter, number of 4 or 5pt tracks actually reconstructed in TkD
 
-    int mTkUGoodEvents;
-    int mTkU5ptTracks;
-    int mTkU4to5ptTracks;
+    double mLowerTimeCut; ///< Minimum time-of-flight between TOF1 and TOF2 for event to be classed
+                          ///< as good, if mCheckTOF is set true
+    double mUpperTimeCut; ///< Maximum time-of-flight between TOF1 and TOF2 for event to be classed
+                          ///< as good, if mCheckTOF is set true
 
-    int mTkDGoodEvents;
-    int mTkD5ptTracks;
-    int mTkD4to5ptTracks;
-
-    double mLowerTimeCut;
-    double mUpperTimeCut;
-
-    ofstream mOf1;
+    ofstream mOf1; ///< output filestream for efficiency data
 
     /** @brief Check a tracker to see if a single track is expected. Set the input bools to
      *         say whether a 4pt track or a 5pt track are expected.
