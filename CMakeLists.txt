@@ -28,7 +28,8 @@ add_library(MicaCore SHARED src/AnalyserBase.cc
                         src/AnalyserTrackerPRStats.cc
                         src/AnalyserTrackerSpacePoints.cc
                         src/AnalyserTrackerSpacePointSearch.cc
-                        src/AnalyserTrackerSpacePointSearchStation.cc)
+                        src/AnalyserTrackerSpacePointSearchStation.cc
+                        src/AnalyserTrackerChannelHits.cc)
 target_link_libraries(MicaCore ${ROOT_LIBRARIES} MausCpp)
 
 # Build the MICA app

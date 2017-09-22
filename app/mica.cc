@@ -33,10 +33,14 @@
 #include "mica/AnalyserTrackerPREfficiency.hh"
 #include "mica/AnalyserTrackerMCPurity.hh"
 #include "mica/AnalyserTrackerMCPRResiduals.hh"
+#include "mica/AnalyserTrackerChannelHits.hh"
 
 int main(int argc, char *argv[]) {
   // Instantiate the analysers
   std::vector<mica::AnalyserBase*> analysers;
+
+  mica::AnalyserTrackerChannelHits* anlCH = new mica::AnalyserTrackerChannelHits();
+  analysers.push_back(anlCH);
 
   mica::AnalyserTrackerSpacePoints* anlTSP = new mica::AnalyserTrackerSpacePoints();
   analysers.push_back(anlTSP);
@@ -60,7 +64,7 @@ int main(int argc, char *argv[]) {
   analysers.push_back(anlMCPRR);
 
   mica::AnalyserTrackerPREfficiency* anlPRE = new mica::AnalyserTrackerPREfficiency();
-  anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
+   anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
   analysers.push_back(anlPRE);
 
   // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
