@@ -38,6 +38,10 @@ class AnalyserTrackerSpacePoints : public AnalyserBase {
     TH2D* mHXYTKD; ///< xy plot for TkD (over all stations)
     std::vector<std::unique_ptr<TH2D> > mXYPerStationTkU; ///< xy plots for TkU, order by station
     std::vector<std::unique_ptr<TH2D> > mXYPerStationTkD; ///< xy plots for TkD, order by station
+    std::vector<std::unique_ptr<TH2D> > mXYPerStationTripletsTkU; ///< xy plots for TkU triplets
+    std::vector<std::unique_ptr<TH2D> > mXYPerStationTripletsTkD; ///< xy plots for TkD triplets
+    std::vector<std::unique_ptr<TH2D> > mXYPerStationDoubletsTkU; ///< xy plots for TkU triplets
+    std::vector<std::unique_ptr<TH2D> > mXYPerStationDoubletsTkD; ///< xy plots for TkD triplets
 };
 } // ~namespace mica
 

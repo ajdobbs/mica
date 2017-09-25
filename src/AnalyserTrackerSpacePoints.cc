@@ -36,13 +36,13 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU{nullptr},
   mHXYTKD->GetXaxis()->SetTitle("x (mm)");
   mHXYTKD->GetYaxis()->SetTitle("y (mm)");
 
-  // Initialise the x-y per station spacepoint plots
+  // Initialise the x-y per station spacepoint plots (for all, triplets only, doublets only)
   for (int iStation = 0; iStation < 5; ++iStation) {
-    std::string title = "Station " + std::to_string(iStation+1);
     std::string name = "S" + std::to_string(iStation+1);
-    std::string tku_title = "TkU XY " + title;
+
+    std::string tku_title = "TkU XY " + name;
     std::string tku_name = "hTkUXY" + name;
-    std::string tkd_title = "TkD XY " + title;
+    std::string tkd_title = "TkD XY " + name;
     std::string tkd_name = "hTkDXY" + name;
     mXYPerStationTkU.push_back(std::unique_ptr<TH2D>(new TH2D(tku_name.c_str(), tku_title.c_str(),
                                                               100, -150, 150, 100, -150, 150)));
@@ -52,6 +52,32 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU{nullptr},
     mXYPerStationTkU[iStation]->GetYaxis()->SetTitle("y (mm)");
     mXYPerStationTkD[iStation]->GetXaxis()->SetTitle("x (mm)");
     mXYPerStationTkD[iStation]->GetYaxis()->SetTitle("y (mm)");
+
+    std::string tku_tri_title = "TkU XY Triplets " + name;
+    std::string tku_tri_name = "hTkUXYTriplets" + name;
+    std::string tkd_tri_title = "TkD XY Triplets " + name;
+    std::string tkd_tri_name = "hTkDXYTriplets" + name;
+    mXYPerStationTripletsTkU.push_back(std::unique_ptr<TH2D>(new TH2D(tku_tri_name.c_str(),
+                                       tku_tri_title.c_str(), 100, -150, 150, 100, -150, 150)));
+    mXYPerStationTripletsTkD.push_back(std::unique_ptr<TH2D>(new TH2D(tkd_tri_name.c_str(),
+                                       tkd_tri_title.c_str(), 100, -150, 150, 100, -150, 150)));
+    mXYPerStationTripletsTkU[iStation]->GetXaxis()->SetTitle("x (mm)");
+    mXYPerStationTripletsTkU[iStation]->GetYaxis()->SetTitle("y (mm)");
+    mXYPerStationTripletsTkD[iStation]->GetXaxis()->SetTitle("x (mm)");
+    mXYPerStationTripletsTkD[iStation]->GetYaxis()->SetTitle("y (mm)");
+
+    std::string tku_dou_title = "TkU XY Doublets " + name;
+    std::string tku_dou_name = "hTkUXYDoublets" + name;
+    std::string tkd_dou_title = "TkD XY Doublets " + name;
+    std::string tkd_dou_name = "hTkDXYDoublets" + name;
+    mXYPerStationDoubletsTkU.push_back(std::unique_ptr<TH2D>(new TH2D(tku_dou_name.c_str(),
+                                       tku_dou_title.c_str(), 100, -150, 150, 100, -150, 150)));
+    mXYPerStationDoubletsTkD.push_back(std::unique_ptr<TH2D>(new TH2D(tkd_dou_name.c_str(),
+                                       tkd_dou_title.c_str(), 100, -150, 150, 100, -150, 150)));
+    mXYPerStationDoubletsTkU[iStation]->GetXaxis()->SetTitle("x (mm)");
+    mXYPerStationDoubletsTkU[iStation]->GetYaxis()->SetTitle("y (mm)");
+    mXYPerStationDoubletsTkD[iStation]->GetXaxis()->SetTitle("x (mm)");
+    mXYPerStationDoubletsTkD[iStation]->GetYaxis()->SetTitle("y (mm)");
   }
 }
 
@@ -71,11 +97,25 @@ bool AnalyserTrackerSpacePoints::analyse(MAUS::ReconEvent* const aReconEvent,
       mHStationNumTKU->Fill(sp->get_station());
       mHXYTKU->Fill(sp->get_position().x(), sp->get_position().y());
       mXYPerStationTkU[sp->get_station() - 1]->Fill(sp->get_position().x(), sp->get_position().y());
+      if (sp->get_channels_pointers().size() == 3) {
+        mXYPerStationTripletsTkU[sp->get_station() - 1]->Fill(sp->get_position().x(),
+                                                              sp->get_position().y());
+      } else if (sp->get_channels_pointers().size() == 2) {
+        mXYPerStationDoubletsTkU[sp->get_station() - 1]->Fill(sp->get_position().x(),
+                                                              sp->get_position().y());
+      }
     } else {
       mHNpeTKD->Fill(sp->get_npe());
       mHStationNumTKD->Fill(sp->get_station());
       mHXYTKD->Fill(sp->get_position().x(), sp->get_position().y());
       mXYPerStationTkD[sp->get_station() - 1]->Fill(sp->get_position().x(), sp->get_position().y());
+      if (sp->get_channels_pointers().size() == 3) {
+        mXYPerStationTripletsTkD[sp->get_station() - 1]->Fill(sp->get_position().x(),
+                                                              sp->get_position().y());
+      } else if (sp->get_channels_pointers().size() == 2) {
+        mXYPerStationDoubletsTkD[sp->get_station() - 1]->Fill(sp->get_position().x(),
+                                                              sp->get_position().y());
+      }
     }
   }
 
@@ -101,17 +141,30 @@ void AnalyserTrackerSpacePoints::draw(TVirtualPad* aPad) {
   // Draw the real space plots per station
   int nStations = 5;
   TVirtualPad* padXY = new TCanvas();
-  padXY->cd();
+  TVirtualPad* padXYTriplets = new TCanvas();
+  TVirtualPad* padXYDoublets = new TCanvas();
   padXY->Divide(nStations, 2);
+  padXYTriplets->Divide(nStations, 2);
+  padXYDoublets->Divide(nStations, 2);
   for (int iStation = 0; iStation < nStations; ++iStation) {
     padXY->cd(iStation+1);
     mXYPerStationTkU[iStation]->Draw("COLZ");
+    padXYTriplets->cd(iStation+1);
+    mXYPerStationTripletsTkU[iStation]->Draw("COLZ");
+    padXYDoublets->cd(iStation+1);
+    mXYPerStationDoubletsTkU[iStation]->Draw("COLZ");
     padXY->cd(nStations+iStation+1);
     mXYPerStationTkD[iStation]->Draw("COLZ");
+    padXYTriplets->cd(nStations+iStation+1);
+    mXYPerStationTripletsTkD[iStation]->Draw("COLZ");
+    padXYDoublets->cd(nStations+iStation+1);
+    mXYPerStationDoubletsTkD[iStation]->Draw("COLZ");
   }
 
   // Add the pads
   AddPad(aPad);
   AddPad(padXY);
+  AddPad(padXYTriplets);
+  AddPad(padXYDoublets);
 }
 } // ~namespace mica
