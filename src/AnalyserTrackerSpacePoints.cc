@@ -18,10 +18,19 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU{nullptr},
                                                            mHXYTKU{nullptr},
                                                            mHXYTKD{nullptr} {
 
+  // Some parameters for the plots
+  int nbins = 100;
+  double xmax = 200.0;
+  double xmin = -200.0;
+  double ymax = 200.0;
+  double ymin = -200.0;
+  std::string xlabel = "x (mm)";
+  std::string ylabel = "y (mm)";
+
   // Initialise the general spacepoint info plots
-  mHNpeTKU = new TH1D("hNpeTKU", "NPE TkU", 100, 0, 200);
+  mHNpeTKU = new TH1D("hNpeTKU", "NPE TkU", nbins, 0, 200);
   mHNpeTKU->GetXaxis()->SetTitle("NPE");
-  mHNpeTKD = new TH1D("hNpeTKD", "NPE TkD", 100, 0, 200);
+  mHNpeTKD = new TH1D("hNpeTKD", "NPE TkD", nbins, 0, 200);
   mHNpeTKD->GetXaxis()->SetTitle("NPE");
 
   mHStationNumTKU = new TH1D("hStationNumTKU", "Station Number TkU", 5, 1, 6);
@@ -29,12 +38,12 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU{nullptr},
   mHStationNumTKD = new TH1D("hStationNumTKD", "Station Number TkD", 5, 1, 6);
   mHStationNumTKD->GetXaxis()->SetTitle("Station Number");
 
-  mHXYTKU = new TH2D("hXYTKU", "Position TkU", 100, -150, 150, 100, -150, 150);
-  mHXYTKU->GetXaxis()->SetTitle("x (mm)");
-  mHXYTKU->GetYaxis()->SetTitle("y (mm)");
-  mHXYTKD = new TH2D("hXYTKD", "Position TkD", 100, -150, 150, 100, -150, 150);
-  mHXYTKD->GetXaxis()->SetTitle("x (mm)");
-  mHXYTKD->GetYaxis()->SetTitle("y (mm)");
+  mHXYTKU = new TH2D("hXYTKU", "Position TkU", nbins, xmin, xmax, nbins, ymin, ymax);
+  mHXYTKU->GetXaxis()->SetTitle(xlabel.c_str());
+  mHXYTKU->GetYaxis()->SetTitle(ylabel.c_str());
+  mHXYTKD = new TH2D("hXYTKD", "Position TkD", nbins, xmin, xmax, nbins, ymin, ymax);
+  mHXYTKD->GetXaxis()->SetTitle(xlabel.c_str());
+  mHXYTKD->GetYaxis()->SetTitle(ylabel.c_str());
 
   // Initialise the x-y per station spacepoint plots (for all, triplets only, doublets only)
   for (int iStation = 0; iStation < 5; ++iStation) {
@@ -45,39 +54,39 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU{nullptr},
     std::string tkd_title = "TkD XY " + name;
     std::string tkd_name = "hTkDXY" + name;
     mXYPerStationTkU.push_back(std::unique_ptr<TH2D>(new TH2D(tku_name.c_str(), tku_title.c_str(),
-                                                              100, -150, 150, 100, -150, 150)));
+        nbins, xmin, xmax, nbins, ymin, ymax)));
     mXYPerStationTkD.push_back(std::unique_ptr<TH2D>(new TH2D(tkd_name.c_str(), tkd_title.c_str(),
-                                                              100, -150, 150, 100, -150, 150)));
-    mXYPerStationTkU[iStation]->GetXaxis()->SetTitle("x (mm)");
-    mXYPerStationTkU[iStation]->GetYaxis()->SetTitle("y (mm)");
-    mXYPerStationTkD[iStation]->GetXaxis()->SetTitle("x (mm)");
-    mXYPerStationTkD[iStation]->GetYaxis()->SetTitle("y (mm)");
+        nbins, xmin, xmax, nbins, ymin, ymax)));
+    mXYPerStationTkU[iStation]->GetXaxis()->SetTitle(xlabel.c_str());
+    mXYPerStationTkU[iStation]->GetYaxis()->SetTitle(ylabel.c_str());
+    mXYPerStationTkD[iStation]->GetXaxis()->SetTitle(xlabel.c_str());
+    mXYPerStationTkD[iStation]->GetYaxis()->SetTitle(ylabel.c_str());
 
     std::string tku_tri_title = "TkU XY Triplets " + name;
     std::string tku_tri_name = "hTkUXYTriplets" + name;
     std::string tkd_tri_title = "TkD XY Triplets " + name;
     std::string tkd_tri_name = "hTkDXYTriplets" + name;
     mXYPerStationTripletsTkU.push_back(std::unique_ptr<TH2D>(new TH2D(tku_tri_name.c_str(),
-                                       tku_tri_title.c_str(), 100, -150, 150, 100, -150, 150)));
+        tku_tri_title.c_str(), nbins, xmin, xmax, nbins, ymin, ymax)));
     mXYPerStationTripletsTkD.push_back(std::unique_ptr<TH2D>(new TH2D(tkd_tri_name.c_str(),
-                                       tkd_tri_title.c_str(), 100, -150, 150, 100, -150, 150)));
-    mXYPerStationTripletsTkU[iStation]->GetXaxis()->SetTitle("x (mm)");
-    mXYPerStationTripletsTkU[iStation]->GetYaxis()->SetTitle("y (mm)");
-    mXYPerStationTripletsTkD[iStation]->GetXaxis()->SetTitle("x (mm)");
-    mXYPerStationTripletsTkD[iStation]->GetYaxis()->SetTitle("y (mm)");
+        tkd_tri_title.c_str(), nbins, xmin, xmax, nbins, ymin, ymax)));
+    mXYPerStationTripletsTkU[iStation]->GetXaxis()->SetTitle(xlabel.c_str());
+    mXYPerStationTripletsTkU[iStation]->GetYaxis()->SetTitle(ylabel.c_str());
+    mXYPerStationTripletsTkD[iStation]->GetXaxis()->SetTitle(xlabel.c_str());
+    mXYPerStationTripletsTkD[iStation]->GetYaxis()->SetTitle(ylabel.c_str());
 
     std::string tku_dou_title = "TkU XY Doublets " + name;
     std::string tku_dou_name = "hTkUXYDoublets" + name;
     std::string tkd_dou_title = "TkD XY Doublets " + name;
     std::string tkd_dou_name = "hTkDXYDoublets" + name;
     mXYPerStationDoubletsTkU.push_back(std::unique_ptr<TH2D>(new TH2D(tku_dou_name.c_str(),
-                                       tku_dou_title.c_str(), 100, -150, 150, 100, -150, 150)));
+        tku_dou_title.c_str(), nbins, xmin, xmax, nbins, ymin, ymax)));
     mXYPerStationDoubletsTkD.push_back(std::unique_ptr<TH2D>(new TH2D(tkd_dou_name.c_str(),
-                                       tkd_dou_title.c_str(), 100, -150, 150, 100, -150, 150)));
-    mXYPerStationDoubletsTkU[iStation]->GetXaxis()->SetTitle("x (mm)");
-    mXYPerStationDoubletsTkU[iStation]->GetYaxis()->SetTitle("y (mm)");
-    mXYPerStationDoubletsTkD[iStation]->GetXaxis()->SetTitle("x (mm)");
-    mXYPerStationDoubletsTkD[iStation]->GetYaxis()->SetTitle("y (mm)");
+        tkd_dou_title.c_str(), nbins, xmin, xmax, nbins, ymin, ymax)));
+    mXYPerStationDoubletsTkU[iStation]->GetXaxis()->SetTitle(xlabel.c_str());
+    mXYPerStationDoubletsTkU[iStation]->GetYaxis()->SetTitle(ylabel.c_str());
+    mXYPerStationDoubletsTkD[iStation]->GetXaxis()->SetTitle(xlabel.c_str());
+    mXYPerStationDoubletsTkD[iStation]->GetYaxis()->SetTitle(ylabel.c_str());
   }
 }
 
