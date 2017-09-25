@@ -14,10 +14,12 @@ AnalyserTrackerAngularMomentum::AnalyserTrackerAngularMomentum() : mAnalysisStat
                                                                    mAnalysisPlane(0),
                                                                    mHAngMomTKU(NULL),
                                                                    mHAngMomTKD(NULL) {
-  mHAngMomTKU = new TH2D("hAngMomTKU", "Canonical AM vs Radius TkU", 200, -4000, 2000, 200, 0, 150);
+  mHAngMomTKU = new TH2D("hAngMomTKU", "PR Canonical AM vs Radius TkU",
+                        200, -4000, 2000, 200, 0, 150);
   mHAngMomTKU->GetXaxis()->SetTitle("xPy - yPx (mm MeV/c)");
   mHAngMomTKU->GetYaxis()->SetTitle("Radius (mm)");
-  mHAngMomTKD = new TH2D("hAngMomTKD", "Canonical AM vs Radius TkD", 200, -4000, 2000, 200, 0, 150);
+  mHAngMomTKD = new TH2D("hAngMomTKD", "PR Canonical AM vs Radius TkD",
+                         200, -4000, 2000, 200, 0, 150);
   mHAngMomTKD->GetXaxis()->SetTitle("xPy - yPx (mm MeV/c)");
   mHAngMomTKD->GetYaxis()->SetTitle("Radius (mm)");
 }

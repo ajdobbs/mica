@@ -60,30 +60,38 @@ int main(int argc, char *argv[]) {
   anlTAM->SetAnalysisPlane(0);
   analysers.push_back(anlTAM);
 
-  mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
-  analysers.push_back(anlMCPRR);
+  // mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
+  // analysers.push_back(anlMCPRR);
 
   mica::AnalyserTrackerPREfficiency* anlPRE = new mica::AnalyserTrackerPREfficiency();
-   anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
+    anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
   analysers.push_back(anlPRE);
 
   // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
   // analysers.push_back(anlMP);
 
-  // Set up ROOT app, input file, and MAUS data class
+  // Set up the input file
   std::string infile = "";
   std::string outfile = "analysis.pdf";
   if (argc > 1) {
     infile = std::string(argv[1]); // 1st arg to code should be input ROOT file name
   } else {
     std::cerr << "Please enter the input file name as the first argument and try again\n";
-    return 0;
+    return -1;
   }
+  TFile f1(infile.c_str());
+  if (!f1.IsOpen()) {
+      std::cerr << "Failed to find file: " << infile <<std::endl;
+      return -1;
+  }
+  std::cout << "Input file " << infile << std::endl;
+
+  // Set up the output file
   if (argc > 2)
     outfile = std::string(argv[2]);
-  std::cout << "Input file " << infile << std::endl;
   std::cout << "Output file " << outfile << std::endl;
-  TFile f1(infile.c_str());
+
+  // Set up access to ROOT data from input file
   TTree* T = static_cast<TTree*>(f1.Get("Spill"));
   MAUS::Data* data = nullptr;  // Don't forget = nullptr or you get a seg fault
   T->SetBranchAddress("data", &data); // Yes, this is the *address* of a *pointer*
@@ -150,6 +158,7 @@ int main(int argc, char *argv[]) {
     }
   }
 
+  // Wrap up
   std::cout << "File done" << std::endl;
   for (auto an : analysers) {
     delete an;

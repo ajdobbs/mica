@@ -12,14 +12,14 @@ AnalyserTrackerPRStats::AnalyserTrackerPRStats() : mHCircleChiSqTKU(NULL),
                                                    mHCircleChiSqTKD(NULL),
                                                    mHSZChiSqTKU(NULL),
                                                    mHSZChiSqTKD(NULL) {
-  mHCircleChiSqTKU = new TH1D("hCircleChiSqTKU", "Circle #chi^{2}_{\nu} TkU", 100, 0, 50);
+  mHCircleChiSqTKU = new TH1D("hCircleChiSqTKU", "PR Circle #chi^{2}_{\nu} TkU", 100, 0, 50);
   mHCircleChiSqTKU->GetXaxis()->SetTitle("Circle #chi^{2}_{\nu} ");
-  mHCircleChiSqTKD = new TH1D("hCircleChiSqTKD", "Circle #chi^{2}_{\nu}  TkD", 100, 0, 50);
+  mHCircleChiSqTKD = new TH1D("hCircleChiSqTKD", "PR  Circle #chi^{2}_{\nu}  TkD", 100, 0, 50);
   mHCircleChiSqTKD->GetXaxis()->SetTitle("Circle #chi^{2}_{\nu} ");
 
-  mHSZChiSqTKU = new TH1D("hSZChiSqTKU", "SZ #chi^{2}_{\nu}  TkU", 100, 0, 500);
+  mHSZChiSqTKU = new TH1D("hSZChiSqTKU", "PR SZ #chi^{2}_{\nu}  TkU", 100, 0, 50);
   mHSZChiSqTKU->GetXaxis()->SetTitle("SZ #chi^{2}_{\nu} ");
-  mHSZChiSqTKD = new TH1D("hSZChiSqTKD", "SZ #chi^{2}_{\nu}  TkD", 100, 0, 500);
+  mHSZChiSqTKD = new TH1D("hSZChiSqTKD", "PR SZ #chi^{2}_{\nu}  TkD", 100, 0, 50);
   mHSZChiSqTKD->GetXaxis()->SetTitle("SZ #chi^{2}_{\nu} ");
 }
 
