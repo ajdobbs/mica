@@ -32,11 +32,11 @@ AnalyserTrackerPREfficiency::AnalyserTrackerPREfficiency() : mCheckTOF(true),
                                                              mTkD4to5ptTracks(0),
                                                              mLowerTimeCut(27.0),
                                                              mUpperTimeCut(50.0) {
-  mOf1.open("tracker-patrec-efficiency.txt");
+  // mOf1.open("tracker-patrec-efficiency.txt");
 }
 
 AnalyserTrackerPREfficiency::~AnalyserTrackerPREfficiency() {
-  mOf1.close();
+  // mOf1.close();
 }
 
 bool AnalyserTrackerPREfficiency::analyse(MAUS::ReconEvent* const aReconEvent,
