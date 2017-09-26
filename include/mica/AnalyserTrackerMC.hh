@@ -71,7 +71,7 @@ class AnalyserTrackerMC : public AnalyserBase {
     /** @brief Draw results of analysis, to be implemented in daughter classes
      *  @param aPad Canvas on which to draw the results
      */
-    virtual void draw(TVirtualPad* aPad) = 0;
+    virtual void draw(std::shared_ptr<TVirtualPad> aPad)= 0;
 
     /** @brief Return the scifi MC lookup table */
     MAUS::SciFiLookup* GetLookup() const { return mLookup; }

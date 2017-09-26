@@ -34,7 +34,7 @@ class AnalyserTrackerPREfficiency : public AnalyserBase {
     /** @brief Reset the internal counter variables to 0 */
     virtual void clear();
 
-    virtual void draw(TVirtualPad* aPad);
+    virtual void draw(std::shared_ptr<TVirtualPad> aPad);
 
     /** @brief Return if we are checking time-of-flight between TOF1 and TOF2, overrules
       * CheckTOFSpacePoints

@@ -43,7 +43,7 @@ bool AnalyserTrackerKFStats::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::
   }
 }
 
-void AnalyserTrackerKFStats::draw(TVirtualPad* aPad) {
+void AnalyserTrackerKFStats::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
   aPad->Divide(2, 2);
 

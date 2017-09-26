@@ -37,7 +37,7 @@ class AnalyserTrackerAngularMomentum : public AnalyserBase {
     /** @brief After analysing all the events, draw the results
      *  @param aPad ROOT TPad to draw results on
      */
-    virtual void draw(TVirtualPad* aPad);
+    virtual void draw(std::shared_ptr<TVirtualPad> aPad);
 
     /** @brief Return the tracker station at which parameters are evaluated */
     int GetAnalysisStation() const { return mAnalysisStation; }

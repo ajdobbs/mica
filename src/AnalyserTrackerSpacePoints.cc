@@ -131,7 +131,7 @@ bool AnalyserTrackerSpacePoints::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTrackerSpacePoints::draw(TVirtualPad* aPad) {
+void AnalyserTrackerSpacePoints::draw(std::shared_ptr<TVirtualPad> aPad) {
   // Draw the general spacepoint information plots
   aPad->Divide(3, 2);
   aPad->cd(1);
@@ -149,9 +149,9 @@ void AnalyserTrackerSpacePoints::draw(TVirtualPad* aPad) {
 
   // Draw the real space plots per station
   int nStations = 5;
-  TVirtualPad* padXY = new TCanvas();
-  TVirtualPad* padXYTriplets = new TCanvas();
-  TVirtualPad* padXYDoublets = new TCanvas();
+  std::shared_ptr<TVirtualPad> padXY = std::shared_ptr<TVirtualPad>(new TCanvas());
+  std::shared_ptr<TVirtualPad> padXYTriplets = std::shared_ptr<TVirtualPad>(new TCanvas());
+  std::shared_ptr<TVirtualPad> padXYDoublets = std::shared_ptr<TVirtualPad>(new TCanvas());
   padXY->Divide(nStations, 2);
   padXYTriplets->Divide(nStations, 2);
   padXYDoublets->Divide(nStations, 2);

@@ -34,9 +34,9 @@ bool AnalyserBase::Analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* c
   return analyse(aReconEvent, aMCEvent);
 }
 
-TVirtualPad* AnalyserBase::Draw(TVirtualPad* aPad) {
+std::shared_ptr<TVirtualPad> AnalyserBase::Draw(std::shared_ptr<TVirtualPad> aPad) {
   if (!aPad) {
-    aPad = new TCanvas();
+    aPad = std::shared_ptr<TVirtualPad>(new TCanvas());
   }
   draw(aPad);
 

@@ -41,7 +41,7 @@ bool AnalyserTrackerPRSeedResidual::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTrackerPRSeedResidual::draw(TVirtualPad* aPad) {
+void AnalyserTrackerPRSeedResidual::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
   aPad->Divide(5, 2);
   for (int i = 0; i < 5; ++i) {

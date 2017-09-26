@@ -47,19 +47,19 @@ class AnalyserBase {
      *         then call draw
      *  @param aPad ROOT TPad to draw results on
      */
-    TVirtualPad* Draw(TVirtualPad* aPad = NULL);
+    std::shared_ptr<TVirtualPad> Draw(std::shared_ptr<TVirtualPad> aPad=nullptr);
 
     /** @brief After analysing all the events, draw the results,
      *         to be overidden by concrete daughter classes
      *  @param aPad ROOT TPad to draw results on
      */
-    virtual void draw(TVirtualPad* aPad) = 0;
+    virtual void draw(std::shared_ptr<TVirtualPad> aPad) = 0;
 
     /** @brief Add a pad to the list of internal pad pointers */
-    void AddPad(TVirtualPad* aPad) { mPads.push_back(aPad); }
+    void AddPad(std::shared_ptr<TVirtualPad> aPad) { mPads.push_back(aPad); }
 
     /** @brief Return all the pads */
-    std::vector<TVirtualPad*> const GetPads() { return mPads; }
+    std::vector<std::shared_ptr<TVirtualPad>> const GetPads() { return mPads; }
 
     /** @brief Add a cut, only events which pass the cut will be processed
      *  @param aCut The cut to add
@@ -87,7 +87,7 @@ class AnalyserBase {
      */
     bool ApplyCuts(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
-    std::vector<TVirtualPad*> mPads; ///< The canvas upon which the plots are drawn
+    std::vector<std::shared_ptr<TVirtualPad>> mPads; ///< The canvas upon which the plots are drawn
     std::vector<CutsBase*> mCuts; ///< The cuts to apply before admitting an event for analysis
     std::shared_ptr<TStyle> mStyle; ///< The ROOT TStyle to be applied to the canvases
 };

@@ -44,7 +44,7 @@ bool AnalyserTrackerSpacePointSearchStation::analyse(MAUS::ReconEvent* const aRe
   return true;
 }
 
-void AnalyserTrackerSpacePointSearchStation::draw(TVirtualPad* aPad) {
+void AnalyserTrackerSpacePointSearchStation::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->Divide(5, 2);
   for (int i = 0; i < 5; ++i) {
     aPad->cd(i+1);

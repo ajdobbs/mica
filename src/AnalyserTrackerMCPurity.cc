@@ -31,7 +31,7 @@ bool AnalyserTrackerMCPurity::analyse_recon(MAUS::ReconEvent* const aReconEvent)
   return true;
 }
 
-void AnalyserTrackerMCPurity::draw(TVirtualPad* aPad) {
+void AnalyserTrackerMCPurity::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->Divide(2);
   aPad->cd(1);
   TLatex tl;

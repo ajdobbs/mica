@@ -220,11 +220,11 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
+void AnalyserTrackerMCPRResiduals::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
 
   // Draw the MC distribution
-  TVirtualPad* padMC = new TCanvas();
+  std::shared_ptr<TVirtualPad> padMC = std::shared_ptr<TVirtualPad>(new TCanvas());
   padMC->cd();
   padMC->Divide(4, 2);
   padMC->cd(1);
@@ -245,7 +245,7 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   mHTkDMCMomentumZ->Draw();
 
   // Draw the Recon distribution
-  TVirtualPad* padRec = new TCanvas();
+  std::shared_ptr<TVirtualPad> padRec = std::shared_ptr<TVirtualPad>(new TCanvas());
   padRec->cd();
   padRec->Divide(4, 2);
   padRec->cd(1);
@@ -286,7 +286,7 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   mHTkDMomentumResidualsZ->Draw();
 
   // Draw the residuals with a log scale
-  TVirtualPad* pad2 = new TCanvas();
+  std::shared_ptr<TVirtualPad> pad2 = std::shared_ptr<TVirtualPad>(new TCanvas());
   pad2->Divide(4, 2);
   pad2->cd(1);
   pad2->GetPad(1)->SetLogy(1);
@@ -314,7 +314,7 @@ void AnalyserTrackerMCPRResiduals::draw(TVirtualPad* aPad) {
   mHTkDMomentumResidualsZ->Draw();
 
   // Draw the graphs
-  TVirtualPad* pad2d = new TCanvas();
+  std::shared_ptr<TVirtualPad> pad2d = std::shared_ptr<TVirtualPad>(new TCanvas());
   pad2d->Divide(2, 2);
 
   pad2d->cd(1);

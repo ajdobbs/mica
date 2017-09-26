@@ -35,7 +35,7 @@ class AnalyserTrackerPRStats : public AnalyserBase {
     /** @brief After analysing all the events, draw the results
      *  @param aPad ROOT TPad to draw results on
      */
-    virtual void draw(TVirtualPad* aPad);
+    virtual void draw(std::shared_ptr<TVirtualPad> aPad);
 
   private:
     TH1D* mHCircleChiSqTKU; ///< mHCircleChiSqTKU Histogram for TkU circle chisq per dof

@@ -234,7 +234,7 @@ bool AnalyserTrackerPREfficiency::check_good_tof_event(MAUS::TOFEvent* evt) {
   return false;
 }
 
-void AnalyserTrackerPREfficiency::draw(TVirtualPad* aPad) {
+void AnalyserTrackerPREfficiency::draw(std::shared_ptr<TVirtualPad> aPad) {
   double tku_5pt_eff = static_cast<double>(mTkU5ptTracks) / static_cast<double>(mTkUGoodEvents);
   double tku_4to5pt_eff =
       static_cast<double>(mTkU4to5ptTracks) / static_cast<double>(mTkUGoodEvents);

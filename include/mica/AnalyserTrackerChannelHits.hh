@@ -10,6 +10,7 @@
 
 #include "TVirtualPad.h"
 #include "TH1.h"
+#include "TH2D.h"
 
 #include "mica/AnalyserBase.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
@@ -27,11 +28,13 @@ class AnalyserTrackerChannelHits : public AnalyserBase {
     virtual ~AnalyserTrackerChannelHits() {}
 
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-    virtual void draw(TVirtualPad* aPad);
+    virtual void draw(std::shared_ptr<TVirtualPad> aPad);
 
   private:
     std::vector<std::unique_ptr<TH1I> > mTkU; ///< Plots for TkU, order by station then by plane
     std::vector<std::unique_ptr<TH1I> > mTkD; ///< Plots for TkD, order by station then by plane
+    std::vector<std::unique_ptr<TH2D> > mNPETkU; ///< Plots for TkU, order by station then by plane
+    std::vector<std::unique_ptr<TH2D> > mNPETkD; ///< Plots for TkD, order by station then by plane
 };
 } // ~namespace mica
 

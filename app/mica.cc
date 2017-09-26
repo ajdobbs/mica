@@ -139,11 +139,11 @@ int main(int argc, char *argv[]) {
   } // ~Loop over all spills
 
   // Plot the results
-  std::vector<TVirtualPad*> pads;
+  std::vector<std::shared_ptr<TVirtualPad>> pads;
   std::vector<std::shared_ptr<TStyle> > styles;
   for (auto an : analysers) {
     an->Draw();
-    auto new_pads = an->GetPads();
+    std::vector<std::shared_ptr<TVirtualPad>> new_pads = an->GetPads();
     pads.insert(std::end(pads), std::begin(new_pads), std::end(new_pads));
     for (size_t i = 0; i < new_pads.size(); ++i) {
       styles.push_back(an->GetStyle());

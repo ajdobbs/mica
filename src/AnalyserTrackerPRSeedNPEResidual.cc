@@ -46,7 +46,7 @@ bool AnalyserTrackerPRSeedNPEResidual::analyse(MAUS::ReconEvent* const aReconEve
   return true;
 }
 
-void AnalyserTrackerPRSeedNPEResidual::draw(TVirtualPad* aPad) {
+void AnalyserTrackerPRSeedNPEResidual::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->Divide(5, 2);
   for (int i = 0; i < 5; ++i) {
     aPad->cd(i+1);

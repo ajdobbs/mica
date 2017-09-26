@@ -12,14 +12,15 @@ AnalyserTrackerPRStats::AnalyserTrackerPRStats() : mHCircleChiSqTKU(NULL),
                                                    mHCircleChiSqTKD(NULL),
                                                    mHSZChiSqTKU(NULL),
                                                    mHSZChiSqTKD(NULL) {
-  mHCircleChiSqTKU = new TH1D("hCircleChiSqTKU", "PR Circle #chi^{2}_{\nu} TkU", 100, 0, 50);
+  int nbins = 100;
+  mHCircleChiSqTKU = new TH1D("hCircleChiSqTKU", "PR Circle #chi^{2}_{\nu} TkU", nbins, 0, 20);
   mHCircleChiSqTKU->GetXaxis()->SetTitle("Circle #chi^{2}_{\nu} ");
-  mHCircleChiSqTKD = new TH1D("hCircleChiSqTKD", "PR  Circle #chi^{2}_{\nu}  TkD", 100, 0, 50);
+  mHCircleChiSqTKD = new TH1D("hCircleChiSqTKD", "PR  Circle #chi^{2}_{\nu}  TkD", nbins, 0, 20);
   mHCircleChiSqTKD->GetXaxis()->SetTitle("Circle #chi^{2}_{\nu} ");
 
-  mHSZChiSqTKU = new TH1D("hSZChiSqTKU", "PR SZ #chi^{2}_{\nu}  TkU", 100, 0, 50);
+  mHSZChiSqTKU = new TH1D("hSZChiSqTKU", "PR SZ #chi^{2}_{\nu}  TkU", nbins, 0, 50);
   mHSZChiSqTKU->GetXaxis()->SetTitle("SZ #chi^{2}_{\nu} ");
-  mHSZChiSqTKD = new TH1D("hSZChiSqTKD", "PR SZ #chi^{2}_{\nu}  TkD", 100, 0, 50);
+  mHSZChiSqTKD = new TH1D("hSZChiSqTKD", "PR SZ #chi^{2}_{\nu}  TkD", nbins, 0, 50);
   mHSZChiSqTKD->GetXaxis()->SetTitle("SZ #chi^{2}_{\nu} ");
 }
 
@@ -42,7 +43,7 @@ bool AnalyserTrackerPRStats::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::
   }
 }
 
-void AnalyserTrackerPRStats::draw(TVirtualPad* aPad) {
+void AnalyserTrackerPRStats::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
   aPad->Divide(4, 2);
 

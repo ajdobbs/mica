@@ -34,7 +34,7 @@ bool AnalyserTrackerSpacePointSearch::analyse(MAUS::ReconEvent* const aReconEven
   return true;
 }
 
-void AnalyserTrackerSpacePointSearch::draw(TVirtualPad* aPad) {
+void AnalyserTrackerSpacePointSearch::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->Divide(3, 2);
   aPad->cd(1);
   mHSeeds->Draw("COLZ");

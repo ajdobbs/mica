@@ -74,7 +74,7 @@ bool AnalyserTrackerAngularMomentum::analyse(MAUS::ReconEvent* const aReconEvent
   return true;
 }
 
-void AnalyserTrackerAngularMomentum::draw(TVirtualPad* aPad) {
+void AnalyserTrackerAngularMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->Divide(2, 1);
   aPad->cd(1);
   mHAngMomTKU->Draw("COLZ");
