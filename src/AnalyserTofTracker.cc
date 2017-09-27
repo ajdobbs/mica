@@ -47,8 +47,6 @@ bool AnalyserTofTracker::analyse(MAUS::ReconEvent* const aReconEvent,
   std::vector<MAUS::TOFSpacePoint> tof2sps = tofevtsp->GetTOF2SpacePointArray();
   if (tof1sps.size() != 1 || tof2sps.size() != 1) return false;
   double tof12 = tof2sps[0].GetTime() - tof1sps[0].GetTime();
-  std::cerr << "TOF data valid, tof12 = " << tof12 << std::endl;
-
 
   // Check and pull out the tracker data
   std::vector<MAUS::SciFiTrack*> trks = sfevt->scifitracks();
