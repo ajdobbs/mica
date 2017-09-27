@@ -35,6 +35,7 @@
 #include "mica/AnalyserTrackerMCPRResiduals.hh"
 #include "mica/AnalyserTrackerChannelHits.hh"
 #include "mica/AnalyserTrackerKFStats.hh"
+#include "mica/AnalyserTofTracker.hh"
 
 int main(int argc, char *argv[]) {
   // Instantiate the analysers
@@ -68,9 +69,9 @@ int main(int argc, char *argv[]) {
     anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
   analysers.push_back(anlPRE);
 
-  mica::AnalyserTrackerKFStats* anlTKFS = new mica::AnalyserTrackerKFStats();
-  analysers.push_back(anlTKFS);
-
+  analysers.push_back(new mica::AnalyserTrackerKFStats());
+  analysers.push_back(new mica::AnalyserTofTracker());
+  
   // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
   // analysers.push_back(anlMP);
 
