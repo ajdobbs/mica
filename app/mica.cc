@@ -66,12 +66,14 @@ int main(int argc, char *argv[]) {
   // analysers.push_back(anlMCPRR);
 
   mica::AnalyserTrackerPREfficiency* anlPRE = new mica::AnalyserTrackerPREfficiency();
-    anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
+  anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
+  anlPRE->SetCheckTkU(false); // Only use the TOFs to define an expected good event
+  anlPRE->SetCheckTkD(false); // Only use the TOFs to define an expected good event
   analysers.push_back(anlPRE);
 
   analysers.push_back(new mica::AnalyserTrackerKFStats());
   analysers.push_back(new mica::AnalyserTofTracker());
-  
+
   // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
   // analysers.push_back(anlMP);
 

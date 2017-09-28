@@ -249,13 +249,48 @@ void AnalyserTrackerPREfficiency::draw(std::shared_ptr<TVirtualPad> aPad) {
             <<  " " << tkd_5pt_eff <<  " " << tkd_4to5pt_eff << std::endl;
 
   TLatex tl;
+  tl.SetTextSize(0.05);
+  tl.DrawLatex(0.1, 0.9, "PatRec Efficiency");
   tl.SetTextSize(0.03);
-  tl.DrawLatex(0.1, 0.8, "PatRec Efficiency");
-  tl.DrawLatex(0.1, 0.7, ("Total Number of Events: " + std::to_string(mNEvents)).c_str());
-  tl.DrawLatex(0.1, 0.6, ("TkU 5pt Efficiency: " + std::to_string(tku_5pt_eff)).c_str());
-  tl.DrawLatex(0.1, 0.5, ("TkU 4-5pt Efficiency: " + std::to_string(tku_4to5pt_eff)).c_str());
-  tl.DrawLatex(0.1, 0.4, ("TkD 5pt Efficiency: " + std::to_string(tkd_5pt_eff)).c_str());
-  tl.DrawLatex(0.1, 0.3, ("TkU 4-5pt Efficiency: " + std::to_string(tkd_4to5pt_eff)).c_str());
+
+  std::string boolstring_tku = "false";
+  std::string boolstring_tkd = "false";
+  std::string boolstring_tof = "false";
+  std::string boolstring_tof_sp = "false";
+  if (mCheckTkU)
+    boolstring_tku = "true";
+  else
+    boolstring_tku = "false";
+  if (mCheckTkD)
+    boolstring_tkd = "true";
+  else
+    boolstring_tkd = "false";
+  if (mCheckTOF)
+    boolstring_tof = "true";
+  else
+    boolstring_tof = "false";
+  if (mCheckTOF || mCheckTOFSpacePoints)
+    boolstring_tof_sp = "true";
+  else
+    boolstring_tof_sp = "false";
+
+  double tline = 0.8;
+  double sep = 0.075;
+  tl.DrawLatex(0.1, tline, ("Check TkU spacepoints: " + boolstring_tku).c_str());
+  tl.DrawLatex(0.1, tline-sep, ("Check TkD spacepoints: " + boolstring_tkd).c_str());
+  tl.DrawLatex(0.1, tline-sep*2, ("Check TOF1 and TOF2 spacepoints: "
+                                    + boolstring_tof_sp).c_str());
+  tl.DrawLatex(0.1, tline-sep*3, ("Check time-of-flight TOF2 - TOF1 : " + boolstring_tof).c_str());
+
+  tl.DrawLatex(0.1, tline-sep*4, ("Total Number of Events: " + std::to_string(mNEvents)).c_str());
+  tl.DrawLatex(0.1, tline-sep*5, ("TkU 5pt Efficiency: " + std::to_string(tku_5pt_eff) + "  ("
+    + std::to_string(mTkU5ptTracks) + "/" + std::to_string(mTkUGoodEvents) + ")").c_str());
+  tl.DrawLatex(0.1, tline-sep*6, ("TkU 4-5pt Efficiency: " + std::to_string(tku_4to5pt_eff) + " ("
+    + std::to_string(mTkU4to5ptTracks) + "/" + std::to_string(mTkUGoodEvents) + ")").c_str());
+  tl.DrawLatex(0.1, tline-sep*7, ("TkD 5pt Efficiency: " + std::to_string(tkd_5pt_eff) + "  ("
+    + std::to_string(mTkD5ptTracks) + "/" + std::to_string(mTkDGoodEvents) + ")").c_str());
+  tl.DrawLatex(0.1, tline-sep*8, ("TkU 4-5pt Efficiency: " + std::to_string(tkd_4to5pt_eff) + "  ("
+    + std::to_string(mTkD4to5ptTracks)+ "/" + std::to_string(mTkDGoodEvents) + ")").c_str());
 
   aPad->cd();
   tl.Draw();
