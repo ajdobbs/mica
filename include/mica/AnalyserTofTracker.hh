@@ -55,8 +55,12 @@ class AnalyserTofTracker : public AnalyserBase {
   private:
     int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
     int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)
-    std::unique_ptr<TH2D> mHTKU; ///< Plot of tof12 time vs tku momentum
-    std::unique_ptr<TH2D> mHTKD; ///< Plot of tof12 time vs tkd momentum
+    std::unique_ptr<TH2D> mHPTkU; ///< Plot of tof12 time vs tku total momentum
+    std::unique_ptr<TH2D> mHPTkD; ///< Plot of tof12 time vs tkd total momentum
+    std::unique_ptr<TH2D> mHPtTkU; ///< Plot of tof12 time vs tku pt
+    std::unique_ptr<TH2D> mHPtTkD; ///< Plot of tof12 time vs tkd pt
+    std::unique_ptr<TH2D> mHPzTkU; ///< Plot of tof12 time vs tku pz
+    std::unique_ptr<TH2D> mHPzTkD; ///< Plot of tof12 time vs tkd pz
 
     /** @brief Extract the momentum at the specified surface
      *  @param[in] trk The SciFiTrack

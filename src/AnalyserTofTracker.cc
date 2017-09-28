@@ -19,17 +19,39 @@ namespace mica {
 
 AnalyserTofTracker::AnalyserTofTracker() : mAnalysisStation{1},
                                            mAnalysisPlane{0},
-                                           mHTKU{nullptr},
-                                           mHTKD{nullptr} {
+                                           mHPTkU{nullptr},
+                                           mHPTkD{nullptr},
+                                           mHPtTkU{nullptr},
+                                           mHPtTkD{nullptr},
+                                           mHPzTkU{nullptr},
+                                           mHPzTkD{nullptr} {
   int nbins = 100;
-  mHTKU = std::unique_ptr<TH2D>(new TH2D("hTKU", "ToF12 Time vs TkU Momentum",
+  mHPTkU = std::unique_ptr<TH2D>(new TH2D("hPTkU", "ToF12 Time vs TkU Momentum",
                                          nbins, 25, 50, nbins, 0, 300));
-  mHTKU->GetXaxis()->SetTitle("tof12 (ns)");
-  mHTKU->GetYaxis()->SetTitle("Momentum (MeV/c)");
-  mHTKD = std::unique_ptr<TH2D>(new TH2D("hTKD", "ToF12 Time vs TkD Momentum",
+  mHPTkU->GetXaxis()->SetTitle("tof12 (ns)");
+  mHPTkU->GetYaxis()->SetTitle("Total Momentum (MeV/c)");
+  mHPTkD = std::unique_ptr<TH2D>(new TH2D("hPTkD", "ToF12 Time vs TkD Momentum",
                                          nbins, 25, 50, nbins, 0, 300));
-  mHTKD->GetXaxis()->SetTitle("tof12 (ns)");
-  mHTKD->GetYaxis()->SetTitle("Momentum (MeV/c)");
+  mHPTkD->GetXaxis()->SetTitle("tof12 (ns)");
+  mHPTkD->GetYaxis()->SetTitle("Total Momentum (MeV/c)");
+
+  mHPtTkU = std::unique_ptr<TH2D>(new TH2D("hPtTkU", "ToF12 Time vs TkU pt",
+                                         nbins, 25, 50, nbins, 0, 300));
+  mHPtTkU->GetXaxis()->SetTitle("tof12 (ns)");
+  mHPtTkU->GetYaxis()->SetTitle("pt (MeV/c)");
+  mHPtTkD = std::unique_ptr<TH2D>(new TH2D("hPtTkD", "ToF12 Time vs TkD pt",
+                                         nbins, 25, 50, nbins, 0, 300));
+  mHPtTkD->GetXaxis()->SetTitle("tof12 (ns)");
+  mHPtTkD->GetYaxis()->SetTitle("pt (MeV/c)");
+
+  mHPzTkU = std::unique_ptr<TH2D>(new TH2D("hPzTkU", "ToF12 Time vs TkU pz",
+                                         nbins, 25, 50, nbins, 0, 300));
+  mHPzTkU->GetXaxis()->SetTitle("tof12 (ns)");
+  mHPzTkU->GetYaxis()->SetTitle("pz (MeV/c)");
+  mHPzTkD = std::unique_ptr<TH2D>(new TH2D("hPzTkD", "ToF12 Time vs TkD pz",
+                                           nbins, 25, 50, nbins, 0, 300));
+  mHPzTkD->GetXaxis()->SetTitle("tof12 (ns)");
+  mHPzTkD->GetYaxis()->SetTitle("pz (MeV/c)");
 }
 
 bool AnalyserTofTracker::analyse(MAUS::ReconEvent* const aReconEvent,
@@ -64,27 +86,40 @@ bool AnalyserTofTracker::analyse(MAUS::ReconEvent* const aReconEvent,
   // Pull out the associated trackpoints, get the momentum
   MAUS::ThreeVector mom_tku;
   MAUS::ThreeVector mom_tkd;
-  bool tku_good = false;
-  bool tkd_good = false;
-  for (auto trk : trks) {
-    tku_good = GetMomentum(trk, mom_tku);
-    tkd_good = GetMomentum(trk, mom_tkd);
-  } // ~Loop over tracks
+  bool tku_good = GetMomentum(tku_trks[0], mom_tku);
+  bool tkd_good = GetMomentum(tkd_trks[0], mom_tkd);
+
 
   // Fill the histograms
-  if (!tku_good && !tkd_good) return false;
-  if (tku_good) mHTKU->Fill(tof12, mom_tku.mag());
-  if (tkd_good) mHTKD->Fill(tof12, mom_tkd.mag());
+  // if (!tku_good && !tkd_good) return false;
+  if (tku_good) {
+    mHPTkU->Fill(tof12, mom_tku.mag());
+    mHPtTkU->Fill(tof12, sqrt(mom_tku.x()*mom_tku.x() + mom_tku.y()*mom_tku.y()));
+    mHPzTkU->Fill(tof12, mom_tku.z());
+  }
+  if (tkd_good) {
+    mHPTkD->Fill(tof12, mom_tkd.mag());
+    mHPtTkD->Fill(tof12, sqrt(mom_tkd.x()*mom_tkd.x() + mom_tkd.y()*mom_tkd.y()));
+    mHPzTkD->Fill(tof12, mom_tkd.z());
+  }
 
   return true;
 }
 
 void AnalyserTofTracker::draw(std::shared_ptr<TVirtualPad> aPad) {
-  aPad->Divide(2, 1);
+  aPad->Divide(3, 2);
   aPad->cd(1);
-  mHTKU->Draw("COLZ");
+  mHPTkU->Draw("COLZ");
   aPad->cd(2);
-  mHTKD->Draw("COLZ");
+  mHPtTkU->Draw("COLZ");
+  aPad->cd(3);
+  mHPzTkU->Draw("COLZ");
+  aPad->cd(4);
+  mHPTkD->Draw("COLZ");
+  aPad->cd(5);
+  mHPtTkD->Draw("COLZ");
+  aPad->cd(6);
+  mHPzTkD->Draw("COLZ");
 }
 
 bool AnalyserTofTracker::GetMomentum(const MAUS::SciFiTrack* const trk, MAUS::ThreeVector& mom) {
