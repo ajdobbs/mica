@@ -36,6 +36,7 @@
 #include "mica/AnalyserTrackerChannelHits.hh"
 #include "mica/AnalyserTrackerKFStats.hh"
 #include "mica/AnalyserTofTracker.hh"
+#include "mica/AnalyserTrackerKFMomentum.hh"
 
 int main(int argc, char *argv[]) {
   // Instantiate the analysers
@@ -72,6 +73,7 @@ int main(int argc, char *argv[]) {
   analysers.push_back(anlPRE);
 
   analysers.push_back(new mica::AnalyserTrackerKFStats());
+  analysers.push_back(new mica::AnalyserTrackerKFMomentum());
   analysers.push_back(new mica::AnalyserTofTracker());
 
   // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();

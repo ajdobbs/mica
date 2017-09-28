@@ -1,6 +1,6 @@
 # MICA top level CMake build script - A. J. Dobbs
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
-project(mica VERSION 1.0.1 LANGUAGES CXX)
+project(mica VERSION 1.1.0 LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 11)
 
 # Specify where build output should go
@@ -31,7 +31,8 @@ add_library(MicaCore SHARED src/AnalyserBase.cc
                         src/AnalyserTrackerSpacePointSearchStation.cc
                         src/AnalyserTrackerChannelHits.cc
                         src/AnalyserTrackerKFStats.cc
-                        src/AnalyserTofTracker.cc)
+                        src/AnalyserTofTracker.cc
+                        src/AnalyserTrackerKFMomentum.cc)
 target_link_libraries(MicaCore ${ROOT_LIBRARIES} MausCpp)
 
 # Build the MICA app

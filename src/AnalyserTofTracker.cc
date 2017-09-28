@@ -107,6 +107,7 @@ bool AnalyserTofTracker::analyse(MAUS::ReconEvent* const aReconEvent,
 }
 
 void AnalyserTofTracker::draw(std::shared_ptr<TVirtualPad> aPad) {
+  GetStyle()->SetOptStat(111111);
   aPad->Divide(3, 2);
   aPad->cd(1);
   mHPTkU->Draw("COLZ");
