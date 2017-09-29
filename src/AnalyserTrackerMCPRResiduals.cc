@@ -30,6 +30,8 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
                                                                mHTkUMomentumResidualsZ{nullptr},
                                                                mHTkUPtResPt{nullptr},
                                                                mHTkUPzResPt{nullptr},
+                                                               mHTkUPtResPzRec{nullptr},
+                                                               mHTkUPzResPzRec{nullptr},
                                                                mHTkDMCPositionX{nullptr},
                                                                mHTkDMCPositionY{nullptr},
                                                                mHTkDMCMomentumT{nullptr},
@@ -43,7 +45,9 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
                                                                mHTkDMomentumResidualsT{nullptr},
                                                                mHTkDMomentumResidualsZ{nullptr},
                                                                mHTkDPtResPt{nullptr},
-                                                               mHTkDPzResPt{nullptr}   {
+                                                               mHTkDPzResPt{nullptr},
+                                                               mHTkDPtResPzRec{nullptr},
+                                                               mHTkDPzResPzRec{nullptr} {
   mHTkUMCPositionX = new TH1D("hTkUMCPositionX", "TkU MC x ", 100, -170, 170);
   mHTkUMCPositionY = new TH1D("hTkUMCPositionY", "TkU MC y ", 100, -170, 170);
   mHTkUMCMomentumT = new TH1D("hTkUMCMomentumT", "TkU MC pt ", 100, 0, 100);
@@ -58,6 +62,8 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
   mHTkUMomentumResidualsZ = new TH1D("hTkUMomentumResidualsZ", "TkU pz Residuals", 100, -50, 200);
   mHTkUPtResPt = new TH2D("hTkUPtResPt", "TkU pt residuals vs ptmc", 100, 0, 100, 100, -20, 20);
   mHTkUPzResPt = new TH2D("hTkUPzResPt", "TkU pz residuals vs ptmc", 100, 0, 100, 100, -300, 300);
+  mHTkUPtResPzRec = new TH2D("hTkUPtResPzRec", "TkU pt residuals vs pzrec", 100, -300, 300, 100, -20, 20);
+  mHTkUPzResPzRec = new TH2D("hTkUPzResPzRec", "TkU pz residuals vs pzrec", 100, -300, 300, 100, -200, 200);
 
   mHTkDMCPositionX = new TH1D("hTkDMCPositionX", "TkD MC x ", 100, -170, 170);
   mHTkDMCPositionY = new TH1D("hTkDMCPositionY", "TkD MC y ", 100, -170, 170);
@@ -74,6 +80,8 @@ AnalyserTrackerMCPRResiduals::AnalyserTrackerMCPRResiduals() : mHTkUMCPositionX{
 
   mHTkDPtResPt = new TH2D("hTkDPtResPt", "TkD pt residuals vs ptmc", 100, 0, 100, 100, -20, 20);
   mHTkDPzResPt = new TH2D("hTkDPzResPt", "TkD pz residuals vs ptmc", 100, 0, 100, 100, -300, 300);
+  mHTkDPtResPzRec = new TH2D("hTkDPtResPzRec", "TkD pt residuals vs pzrec", 100, -300, 300, 100, -20, 20);
+  mHTkDPzResPzRec = new TH2D("hTkDPzResPzRec", "TkD pz residuals vs pzrec", 100, -300, 300, 100, -200, 200);
 }
 
 bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
@@ -198,6 +206,8 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
 
   mHTkUPtResPt->Fill(tku_ptmc, tku_dpt);
   mHTkUPzResPt->Fill(tku_ptmc, tku_dpz);
+  mHTkUPtResPzRec->Fill(tku_pzrec, tku_dpt);
+  mHTkUPzResPzRec->Fill(tku_pzrec, tku_dpz);
 
   mHTkDMCPositionX->Fill(tkd_ref_hit->GetPosition().x());
   mHTkDMCPositionY->Fill(tkd_ref_hit->GetPosition().y());
@@ -216,6 +226,8 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
 
   mHTkDPtResPt->Fill(tkd_ptmc, tkd_dpt);
   mHTkDPzResPt->Fill(tkd_ptmc, tkd_dpz);
+  mHTkDPtResPzRec->Fill(tkd_pzrec, tkd_dpt);
+  mHTkDPzResPzRec->Fill(tkd_pzrec, tkd_dpz);
 
   return true;
 }
@@ -326,10 +338,23 @@ void AnalyserTrackerMCPRResiduals::draw(std::shared_ptr<TVirtualPad> aPad) {
   pad2d->cd(4);
   mHTkDPzResPt->Draw("COLZ");
 
+  std::shared_ptr<TVirtualPad> padResPzRec = std::shared_ptr<TVirtualPad>(new TCanvas());
+  padResPzRec->Divide(2, 2);
+
+  padResPzRec->cd(1);
+  mHTkUPtResPzRec->Draw("COLZ");
+  padResPzRec->cd(2);
+  mHTkUPzResPzRec->Draw("COLZ");
+  padResPzRec->cd(3);
+  mHTkDPtResPzRec->Draw("COLZ");
+  padResPzRec->cd(4);
+  mHTkDPzResPzRec->Draw("COLZ");
+
   AddPad(padMC);
   AddPad(padRec);
   AddPad(aPad);
   AddPad(pad2);
   AddPad(pad2d);
+  AddPad(padResPzRec);
 }
 } // ~namespace mica

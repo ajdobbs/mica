@@ -63,8 +63,8 @@ int main(int argc, char *argv[]) {
   anlTAM->SetAnalysisPlane(0);
   analysers.push_back(anlTAM);
 
-  // mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
-  // analysers.push_back(anlMCPRR);
+  mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
+  analysers.push_back(anlMCPRR);
 
   mica::AnalyserTrackerPREfficiency* anlPRE = new mica::AnalyserTrackerPREfficiency();
   anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed

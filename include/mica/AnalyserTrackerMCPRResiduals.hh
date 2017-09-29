@@ -51,6 +51,8 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
 
     TH2D* mHTkUPtResPt;
     TH2D* mHTkUPzResPt;
+    TH2D* mHTkUPtResPzRec;
+    TH2D* mHTkUPzResPzRec;
 
     TH1D* mHTkDMCPositionX;
     TH1D* mHTkDMCPositionY;
@@ -69,6 +71,8 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
 
     TH2D* mHTkDPtResPt;
     TH2D* mHTkDPzResPt;
+    TH2D* mHTkDPtResPzRec;
+    TH2D* mHTkDPzResPzRec;
 };
 } // ~namespace mica
 
