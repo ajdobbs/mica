@@ -1,6 +1,6 @@
 # MICA top level CMake build script - A. J. Dobbs
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
-project(mica VERSION 1.1.0 LANGUAGES CXX)
+project(mica VERSION 1.1.1 LANGUAGES CXX)
 set (CMAKE_CXX_STANDARD 11)
 
 # Specify where build output should go

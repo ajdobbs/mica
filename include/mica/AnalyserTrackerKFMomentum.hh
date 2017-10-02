@@ -55,9 +55,7 @@ class AnalyserTrackerKFMomentum : public AnalyserBase {
   private:
     int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
     int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)
-    std::unique_ptr<TH2D> mHPxUSDS; ///< Plot tku vs tkd px
-    std::unique_ptr<TH2D> mHPyUSDS; ///< Plot of tku vs tkd py
-    std::unique_ptr<TH2D> mHPzUSDS; ///< Plot of tku vs tkd pz
+    std::unique_ptr<TH2D> mHPUSDS; ///< Plot tku vs tkd p
 
     /** @brief Extract the momentum at the specified surface
      *  @param[in] trk The SciFiTrack

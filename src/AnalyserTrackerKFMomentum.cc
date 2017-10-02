@@ -16,22 +16,12 @@ namespace mica {
 
 AnalyserTrackerKFMomentum::AnalyserTrackerKFMomentum() : mAnalysisStation{1},
                                                          mAnalysisPlane{0},
-                                                         mHPxUSDS{nullptr},
-                                                         mHPyUSDS{nullptr},
-                                                         mHPzUSDS{nullptr} {
+                                                         mHPUSDS{nullptr} {
   int nbins = 100;
-  mHPxUSDS = std::unique_ptr<TH2D>(new TH2D("hPxUSDS", "TkU px vx TkD px",
-                                             nbins, -100, 100, nbins, -100, 100));
-  mHPxUSDS->GetXaxis()->SetTitle("tku px (MeV/c)");
-  mHPxUSDS->GetYaxis()->SetTitle("tkd px (MeV/c)");
-  mHPyUSDS = std::unique_ptr<TH2D>(new TH2D("hPyUSDS", "TkU py vx TkD py",
-                                             nbins, -100, 100, nbins, -100, 100));
-  mHPyUSDS->GetXaxis()->SetTitle("tku py (MeV/c)");
-  mHPyUSDS->GetYaxis()->SetTitle("tkd py (MeV/c)");
-  mHPzUSDS = std::unique_ptr<TH2D>(new TH2D("hPzUSDS", "TkU pz vx TkD pz",
-                                             nbins, 0, 350, nbins, 0, 350));
-  mHPzUSDS->GetXaxis()->SetTitle("tku pz (MeV/c)");
-  mHPzUSDS->GetYaxis()->SetTitle("tkd pz (MeV/c)");
+  mHPUSDS = std::unique_ptr<TH2D>(new TH2D("hPUSDS", "TkU p vs TkD p",
+                                             nbins, 0, 300, nbins, 0, 300));
+  mHPUSDS->GetXaxis()->SetTitle("tku p (MeV/c)");
+  mHPUSDS->GetYaxis()->SetTitle("tkd p (MeV/c)");
 }
 
 bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
@@ -61,22 +51,14 @@ bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
 
   // Fill the histograms
   if (!tku_good && !tkd_good) return false;
-  mHPxUSDS->Fill(mom_tku.x(), mom_tkd.x());
-  mHPyUSDS->Fill(mom_tku.y(), mom_tkd.y());
-  mHPzUSDS->Fill(mom_tku.z(), mom_tkd.z());
+  mHPUSDS->Fill(mom_tku.mag(), mom_tkd.mag());
 
   return true;
 }
 
 void AnalyserTrackerKFMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
-  aPad->Divide(3, 1);
-  aPad->cd(1);
-  mHPxUSDS->Draw("COLZ");
-  aPad->cd(2);
-  mHPyUSDS->Draw("COLZ");
-  aPad->cd(3);
-  mHPzUSDS->Draw("COLZ");
+  mHPUSDS->Draw("COLZ");
 }
 
 bool AnalyserTrackerKFMomentum::GetMomentum(const MAUS::SciFiTrack* const trk,
