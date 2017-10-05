@@ -51,7 +51,11 @@ bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
 
   // Fill the histograms
   if (!tku_good && !tkd_good) return false;
-  mHPUSDS->Fill(mom_tku.mag(), mom_tkd.mag());
+  double tku_mag =
+    sqrt(mom_tku.x()*mom_tku.x() + mom_tku.y()*mom_tku.y() + mom_tku.z()*mom_tku.z());
+  double tkd_mag =
+    sqrt(mom_tkd.x()*mom_tkd.x() + mom_tkd.y()*mom_tkd.y() + mom_tkd.z()*mom_tkd.z());
+  mHPUSDS->Fill(tku_mag, tkd_mag);
 
   return true;
 }

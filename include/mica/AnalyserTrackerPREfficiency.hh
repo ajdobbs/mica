@@ -95,7 +95,7 @@ class AnalyserTrackerPREfficiency : public AnalyserBase {
     double mUpperTimeCut; ///< Maximum time-of-flight between TOF1 and TOF2 for event to be classed
                           ///< as good, if mCheckTOF is set true
 
-    ofstream mOf1; ///< output filestream for efficiency data
+    // std::ofstream mOf1; ///< output filestream for efficiency data
 
     /** @brief Check a tracker to see if a single track is expected. Set the input bools to
      *         say whether a 4pt track or a 5pt track are expected.

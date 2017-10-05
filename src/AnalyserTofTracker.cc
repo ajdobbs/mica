@@ -92,13 +92,17 @@ bool AnalyserTofTracker::analyse(MAUS::ReconEvent* const aReconEvent,
 
   // Fill the histograms
   // if (!tku_good && !tkd_good) return false;
+  double tku_mag =
+    sqrt(mom_tku.x()*mom_tku.x() + mom_tku.y()*mom_tku.y() + mom_tku.z()*mom_tku.z());
+  double tkd_mag =
+    sqrt(mom_tkd.x()*mom_tkd.x() + mom_tkd.y()*mom_tkd.y() + mom_tkd.z()*mom_tkd.z());
   if (tku_good) {
-    mHPTkU->Fill(tof12, mom_tku.mag());
+    mHPTkU->Fill(tof12, tku_mag);
     mHPtTkU->Fill(tof12, sqrt(mom_tku.x()*mom_tku.x() + mom_tku.y()*mom_tku.y()));
     mHPzTkU->Fill(tof12, mom_tku.z());
   }
   if (tkd_good) {
-    mHPTkD->Fill(tof12, mom_tkd.mag());
+    mHPTkD->Fill(tof12, tkd_mag);
     mHPtTkD->Fill(tof12, sqrt(mom_tkd.x()*mom_tkd.x() + mom_tkd.y()*mom_tkd.y()));
     mHPzTkD->Fill(tof12, mom_tkd.z());
   }
