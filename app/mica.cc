@@ -1,36 +1,39 @@
 /** The main application for the Muon Ionization Cooling Analysis (MICA) framework */
 
-// C / C++ headers
-#include <stdlib.h>
+// std library headers
 #include <iostream>
-#include <iomanip>
 #include <fstream>
-#include <sstream>
 #include <string>
 #include <vector>
 #include <memory>
 
 // ROOT headers
-#include "TROOT.h"
 #include "TStyle.h"
-#include "TObject.h"
 #include "TFile.h"
 #include "TTree.h"
 #include "TVirtualPad.h"
-#include "TCanvas.h"
 
+// MAUS headers
 #include "src/common_cpp/DataStructure/Spill.hh"
 #include "src/common_cpp/DataStructure/Data.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 
+// MICA headers
 #include "mica/AnalyserBase.hh"
 #include "mica/AnalyserFactory.hh"
 #include "mica/AnalyserTrackerPRSeedResidual.hh"
 #include "mica/AnalyserTrackerPREfficiency.hh"
 
+/** Analyse one ROOT file, using a given set of MICE analysers */
+void analyse_file(TFile& aFile, std::vector<mica::AnalyserBase*>& analysers);
+
+/** Draw and save to pdf the data contained in a given set of MICA analysers */
+void make_plots(const std::string& ofname, std::vector<mica::AnalyserBase*>& analysers);
+
+/** The main MICA app function - prepare the input file, analyse, plot, save to pdf */
 int main(int argc, char *argv[]) {
-  // Instantiate the analysers
+  // Instantiate the analysers required
   std::vector<std::string> analyser_names {"AnalyserTrackerChannelHits",
                                            "AnalyserTrackerSpacePoints",
                                            "AnalyserTrackerPRSeedResidual",
@@ -43,7 +46,7 @@ int main(int argc, char *argv[]) {
                                            "AnalyserTrackerKFMomentum",
                                            "AnalyserTofTracker"};
   std::vector<mica::AnalyserBase*> analysers
-    = mica::AnalyserFactory::CreateAnalysers(analyser_names);
+      = mica::AnalyserFactory::CreateAnalysers(analyser_names);
 
   // Customise a few specific analyser options
   // Use a log scale for patrec seed residual plots
@@ -54,7 +57,7 @@ int main(int argc, char *argv[]) {
   dynamic_cast<mica::AnalyserTrackerPREfficiency*>(analysers[7])->SetCheckTkU(false);
   dynamic_cast<mica::AnalyserTrackerPREfficiency*>(analysers[7])->SetCheckTkD(false);
 
-  // Set up the input file
+  // Set up the input and output files using the programme arguments
   std::string infile = "";
   std::string outfile = "analysis.pdf";
   if (argc > 1) {
@@ -70,13 +73,25 @@ int main(int argc, char *argv[]) {
   }
   std::cout << "Input file " << infile << std::endl;
 
-  // Set up the output file
-  if (argc > 2)
-    outfile = std::string(argv[2]);
+  if (argc > 2) outfile = std::string(argv[2]);
   std::cout << "Output file " << outfile << std::endl;
 
+  // Analyse the input ROOT file using the analysers
+  analyse_file(f1, analysers);
+
+  // Plot the results contained in the analysers
+  make_plots(outfile, analysers);
+
+  // Wrap up
+  for (auto an : analysers) {
+    delete an;
+  }
+  return 0;
+}
+
+void analyse_file(TFile& aFile, std::vector<mica::AnalyserBase*>& analysers) {
   // Set up access to ROOT data from input file
-  TTree* T = static_cast<TTree*>(f1.Get("Spill"));
+  TTree* T = static_cast<TTree*>(aFile.Get("Spill"));
   MAUS::Data* data = nullptr;  // Don't forget = nullptr or you get a seg fault
   T->SetBranchAddress("data", &data); // Yes, this is the *address* of a *pointer*
   int nentries = T->GetEntries();
@@ -117,8 +132,9 @@ int main(int argc, char *argv[]) {
     std::cout << "Spills processed: " << spills_processed << " of " << nentries
               << ", events processed: " << events_processed << std::endl;
   } // ~Loop over all spills
+}
 
-  // Plot the results
+void make_plots(const std::string& ofname, std::vector<mica::AnalyserBase*>& analysers) {
   std::vector<std::shared_ptr<TVirtualPad>> pads;
   std::vector<std::shared_ptr<TStyle> > styles;
   for (auto an : analysers) {
@@ -135,18 +151,11 @@ int main(int argc, char *argv[]) {
     if (styles[i]) styles[i]->cd();
     pads[i]->Update();
     if (i == 0) {
-      pads[i]->SaveAs((outfile + "(").c_str(), "pdf");
+      pads[i]->SaveAs((ofname + "(").c_str(), "pdf");
     } else if (i == (pads.size() - 1)) {
-      pads[i]->SaveAs((outfile + ")").c_str(), "pdf");
+      pads[i]->SaveAs((ofname + ")").c_str(), "pdf");
     } else {
-      pads[i]->SaveAs(outfile.c_str(), "pdf");
+      pads[i]->SaveAs(ofname.c_str(), "pdf");
     }
   }
-
-  // Wrap up
-  std::cout << "File done" << std::endl;
-  for (auto an : analysers) {
-    delete an;
-  }
-  return 0;
 }

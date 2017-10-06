@@ -21,7 +21,8 @@ namespace mica {
  *    Base class for all analysers. Defines an interface via the draw and analyse
  *    functions, which must be overidden in daughter classes. Client code calls
  *    Draw and Analyse. Applies any cuts selected prior to passing events
- *    to daughter routines.
+ *    to daughter routines. All new user defined daughter classes should be registered
+ *    with AnalyserFactory::CreateAnalyser.
  *  @author A. Dobbs
  */
 class AnalyserBase {
