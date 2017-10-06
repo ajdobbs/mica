@@ -44,7 +44,7 @@ bool AnalyserTrackerSpacePointSearchStation::analyse(MAUS::ReconEvent* const aRe
   return true;
 }
 
-void AnalyserTrackerSpacePointSearchStation::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerSpacePointSearchStation::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->Divide(5, 2);
   for (int i = 0; i < 5; ++i) {
     aPad->cd(i+1);
@@ -52,5 +52,6 @@ void AnalyserTrackerSpacePointSearchStation::draw(std::shared_ptr<TVirtualPad> a
     aPad->cd(i+6);
     mHAddOns[i]->Draw("COLZ");
   }
+  return true;
 }
 } // ~namespace mica

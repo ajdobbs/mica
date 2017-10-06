@@ -27,7 +27,7 @@ class AnalyserTrackerSpacePoints : public AnalyserBase {
 
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
-    virtual void draw(std::shared_ptr<TVirtualPad> aPad);
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
 
   private:
     TH1D* mHNpeTKU; ///< Spacepoint NPE plot for TkU

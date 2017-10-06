@@ -38,12 +38,14 @@ std::shared_ptr<TVirtualPad> AnalyserBase::Draw(std::shared_ptr<TVirtualPad> aPa
   if (!aPad) {
     aPad = std::shared_ptr<TVirtualPad>(new TCanvas());
   }
-  draw(aPad);
+  bool success = draw(aPad);
 
-  // If the mPads vector is empty, add the current pad to the list
-  if (mPads.size() == 0)
+  // If draw was successful yet the mPads vector is still empty, add the current pad to the list
+  if (!success) {
+    aPad = nullptr;
+  } else if (mPads.size() == 0) {
     AddPad(aPad);
-
+  }
   return aPad;
 }
 } // ~namespace mica

@@ -72,7 +72,7 @@ bool AnalyserTrackerChannelHits::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTrackerChannelHits::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerChannelHits::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
   int nStations = 5;
   int nPlanes = 3;
@@ -111,6 +111,8 @@ void AnalyserTrackerChannelHits::draw(std::shared_ptr<TVirtualPad> aPad) {
   for (int i = 0; i < nStations; ++i) {
     AddPad(pads_npe[i]);
   }
+
+  return true;
 }
 
 } // ~namespace mica

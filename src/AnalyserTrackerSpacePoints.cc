@@ -131,7 +131,7 @@ bool AnalyserTrackerSpacePoints::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTrackerSpacePoints::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerSpacePoints::draw(std::shared_ptr<TVirtualPad> aPad) {
   // Draw the general spacepoint information plots
   aPad->Divide(3, 2);
   aPad->cd(1);
@@ -175,5 +175,7 @@ void AnalyserTrackerSpacePoints::draw(std::shared_ptr<TVirtualPad> aPad) {
   AddPad(padXY);
   AddPad(padXYTriplets);
   AddPad(padXYDoublets);
+
+  return true;
 }
 } // ~namespace mica

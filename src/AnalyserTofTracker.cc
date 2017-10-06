@@ -110,7 +110,7 @@ bool AnalyserTofTracker::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTofTracker::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTofTracker::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
   aPad->Divide(3, 2);
   aPad->cd(1);
@@ -125,6 +125,8 @@ void AnalyserTofTracker::draw(std::shared_ptr<TVirtualPad> aPad) {
   mHPtTkD->Draw("COLZ");
   aPad->cd(6);
   mHPzTkD->Draw("COLZ");
+
+  return true;
 }
 
 bool AnalyserTofTracker::GetMomentum(const MAUS::SciFiTrack* const trk, MAUS::ThreeVector& mom) {

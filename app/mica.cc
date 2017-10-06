@@ -25,59 +25,34 @@
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 
 #include "mica/AnalyserBase.hh"
-#include "mica/AnalyserTrackerSpacePoints.hh"
+#include "mica/AnalyserFactory.hh"
 #include "mica/AnalyserTrackerPRSeedResidual.hh"
-#include "mica/AnalyserTrackerPRSeedNPEResidual.hh"
-#include "mica/AnalyserTrackerPRStats.hh"
-#include "mica/AnalyserTrackerAngularMomentum.hh"
 #include "mica/AnalyserTrackerPREfficiency.hh"
-#include "mica/AnalyserTrackerMCPurity.hh"
-#include "mica/AnalyserTrackerMCPRResiduals.hh"
-#include "mica/AnalyserTrackerChannelHits.hh"
-#include "mica/AnalyserTrackerKFStats.hh"
-#include "mica/AnalyserTofTracker.hh"
-#include "mica/AnalyserTrackerKFMomentum.hh"
 
 int main(int argc, char *argv[]) {
   // Instantiate the analysers
-  std::vector<mica::AnalyserBase*> analysers;
+  std::vector<std::string> analyser_names {"AnalyserTrackerChannelHits",
+                                           "AnalyserTrackerSpacePoints",
+                                           "AnalyserTrackerPRSeedResidual",
+                                           "AnalyserTrackerPRSeedNPEResidual",
+                                           "AnalyserTrackerPRStats",
+                                           "AnalyserTrackerAngularMomentum",
+                                           "AnalyserTrackerMCPRResiduals",
+                                           "AnalyserTrackerPREfficiency",
+                                           "AnalyserTrackerKFStats",
+                                           "AnalyserTrackerKFMomentum",
+                                           "AnalyserTofTracker"};
+  std::vector<mica::AnalyserBase*> analysers
+    = mica::AnalyserFactory::CreateAnalysers(analyser_names);
 
-  mica::AnalyserTrackerChannelHits* anlCH = new mica::AnalyserTrackerChannelHits();
-  analysers.push_back(anlCH);
-
-  mica::AnalyserTrackerSpacePoints* anlTSP = new mica::AnalyserTrackerSpacePoints();
-  analysers.push_back(anlTSP);
-
-  mica::AnalyserTrackerPRSeedResidual* anlTPSR = new mica::AnalyserTrackerPRSeedResidual();
-  anlTPSR->setLogScale(true);
-  analysers.push_back(anlTPSR);
-
-  mica::AnalyserTrackerPRSeedNPEResidual* anlTPSNR = new mica::AnalyserTrackerPRSeedNPEResidual();
-  analysers.push_back(anlTPSNR);
-
-  mica::AnalyserTrackerPRStats* anlTPRS = new mica::AnalyserTrackerPRStats();
-  analysers.push_back(anlTPRS);
-
-  mica::AnalyserTrackerAngularMomentum* anlTAM = new mica::AnalyserTrackerAngularMomentum();
-  anlTAM->SetAnalysisStation(1);
-  anlTAM->SetAnalysisPlane(0);
-  analysers.push_back(anlTAM);
-
-  mica::AnalyserTrackerMCPRResiduals* anlMCPRR = new mica::AnalyserTrackerMCPRResiduals();
-  analysers.push_back(anlMCPRR);
-
-  mica::AnalyserTrackerPREfficiency* anlPRE = new mica::AnalyserTrackerPREfficiency();
-  anlPRE->SetAllowMultiHitStations(false); // false -> ideal events only, true -> non-ideal allowed
-  anlPRE->SetCheckTkU(false); // Only use the TOFs to define an expected good event
-  anlPRE->SetCheckTkD(false); // Only use the TOFs to define an expected good event
-  analysers.push_back(anlPRE);
-
-  analysers.push_back(new mica::AnalyserTrackerKFStats());
-  analysers.push_back(new mica::AnalyserTrackerKFMomentum());
-  analysers.push_back(new mica::AnalyserTofTracker());
-
-  // AnalyserTrackerMCPurity* anlMP = new AnalyserTrackerMCPurity();
-  // analysers.push_back(anlMP);
+  // Customise a few specific analyser options
+  // Use a log scale for patrec seed residual plots
+  dynamic_cast<mica::AnalyserTrackerPRSeedResidual*>(analysers[2])->setLogScale(true);
+  // Don't restrict efficiency calc to ideal events (false = ideal events only, true = non-ideal ok)
+  dynamic_cast<mica::AnalyserTrackerPREfficiency*>(analysers[7])->SetAllowMultiHitStations(false);
+  // Only use the TOFs to define an expected good event, not tracker spacepoints
+  dynamic_cast<mica::AnalyserTrackerPREfficiency*>(analysers[7])->SetCheckTkU(false);
+  dynamic_cast<mica::AnalyserTrackerPREfficiency*>(analysers[7])->SetCheckTkD(false);
 
   // Set up the input file
   std::string infile = "";
@@ -148,10 +123,11 @@ int main(int argc, char *argv[]) {
   std::vector<std::shared_ptr<TStyle> > styles;
   for (auto an : analysers) {
     an->Draw();
-    std::vector<std::shared_ptr<TVirtualPad>> new_pads = an->GetPads();
-    pads.insert(std::end(pads), std::begin(new_pads), std::end(new_pads));
-    for (size_t i = 0; i < new_pads.size(); ++i) {
-      styles.push_back(an->GetStyle());
+    for (auto pad : an->GetPads()) {
+      if (pad) {
+        pads.push_back(pad);
+        styles.push_back(an->GetStyle());
+      }
     }
   }
   std::cout << "Found " << pads.size() << " canvases, saving to pdf." << std::endl;

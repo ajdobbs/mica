@@ -31,7 +31,7 @@ bool AnalyserTrackerMCPurity::analyse_recon(MAUS::ReconEvent* const aReconEvent)
   return true;
 }
 
-void AnalyserTrackerMCPurity::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerMCPurity::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->Divide(2);
   aPad->cd(1);
   TLatex tl;
@@ -43,6 +43,8 @@ void AnalyserTrackerMCPurity::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->cd(2);
   mHTracksMatched->Draw();
   aPad->Update();
+
+  return true;
 }
 
 int AnalyserTrackerMCPurity::find_mc_track_id(MAUS::SciFiBasePRTrack* trk) {

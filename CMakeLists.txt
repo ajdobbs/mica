@@ -18,6 +18,7 @@ link_directories($ENV{MAUS_ROOT_DIR}/build)
 
 # Build the MICA library
 add_library(MicaCore SHARED src/AnalyserBase.cc
+                        src/AnalyserFactory.cc
                         src/AnalyserTrackerAngularMomentum.cc
                         src/AnalyserTrackerMC.cc
                         src/AnalyserTrackerMCPRResiduals.cc

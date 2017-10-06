@@ -33,7 +33,7 @@ class AnalyserTrackerMCPurity : public AnalyserTrackerMC {
 
     virtual bool analyse_recon(MAUS::ReconEvent* const aReconEvent) override;
 
-    virtual void draw(std::shared_ptr<TVirtualPad> aPad)override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad)override;
 
   private:
     int find_mc_track_id(MAUS::SciFiBasePRTrack* trk);

@@ -29,7 +29,7 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
                          MAUS::MCEvent* const aMCEvent) override;
 
-    virtual void draw(std::shared_ptr<TVirtualPad> aPad)override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad)override;
 
   private:
     const double mBfield = 3.0;

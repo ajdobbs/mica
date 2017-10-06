@@ -53,7 +53,7 @@ class AnalyserBase {
      *         to be overidden by concrete daughter classes
      *  @param aPad ROOT TPad to draw results on
      */
-    virtual void draw(std::shared_ptr<TVirtualPad> aPad) = 0;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) = 0;
 
     /** @brief Add a pad to the list of internal pad pointers */
     void AddPad(std::shared_ptr<TVirtualPad> aPad) { mPads.push_back(aPad); }

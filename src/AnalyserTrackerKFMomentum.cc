@@ -60,9 +60,11 @@ bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTrackerKFMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerKFMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
   mHPUSDS->Draw("COLZ");
+
+  return true;
 }
 
 bool AnalyserTrackerKFMomentum::GetMomentum(const MAUS::SciFiTrack* const trk,

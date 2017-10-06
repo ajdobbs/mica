@@ -43,7 +43,7 @@ bool AnalyserTrackerPRStats::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::
   }
 }
 
-void AnalyserTrackerPRStats::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerPRStats::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
   aPad->Divide(4, 2);
 
@@ -70,5 +70,7 @@ void AnalyserTrackerPRStats::draw(std::shared_ptr<TVirtualPad> aPad) {
   aPad->cd(8);
   aPad->GetPad(8)->SetLogy(1);
   mHSZChiSqTKD->Draw();
+
+  return true;
 }
 } // ~namespace mica

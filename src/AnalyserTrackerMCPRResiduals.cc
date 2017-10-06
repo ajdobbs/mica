@@ -232,7 +232,7 @@ bool AnalyserTrackerMCPRResiduals::analyse(MAUS::ReconEvent* const aReconEvent,
   return true;
 }
 
-void AnalyserTrackerMCPRResiduals::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerMCPRResiduals::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
 
   // Draw the MC distribution
@@ -356,5 +356,7 @@ void AnalyserTrackerMCPRResiduals::draw(std::shared_ptr<TVirtualPad> aPad) {
   AddPad(pad2);
   AddPad(pad2d);
   AddPad(padResPzRec);
+
+  return true;
 }
 } // ~namespace mica

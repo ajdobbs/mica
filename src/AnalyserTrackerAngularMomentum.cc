@@ -44,14 +44,14 @@ bool AnalyserTrackerAngularMomentum::analyse(MAUS::ReconEvent* const aReconEvent
     // Access the PR track from the SciFiSeed in order to extract the radius
     TObject* pr_track_obj = seed->getPRTrackTobject();
     if (!pr_track_obj) {
-      std::cerr << "Empty PR track TObject pointer, skipping track" << std::endl;
+      // std::cerr << "Empty PR track TObject pointer, skipping track" << std::endl;
       continue;
     }
     MAUS::SciFiHelicalPRTrack* htrk =
         dynamic_cast<MAUS::SciFiHelicalPRTrack*>(pr_track_obj); // NOLINT(runtime/rtti)
     if (!htrk) {
-      std::cerr << "PR track dynamic cast failed, source pointer address "
-                << pr_track_obj << std::endl;
+      // std::cerr << "PR track dynamic cast failed, source pointer address "
+      //          << pr_track_obj << std::endl;
       continue;
     }
     double radius = htrk->get_R();
@@ -74,12 +74,19 @@ bool AnalyserTrackerAngularMomentum::analyse(MAUS::ReconEvent* const aReconEvent
   return true;
 }
 
-void AnalyserTrackerAngularMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
+bool AnalyserTrackerAngularMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
+  // If no data, don't bother drawing the canvas
+  if (mHAngMomTKU->GetEntries() < 1.0 && mHAngMomTKD->GetEntries() < 1.0) {
+    return false;
+  }
+
   aPad->Divide(2, 1);
   aPad->cd(1);
   mHAngMomTKU->Draw("COLZ");
   aPad->cd(2);
   mHAngMomTKD->Draw("COLZ");
+
+  return true;
 }
 
 MAUS::SciFiSeed* AnalyserTrackerAngularMomentum::ExtractSeed(MAUS::SciFiTrack* aTrack) const {
