@@ -178,3 +178,4 @@ bool AnalyserTrackerMC::make_lookup(MAUS::MCEvent* const aMCEvent) {
   return mLookup->make_hits_map(aMCEvent);
 }
 } // ~namespace mica
+

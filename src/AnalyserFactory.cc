@@ -48,6 +48,14 @@ std::vector<AnalyserBase*> AnalyserFactory::CreateAnalysers(const std::vector<st
   return analysers;
 }
 
+AnalyserGroup AnalyserFactory::CreateAnalyserGroup(const std::vector<std::string>& aNames) {
+  AnalyserGroup analysers;
+  for (auto s : aNames) {
+     analysers.AddAnalyser(CreateAnalyser(s));
+  }
+  return analysers;
+}
+
 std::shared_ptr<AnalyserBase> AnalyserFactory::CreateSharedAnalyser(const std::string &aName) {
   return std::shared_ptr<AnalyserBase>(CreateAnalyser(aName));
 }

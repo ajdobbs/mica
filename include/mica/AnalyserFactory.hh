@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "mica/AnalyserBase.hh"
+#include "mica/AnalyserGroup.hh"
 
 namespace mica {
 
@@ -23,6 +24,8 @@ class AnalyserFactory {
   public:
     /** Create a new instance of the analyser type represented by the string arg */
     static AnalyserBase* CreateAnalyser(const std::string& aName);
+
+    AnalyserGroup CreateAnalyserGroup(const std::vector<std::string>& aNames);
 
     /** Create a vector of analysers, with the specific types defined the vector of strings arg */
     static std::vector<AnalyserBase*> CreateAnalysers(const std::vector<std::string>& aNames);

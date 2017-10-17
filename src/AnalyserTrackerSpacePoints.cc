@@ -17,7 +17,6 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU{nullptr},
                                                            mHStationNumTKD{nullptr},
                                                            mHXYTKU{nullptr},
                                                            mHXYTKD{nullptr} {
-
   // Some parameters for the plots
   int nbins = 100;
   double xmax = 200.0;
@@ -28,25 +27,30 @@ AnalyserTrackerSpacePoints::AnalyserTrackerSpacePoints() : mHNpeTKU{nullptr},
   std::string ylabel = "y (mm)";
 
   // Initialise the general spacepoint info plots
-  mHNpeTKU = new TH1D("hNpeTKU", "Spacepoint NPE TkU", nbins, 0, 200);
+  mHNpeTKU = std::unique_ptr<TH1D>(new TH1D("hNpeTKU", "Spacepoint NPE TkU", nbins, 0, 200));
   mHNpeTKU->GetXaxis()->SetTitle("NPE");
-  mHNpeTKD = new TH1D("hNpeTKD", "Spacepoint NPE TkD", nbins, 0, 200);
+  mHNpeTKD = std::unique_ptr<TH1D>(new TH1D("hNpeTKD", "Spacepoint NPE TkD", nbins, 0, 200));
   mHNpeTKD->GetXaxis()->SetTitle("NPE");
 
-  mHStationNumTKU = new TH1D("hStationNumTKU", "Spacepoints per Station TkU", 5, 1, 6);
+  mHStationNumTKU = std::unique_ptr<TH1D>(new TH1D("hStationNumTKU",
+                                                   "Spacepoints per Station TkU", 5, 1, 6));
   mHStationNumTKU->GetXaxis()->SetTitle("Station Number");
-  mHStationNumTKD = new TH1D("hStationNumTKD", "Spacepoints per Station TkD", 5, 1, 6);
+
+  mHStationNumTKD = std::unique_ptr<TH1D>(new TH1D("hStationNumTKD",
+                                                   "Spacepoints per Station TkD", 5, 1, 6));
   mHStationNumTKD->GetXaxis()->SetTitle("Station Number");
 
-  mHXYTKU = new TH2D("hXYTKU", "Spacepoints XY TkU", nbins, xmin, xmax, nbins, ymin, ymax);
+  mHXYTKU = std::unique_ptr<TH2D>(new TH2D("hXYTKU", "Spacepoints XY TkU",
+                                           nbins, xmin, xmax, nbins, ymin, ymax));
   mHXYTKU->GetXaxis()->SetTitle(xlabel.c_str());
   mHXYTKU->GetYaxis()->SetTitle(ylabel.c_str());
-  mHXYTKD = new TH2D("hXYTKD", "Spacepoints XY  TkD", nbins, xmin, xmax, nbins, ymin, ymax);
+  mHXYTKD = std::unique_ptr<TH2D>(new TH2D("hXYTKD", "Spacepoints XY  TkD",
+                                            nbins, xmin, xmax, nbins, ymin, ymax));
   mHXYTKD->GetXaxis()->SetTitle(xlabel.c_str());
   mHXYTKD->GetYaxis()->SetTitle(ylabel.c_str());
 
   // Initialise the x-y per station spacepoint plots (for all, triplets only, doublets only)
-  for (int iStation = 0; iStation < 5; ++iStation) {
+  for (int iStation = 0; iStation < mNStations; ++iStation) {
     std::string name = "S" + std::to_string(iStation+1);
 
     std::string tku_title = "TkU Spacepoints XY " + name;
@@ -177,5 +181,23 @@ bool AnalyserTrackerSpacePoints::draw(std::shared_ptr<TVirtualPad> aPad) {
   AddPad(padXYDoublets);
 
   return true;
+}
+
+void AnalyserTrackerSpacePoints::merge(AnalyserTrackerSpacePoints* aAnalyser) {
+  mHNpeTKU->Add(aAnalyser->mHNpeTKU.get());
+  mHNpeTKD->Add(aAnalyser->mHNpeTKD.get());
+  mHStationNumTKU->Add(aAnalyser->mHStationNumTKU.get());
+  mHStationNumTKD->Add(aAnalyser->mHStationNumTKD.get());
+  mHXYTKU->Add(aAnalyser->mHXYTKU.get());
+  mHXYTKD->Add(aAnalyser->mHXYTKD.get());
+
+  for (int i = 0; i < mNStations; ++i) {
+    mXYPerStationTkU[i]->Add(aAnalyser->mXYPerStationTkU[i].get());
+    mXYPerStationTkD[i]->Add(aAnalyser->mXYPerStationTkD[i].get());
+    mXYPerStationTripletsTkU[i]->Add(aAnalyser->mXYPerStationTripletsTkU[i].get());
+    mXYPerStationTripletsTkD[i]->Add(aAnalyser->mXYPerStationTripletsTkD[i].get());
+    mXYPerStationDoubletsTkU[i]->Add(aAnalyser->mXYPerStationDoubletsTkU[i].get());
+    mXYPerStationDoubletsTkD[i]->Add(aAnalyser->mXYPerStationDoubletsTkD[i].get());
+  }
 }
 } // ~namespace mica

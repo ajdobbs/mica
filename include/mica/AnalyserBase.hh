@@ -44,6 +44,9 @@ class AnalyserBase {
      */
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) = 0;
 
+    /** @brief Create a new instance of the actual daughter class, returning a base pointer */
+    // virtual AnalyserBase* Clone() = 0;
+
     /** @brief Check to see if a valid pad has been supplied, if not make a new one,
      *         then call draw
      *  @param aPad ROOT TPad to draw results on
@@ -55,6 +58,8 @@ class AnalyserBase {
      *  @param aPad ROOT TPad to draw results on
      */
     virtual bool draw(std::shared_ptr<TVirtualPad> aPad) = 0;
+
+    virtual bool Merge(AnalyserBase* aAnalyser) { return false; };
 
     /** @brief Add a pad to the list of internal pad pointers */
     void AddPad(std::shared_ptr<TVirtualPad> aPad) { mPads.push_back(aPad); }

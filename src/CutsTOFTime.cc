@@ -38,3 +38,4 @@ bool CutsTOFTime::Cut(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const 
 }
 
 } // ~namespace mica
+

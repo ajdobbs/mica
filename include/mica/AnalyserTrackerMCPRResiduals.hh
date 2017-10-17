@@ -9,8 +9,10 @@
 
 #include "TVirtualPad.h"
 #include "TH1.h"
+#include "TH2.h"
 
-#include "mica/AnalyserTrackerMC.hh"
+#include "mica/IAnalyser.hh"
+
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 
 namespace mica {
@@ -20,7 +22,7 @@ namespace mica {
  *  @author A. Dobbs
  */
 
-class AnalyserTrackerMCPRResiduals : public AnalyserBase {
+class AnalyserTrackerMCPRResiduals : public IAnalyser<AnalyserTrackerMCPRResiduals> {
   public:
     AnalyserTrackerMCPRResiduals();
 
@@ -29,7 +31,9 @@ class AnalyserTrackerMCPRResiduals : public AnalyserBase {
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
                          MAUS::MCEvent* const aMCEvent) override;
 
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad)override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
+    virtual void merge(AnalyserTrackerMCPRResiduals* aAnalyser) override;
 
   private:
     const double mBfield = 3.0;

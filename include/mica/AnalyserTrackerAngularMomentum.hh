@@ -11,6 +11,7 @@
 #include "TH2.h"
 
 #include "mica/AnalyserBase.hh"
+#include "mica/IAnalyser.hh"
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "src/common_cpp/DataStructure/SciFiSeed.hh"
@@ -22,7 +23,8 @@ namespace mica {
  *         Anayser class which produces plots of ang. mom. vs radius
  *  @author A. Dobbs
  */
-class AnalyserTrackerAngularMomentum : public AnalyserBase {
+
+class AnalyserTrackerAngularMomentum : public IAnalyser<AnalyserTrackerAngularMomentum> {
   public:
     AnalyserTrackerAngularMomentum();
     virtual ~AnalyserTrackerAngularMomentum() {}
@@ -32,12 +34,15 @@ class AnalyserTrackerAngularMomentum : public AnalyserBase {
      *  @param aMCEvent The corresponding MC event
      *  @return Boolean indicating if the cuts passed and the analysis happened
      */
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
+                         MAUS::MCEvent* const aMCEvent) override;
 
     /** @brief After analysing all the events, draw the results
      *  @param aPad ROOT TPad to draw results on
      */
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
+    virtual void merge(AnalyserTrackerAngularMomentum* aAnalyser) override;
 
     /** @brief Return the tracker station at which parameters are evaluated */
     int GetAnalysisStation() const { return mAnalysisStation; }

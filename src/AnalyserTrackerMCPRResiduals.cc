@@ -359,4 +359,16 @@ bool AnalyserTrackerMCPRResiduals::draw(std::shared_ptr<TVirtualPad> aPad) {
 
   return true;
 }
+
+void AnalyserTrackerMCPRResiduals::merge(AnalyserTrackerMCPRResiduals* aAnalyser) {
+  mHTkUPositionResidualsX->Add(aAnalyser->mHTkUPositionResidualsX);
+  mHTkUPositionResidualsY->Add(aAnalyser->mHTkUPositionResidualsY);
+  mHTkUMomentumResidualsT->Add(aAnalyser->mHTkUMomentumResidualsT);
+  mHTkUMomentumResidualsZ->Add(aAnalyser->mHTkUMomentumResidualsZ);
+  mHTkDPositionResidualsX->Add(aAnalyser->mHTkDPositionResidualsX);
+  mHTkDPositionResidualsY->Add(aAnalyser->mHTkDPositionResidualsY);
+  mHTkDMomentumResidualsT->Add(aAnalyser->mHTkDMomentumResidualsT);
+  mHTkDMomentumResidualsZ->Add(aAnalyser->mHTkDMomentumResidualsZ);
+}
 } // ~namespace mica
+

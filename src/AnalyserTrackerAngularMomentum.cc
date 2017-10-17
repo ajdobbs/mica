@@ -112,5 +112,8 @@ MAUS::SciFiSeed* AnalyserTrackerAngularMomentum::ExtractSeed(MAUS::SciFiTrack* a
   return seed;
 }
 
-
+void AnalyserTrackerAngularMomentum::merge(AnalyserTrackerAngularMomentum* aAnalyser) {
+  mHAngMomTKU->Add(aAnalyser->mHAngMomTKU);
+  mHAngMomTKD->Add(aAnalyser->mHAngMomTKD);
+}
 } // ~namespace mica

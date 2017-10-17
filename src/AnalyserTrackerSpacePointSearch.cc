@@ -1,6 +1,7 @@
 /* This file is part of the MICA (Muon Ionization Cooling Analysis) package.
  * Author: A. Dobbs
  */
+
 #include "mica/AnalyserTrackerSpacePointSearch.hh"
 
 namespace mica {
@@ -52,3 +53,4 @@ bool AnalyserTrackerSpacePointSearch::draw(std::shared_ptr<TVirtualPad> aPad) {
   return true;
 }
 } // ~namespace mica
+

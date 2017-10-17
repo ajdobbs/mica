@@ -12,7 +12,7 @@
 
 #include "src/common_cpp/DataStructure/ReconEvent.hh"
 #include "src/common_cpp/DataStructure/MCEvent.hh"
-#include "mica/AnalyserBase.hh"
+#include "mica/IAnalyser.hh"
 
 namespace mica {
 
@@ -20,7 +20,7 @@ namespace mica {
  *         Anayser class for producing spacepoint level plots for the trackers
  *  @author A. Dobbs
  */
-class AnalyserTrackerSpacePoints : public AnalyserBase {
+class AnalyserTrackerSpacePoints :  public IAnalyser<AnalyserTrackerSpacePoints> {
   public:
     AnalyserTrackerSpacePoints();
     virtual ~AnalyserTrackerSpacePoints() {}
@@ -29,13 +29,16 @@ class AnalyserTrackerSpacePoints : public AnalyserBase {
 
     virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
 
+    virtual void merge(AnalyserTrackerSpacePoints* aAnalyser) override;
+
   private:
-    TH1D* mHNpeTKU; ///< Spacepoint NPE plot for TkU
-    TH1D* mHNpeTKD; ///< Spacepoint NPE plot for TkD
-    TH1D* mHStationNumTKU; ///< spacepoints per station plot for TkU
-    TH1D* mHStationNumTKD; ///< spacepoints per station plot for TkD
-    TH2D* mHXYTKU; ///< xy plot for TkU (over all stations)
-    TH2D* mHXYTKD; ///< xy plot for TkD (over all stations)
+    const int mNStations = 5; ///< The number of tracker stations
+    std::unique_ptr<TH1D> mHNpeTKU; ///< Spacepoint NPE plot for TkU
+    std::unique_ptr<TH1D> mHNpeTKD; ///< Spacepoint NPE plot for TkD
+    std::unique_ptr<TH1D> mHStationNumTKU; ///< spacepoints per station plot for TkU
+    std::unique_ptr<TH1D> mHStationNumTKD; ///< spacepoints per station plot for TkD
+    std::unique_ptr<TH2D> mHXYTKU; ///< xy plot for TkU (over all stations)
+    std::unique_ptr<TH2D> mHXYTKD; ///< xy plot for TkD (over all stations)
     std::vector<std::unique_ptr<TH2D> > mXYPerStationTkU; ///< xy plots for TkU, order by station
     std::vector<std::unique_ptr<TH2D> > mXYPerStationTkD; ///< xy plots for TkD, order by station
     std::vector<std::unique_ptr<TH2D> > mXYPerStationTripletsTkU; ///< xy plots for TkU triplets

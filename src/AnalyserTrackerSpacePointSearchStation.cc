@@ -55,3 +55,4 @@ bool AnalyserTrackerSpacePointSearchStation::draw(std::shared_ptr<TVirtualPad> a
   return true;
 }
 } // ~namespace mica
+
