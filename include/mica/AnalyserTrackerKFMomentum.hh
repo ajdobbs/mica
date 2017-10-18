@@ -28,18 +28,6 @@ class AnalyserTrackerKFMomentum : public AnalyserBase {
     AnalyserTrackerKFMomentum();
     virtual ~AnalyserTrackerKFMomentum() {}
 
-    /** @brief Analyse the given event
-     *  @param aReconEvent The recon event
-     *  @param aMCEvent The corresponding MC event
-     *  @return Boolean indicating if the cuts passed and the analysis happened
-     */
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    /** @brief After analysing all the events, draw the results
-     *  @param aPad ROOT TPad to draw results on
-     */
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
     /** @brief Return the tracker station at which parameters are evaluated */
     int GetAnalysisStation() const { return mAnalysisStation; }
 
@@ -53,16 +41,19 @@ class AnalyserTrackerKFMomentum : public AnalyserBase {
     void SetAnalysisPlane(int aAnalysisPlane) { mAnalysisPlane = aAnalysisPlane; }
 
   private:
-    int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
-    int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)
-    std::unique_ptr<TH2D> mHPUSDS; ///< Plot tku vs tkd p
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad)  override;
 
     /** @brief Extract the momentum at the specified surface
      *  @param[in] trk The SciFiTrack
      *  @param[out] mom The momentum
      *  @return Bool representing success of fail
      */
-     bool GetMomentum(const MAUS::SciFiTrack* const trk, MAUS::ThreeVector& mom);
+    bool GetMomentum(const MAUS::SciFiTrack* const trk, MAUS::ThreeVector& mom);
+
+    int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
+    int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)
+    std::unique_ptr<TH2D> mHPUSDS; ///< Plot tku vs tkd p
 };
 } // ~namespace mica
 

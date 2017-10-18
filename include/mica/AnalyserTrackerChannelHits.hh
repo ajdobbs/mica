@@ -27,10 +27,10 @@ class AnalyserTrackerChannelHits : public AnalyserBase {
     AnalyserTrackerChannelHits();
     virtual ~AnalyserTrackerChannelHits() {}
 
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     std::vector<std::unique_ptr<TH1I> > mTkU; ///< Plots for TkU, order by station then by plane
     std::vector<std::unique_ptr<TH1I> > mTkD; ///< Plots for TkD, order by station then by plane
     std::vector<std::unique_ptr<TH2D> > mNPETkU; ///< Plots for TkU, order by station then by plane

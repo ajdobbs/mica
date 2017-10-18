@@ -14,7 +14,6 @@
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "mica/AnalyserBase.hh"
 
-
 namespace mica {
 
 class AnalyserTrackerSpacePointSearch : public AnalyserBase {
@@ -22,11 +21,10 @@ class AnalyserTrackerSpacePointSearch : public AnalyserBase {
     AnalyserTrackerSpacePointSearch();
     ~AnalyserTrackerSpacePointSearch() {}
 
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     TH2D* mHSeeds;
     TH2D* mHAddOns;
 };

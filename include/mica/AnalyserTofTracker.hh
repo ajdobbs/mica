@@ -28,18 +28,6 @@ class AnalyserTofTracker : public AnalyserBase {
     AnalyserTofTracker();
     virtual ~AnalyserTofTracker() {}
 
-    /** @brief Analyse the given event
-     *  @param aReconEvent The recon event
-     *  @param aMCEvent The corresponding MC event
-     *  @return Boolean indicating if the cuts passed and the analysis happened
-     */
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    /** @brief After analysing all the events, draw the results
-     *  @param aPad ROOT TPad to draw results on
-     */
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
     /** @brief Return the tracker station at which parameters are evaluated */
     int GetAnalysisStation() const { return mAnalysisStation; }
 
@@ -53,6 +41,18 @@ class AnalyserTofTracker : public AnalyserBase {
     void SetAnalysisPlane(int aAnalysisPlane) { mAnalysisPlane = aAnalysisPlane; }
 
   private:
+    /** @brief Analyse the given event
+     *  @param aReconEvent The recon event
+     *  @param aMCEvent The corresponding MC event
+     *  @return Boolean indicating if the cuts passed and the analysis happened
+     */
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+
+    /** @brief After analysing all the events, draw the results
+     *  @param aPad ROOT TPad to draw results on
+     */
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
     int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)
     std::unique_ptr<TH2D> mHPTkU; ///< Plot of tof12 time vs tku total momentum

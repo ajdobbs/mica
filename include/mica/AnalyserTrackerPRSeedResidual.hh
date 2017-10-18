@@ -21,10 +21,6 @@ class AnalyserTrackerPRSeedResidual : public AnalyserBase {
     AnalyserTrackerPRSeedResidual();
     ~AnalyserTrackerPRSeedResidual() {}
 
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
     /** @brief Return if plots should be a log scale on y axis */
     bool getLogScale() const { return mLogScale; }
 
@@ -32,6 +28,9 @@ class AnalyserTrackerPRSeedResidual : public AnalyserBase {
     void setLogScale(bool aLogScale) { mLogScale = aLogScale; }
 
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     bool mLogScale; ///< Should plots be a log scale on y axis
     std::vector<TH1D*> mHResidualsTkU; ///< TkU residuals of seeds from fit
     std::vector<TH1D*> mHResidualsTkD; ///< TkD residuals of seeds from fit

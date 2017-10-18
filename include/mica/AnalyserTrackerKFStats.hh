@@ -25,19 +25,10 @@ class AnalyserTrackerKFStats : public AnalyserBase {
     AnalyserTrackerKFStats();
     ~AnalyserTrackerKFStats() {}
 
-    /** @brief Analyse the given event
-     *  @param aReconEvent The recon event
-     *  @param aMCEvent The corresponding MC event
-     *  @return Boolean indicating if the cuts passed and the analysis happened
-     */
+  private:
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    /** @brief After analysing all the events, draw the results
-     *  @param aPad ROOT TPad to draw results on
-     */
     virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
 
-  private:
     TH1D* mHChiSqTKU; ///< mHChiSqTKU Histogram for TkU circle chisq per dof
     TH1D* mHChiSqTKD; ///< mHCircleChiSqTKD Histogram for TkD circle chisq per dof
     TH1D* mHPValueTKU; ///< mHSZChiSqTKU Histogram for TkU p-value

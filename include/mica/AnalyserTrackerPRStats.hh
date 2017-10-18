@@ -25,19 +25,10 @@ class AnalyserTrackerPRStats : public AnalyserBase {
     AnalyserTrackerPRStats();
     ~AnalyserTrackerPRStats() {}
 
-    /** @brief Analyse the given event
-     *  @param aReconEvent The recon event
-     *  @param aMCEvent The corresponding MC event
-     *  @return Boolean indicating if the cuts passed and the analysis happened
-     */
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    /** @brief After analysing all the events, draw the results
-     *  @param aPad ROOT TPad to draw results on
-     */
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     TH1D* mHCircleChiSqTKU; ///< mHCircleChiSqTKU Histogram for TkU circle chisq per dof
     TH1D* mHCircleChiSqTKD; ///< mHCircleChiSqTKD Histogram for TkD circle chisq per dof
     TH1D* mHSZChiSqTKU; ///< mHSZChiSqTKU Histogram for TkU sz chisq per dof

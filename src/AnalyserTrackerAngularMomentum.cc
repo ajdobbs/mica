@@ -92,20 +92,20 @@ bool AnalyserTrackerAngularMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
 MAUS::SciFiSeed* AnalyserTrackerAngularMomentum::ExtractSeed(MAUS::SciFiTrack* aTrack) const {
   MAUS::SciFiSeed* seed = aTrack->scifi_seed();
   if (!seed) {
-    std::cerr << "Empty seed pointer at: " << seed << std::endl;
+    // std::cerr << "Empty seed pointer at: " << seed << std::endl;
   }
   TObject* seed_obj = aTrack->scifi_seed_tobject();
   if (!seed_obj) {
     std::cerr << "Empty seed TObject pointer" << std::endl;
   }
   if (!seed && !seed_obj) {
-    std::cerr << "No seed pointer at all" << std::endl;
+    // std::cerr << "No seed pointer at all" << std::endl;
     return NULL;
   }
   if (!seed && seed_obj) {
     seed = dynamic_cast<MAUS::SciFiSeed*>(seed_obj); // NOLINT(runtime/rtti)
     if (!seed) {
-      std::cerr << "Dynamic cast from SciFiSeed TObject failed" << std::endl;
+      // std::cerr << "Dynamic cast from SciFiSeed TObject failed" << std::endl;
       return NULL;
     }
   }

@@ -25,13 +25,11 @@ class AnalyserTrackerSpacePoints :  public IAnalyser<AnalyserTrackerSpacePoints>
     AnalyserTrackerSpacePoints();
     virtual ~AnalyserTrackerSpacePoints() {}
 
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
+  private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
     virtual void merge(AnalyserTrackerSpacePoints* aAnalyser) override;
 
-  private:
     const int mNStations = 5; ///< The number of tracker stations
     std::unique_ptr<TH1D> mHNpeTKU; ///< Spacepoint NPE plot for TkU
     std::unique_ptr<TH1D> mHNpeTKD; ///< Spacepoint NPE plot for TkD

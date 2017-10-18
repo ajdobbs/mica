@@ -14,7 +14,6 @@
 #include "src/common_cpp/DataStructure/MCEvent.hh"
 #include "mica/AnalyserBase.hh"
 
-
 namespace mica {
 
 class AnalyserTrackerPRSeedNPEResidual : public AnalyserBase {
@@ -22,15 +21,13 @@ class AnalyserTrackerPRSeedNPEResidual : public AnalyserBase {
     AnalyserTrackerPRSeedNPEResidual();
     ~AnalyserTrackerPRSeedNPEResidual() {}
 
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
-
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     std::vector<TH2D*> mHResidualsTkU;
     std::vector<TH2D*> mHResidualsTkD;
 };
 } // ~namespace mica
-
 
 #endif

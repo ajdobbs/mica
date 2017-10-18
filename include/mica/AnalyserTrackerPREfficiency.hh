@@ -29,12 +29,8 @@ class AnalyserTrackerPREfficiency : public AnalyserBase {
     AnalyserTrackerPREfficiency();
     virtual ~AnalyserTrackerPREfficiency();
 
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
     /** @brief Reset the internal counter variables to 0 */
     virtual void clear();
-
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad);
 
     /** @brief Return if we are checking time-of-flight between TOF1 and TOF2, overrules
       * CheckTOFSpacePoints
@@ -67,6 +63,9 @@ class AnalyserTrackerPREfficiency : public AnalyserBase {
     void SetCheckTkD(bool aBool) { mCheckTkD = aBool; }
 
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     bool mCheckTOF; ///< Should we check time-of-flight between TOF1 and TOF2. Requires 1 and only 1
                     ///< spacepoint in both TOF1 and TOF2, so if set to true it will override
                     ///< mCheckTOFSpacePoints.

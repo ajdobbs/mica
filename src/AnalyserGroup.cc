@@ -55,7 +55,7 @@ void AnalyserGroup::MakePlots(const std::string& ofname) {
 }
 
 bool AnalyserGroup::Merge(AnalyserGroup* aAnalyserGroup) {
-  if (mAnalysers.size() != aAnalyserGroup->NAnalysers())
+  if (mAnalysers.size() != aAnalyserGroup->size())
     return false;
 
   bool success = true;

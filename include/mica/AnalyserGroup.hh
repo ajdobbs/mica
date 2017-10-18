@@ -37,7 +37,7 @@ class AnalyserGroup {
     /** Merge the data from another set of identical analysers into this AnalyserGroup */
     bool Merge(AnalyserGroup* aAnalyserGroup);
 
-    size_t NAnalysers() { return mAnalysers.size(); }
+    size_t size() { return mAnalysers.size(); }
 
   private:
     std::vector<AnalyserBase*> mAnalysers;

@@ -23,26 +23,10 @@ namespace mica {
  *         Anayser class which produces plots of ang. mom. vs radius
  *  @author A. Dobbs
  */
-
 class AnalyserTrackerAngularMomentum : public IAnalyser<AnalyserTrackerAngularMomentum> {
   public:
     AnalyserTrackerAngularMomentum();
     virtual ~AnalyserTrackerAngularMomentum() {}
-
-    /** @brief Analyse the given event
-     *  @param aReconEvent The recon event
-     *  @param aMCEvent The corresponding MC event
-     *  @return Boolean indicating if the cuts passed and the analysis happened
-     */
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
-                         MAUS::MCEvent* const aMCEvent) override;
-
-    /** @brief After analysing all the events, draw the results
-     *  @param aPad ROOT TPad to draw results on
-     */
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
-
-    virtual void merge(AnalyserTrackerAngularMomentum* aAnalyser) override;
 
     /** @brief Return the tracker station at which parameters are evaluated */
     int GetAnalysisStation() const { return mAnalysisStation; }
@@ -57,6 +41,11 @@ class AnalyserTrackerAngularMomentum : public IAnalyser<AnalyserTrackerAngularMo
     void SetAnalysisPlane(int aAnalysisPlane) { mAnalysisPlane = aAnalysisPlane; }
 
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
+                         MAUS::MCEvent* const aMCEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+    virtual void merge(AnalyserTrackerAngularMomentum* aAnalyser) override;
+
     int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
     int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)
     TH2D* mHAngMomTKU; ///< Plot of ang. mom. vs radius for TkU

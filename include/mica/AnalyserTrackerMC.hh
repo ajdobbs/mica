@@ -43,35 +43,11 @@ class AnalyserTrackerMC : public AnalyserBase {
     AnalyserTrackerMC();
     ~AnalyserTrackerMC();
 
-    /** @brief Analyse the data, call analyse_mc, then analyse_recon
-     *  @param[in] aReconEvent ReconEvent to analyse, corresponding to aMCEvent
-     *  @param[in] aMCEvent MCEvent to analyse, corresponding to aReconEvent
-     *  @return Did the analysis succeed
-     */
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
-
-    /** @brief Analyse MC data, calls fill_mc_track_data and make_lookup
-     *  @param[in] aMCEvent MCEvent to analyse
-     *  @return Did the analysis succeed
-     */
-    virtual bool analyse_mc(MAUS::MCEvent* const aMCEvent);
-
-    /** @brief Analyse the recon data, to be implemented in daughter classes
-     *  @param[in] aReconEvent MAUS::ReconEvent to analyse, corresponding to aMCEvent
-     *  @return Did the analysis succeed
-     */
-    virtual bool analyse_recon(MAUS::ReconEvent* const aReconEvent) = 0;
-
     /** @brief Delete the lookup table and set the member pointer to nullptr */
     virtual void clear_lookup();
 
     /** @brief Cycle through data vectors, delete every object, set vectors to zero size */
     virtual void clear_mc_data();
-
-    /** @brief Draw results of analysis, to be implemented in daughter classes
-     *  @param aPad Canvas on which to draw the results
-     */
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad)= 0;
 
     /** @brief Return the scifi MC lookup table */
     MAUS::SciFiLookup* GetLookup() const { return mLookup; }
@@ -97,6 +73,20 @@ class AnalyserTrackerMC : public AnalyserBase {
         std::map<int, std::vector<MAUS::SciFiHit*> >& hit_map, int aNPlanes);
 
   private:
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
+
+    /** @brief Analyse MC data, calls fill_mc_track_data and make_lookup
+     *  @param[in] aMCEvent MCEvent to analyse
+     *  @return Did the analysis succeed
+     */
+    virtual bool analyse_mc(MAUS::MCEvent* const aMCEvent);
+
+    /** @brief Analyse the recon data, to be implemented in daughter classes
+     *  @param[in] aReconEvent MAUS::ReconEvent to analyse, corresponding to aMCEvent
+     *  @return Did the analysis succeed
+     */
+    virtual bool analyse_recon(MAUS::ReconEvent* const aReconEvent) = 0;
+
     int mRefStation; ///< Reference surface to use
     int mRefPlane;   ///< Reference plane to use
     int mNStations;  ///< # of stations hit for event to be classed as reconstructible

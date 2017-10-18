@@ -9,11 +9,10 @@ namespace mica {
  *  classes. The purpose of the class is to enable CRTP, allowing the merge function to be defined.
  *  We want to make merge virtual void to force the daughter classes implement it, however merge
  *  requires its argument to be the daughter class type, hence the neccessity of CRTP.
- *  We also implement Clone here, easier than doing it in each daughter class (another CRTP use).
+ *  May also implement a Clone here, easier than doing it in each daughter class (another CRTP use).
  *
  *  @tparam Derived The daughter class type
  */
-
 template <typename Derived>
 class IAnalyser : public AnalyserBase {
   public:
@@ -28,10 +27,11 @@ class IAnalyser : public AnalyserBase {
       Derived* derivedAnalyser = dynamic_cast<Derived*>(aAnalyser);
       if (!derivedAnalyser)
         return false;
-      static_cast<Derived*>(this)->merge(derivedAnalyser);
+      merge(derivedAnalyser);
       return true;
     }
 
+  private:
     /**  Add data from the internal data variables of another analyser instance to the internal
       *  data variables of this analyser instance
       *

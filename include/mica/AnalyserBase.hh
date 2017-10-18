@@ -37,13 +37,6 @@ class AnalyserBase {
      */
     bool Analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
 
-    /** @brief Analyse the given event, to be overidden by concrete daughter classes
-     *  @param aReconEvent The recon event
-     *  @param aMCEvent The corresponding MC event
-     *  @return Boolean indicating if the cuts passed and the analysis happened
-     */
-    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) = 0;
-
     /** @brief Create a new instance of the actual daughter class, returning a base pointer */
     // virtual AnalyserBase* Clone() = 0;
 
@@ -53,12 +46,16 @@ class AnalyserBase {
      */
     std::shared_ptr<TVirtualPad> Draw(std::shared_ptr<TVirtualPad> aPad=nullptr);
 
-    /** @brief After analysing all the events, draw the results,
-     *         to be overidden by concrete daughter classes
-     *  @param aPad ROOT TPad to draw results on
-     */
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) = 0;
-
+    /** @brief Merge combines the data from a second analyser of the same concrete type into
+      * into this analyser (generally by calling the Add method of the ROOT histogram members).
+      *
+      * Daughter classes should inherit from IAnalyser instead of AnalyserBase directly if they
+      * implement this method (which provides some wrapping to handle the dynamic_cast from
+      * AnalyserBase to the specific daughter class).
+      *
+      * @param[in] aAnalyser The analyser to add the data from, must be same type as this
+      * @return Boolean, was the merge sucessful or not
+      */
     virtual bool Merge(AnalyserBase* aAnalyser) { return false; };
 
     /** @brief Add a pad to the list of internal pad pointers */
@@ -85,6 +82,13 @@ class AnalyserBase {
     std::shared_ptr<TStyle> GetStyle() { return mStyle; }
 
   private:
+    /** @brief Analyse the given event, to be overidden by concrete daughter classes
+     *  @param aReconEvent The recon event
+     *  @param aMCEvent The corresponding MC event
+     *  @return Boolean indicating if the cuts passed and the analysis happened
+     */
+    virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) = 0;
+
     /** @brief Apply the cuts held by the mCuts members to the event given as arguments, if they
      *         pass return true, otherwise false - no cuts just causes return true.
      *  @param aReconEvent The recon event
@@ -92,6 +96,12 @@ class AnalyserBase {
      *  @return Boolean indicating if the cuts passed
      */
     bool ApplyCuts(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent);
+
+    /** @brief After analysing all the events, draw the results,
+     *         to be overidden by concrete daughter classes
+     *  @param aPad ROOT TPad to draw results on
+     */
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) = 0;
 
     std::vector<std::shared_ptr<TVirtualPad>> mPads; ///< The canvas upon which the plots are drawn
     std::vector<CutsBase*> mCuts; ///< The cuts to apply before admitting an event for analysis

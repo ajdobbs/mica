@@ -17,29 +17,24 @@
 #include "src/common_cpp/DataStructure/SciFiTrack.hh"
 #include "src/common_cpp/DataStructure/SciFiBasePRTrack.hh"
 
-
 namespace mica {
 
 /** @class AnalyserTrackerMCPurity
  *         Analyser class which calculates pattern recognition purity.
  *  @author A. Dobbs
  */
-
 class AnalyserTrackerMCPurity : public AnalyserTrackerMC {
   public:
     AnalyserTrackerMCPurity();
-
     virtual ~AnalyserTrackerMCPurity() {}
 
-    virtual bool analyse_recon(MAUS::ReconEvent* const aReconEvent) override;
-
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad)override;
-
   private:
+    virtual bool analyse_recon(MAUS::ReconEvent* const aReconEvent) override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+
     int find_mc_track_id(MAUS::SciFiBasePRTrack* trk);
     TH1I* mHTracksMatched;
 };
 } // ~namespace mica
-
 
 #endif

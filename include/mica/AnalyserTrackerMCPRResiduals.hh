@@ -25,17 +25,14 @@ namespace mica {
 class AnalyserTrackerMCPRResiduals : public IAnalyser<AnalyserTrackerMCPRResiduals> {
   public:
     AnalyserTrackerMCPRResiduals();
-
     virtual ~AnalyserTrackerMCPRResiduals() {}
 
+  private:
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent,
                          MAUS::MCEvent* const aMCEvent) override;
-
     virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
-
     virtual void merge(AnalyserTrackerMCPRResiduals* aAnalyser) override;
 
-  private:
     const double mBfield = 3.0;
 
     TH1D* mHTkUMCPositionX;
