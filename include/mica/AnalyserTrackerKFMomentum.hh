@@ -54,6 +54,8 @@ class AnalyserTrackerKFMomentum : public AnalyserBase {
     int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
     int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)
     std::unique_ptr<TH2D> mHPUSDS; ///< Plot tku vs tkd p
+    std::unique_ptr<TH2D> mHPtPzTkU; ///< Plot pt vs pz for tku
+    std::unique_ptr<TH2D> mHPtPzTkD; ///< Plot pt vs pz for tkd
 };
 } // ~namespace mica
 

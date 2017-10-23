@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cmath>
 
+#include "TCanvas.h"
 #include "TRef.h"
 
 #include "src/common_cpp/DataStructure/SciFiTrack.hh"
@@ -16,12 +17,24 @@ namespace mica {
 
 AnalyserTrackerKFMomentum::AnalyserTrackerKFMomentum() : mAnalysisStation{1},
                                                          mAnalysisPlane{0},
-                                                         mHPUSDS{nullptr} {
+                                                         mHPUSDS{nullptr},
+                                                         mHPtPzTkU{nullptr},
+                                                         mHPtPzTkD{nullptr} {
   int nbins = 100;
   mHPUSDS = std::unique_ptr<TH2D>(new TH2D("hPUSDS", "TkU p vs TkD p",
-                                             nbins, 0, 300, nbins, 0, 300));
+                                           nbins, 0, 300, nbins, 0, 300));
   mHPUSDS->GetXaxis()->SetTitle("tku p (MeV/c)");
   mHPUSDS->GetYaxis()->SetTitle("tkd p (MeV/c)");
+
+  mHPtPzTkU = std::unique_ptr<TH2D>(new TH2D("hPtPzTkU", "Recon pt vs Recon pz TkU",
+                                             nbins, 0, 100, nbins, 0, 300));
+  mHPtPzTkU->GetXaxis()->SetTitle("pt (MeV/c)");
+  mHPtPzTkU->GetYaxis()->SetTitle("pz (MeV/c)");
+
+  mHPtPzTkD = std::unique_ptr<TH2D>(new TH2D("hPtPzTkD", "Recon pt vs Recon pz TkD",
+                                             nbins, 0, 100, nbins, 0, 300));
+  mHPtPzTkD->GetXaxis()->SetTitle("pt (MeV/c)");
+  mHPtPzTkD->GetYaxis()->SetTitle("pz (MeV/c)");
 }
 
 bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
@@ -50,19 +63,34 @@ bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
   bool tkd_good = GetMomentum(tkd_trks[0], mom_tkd);
 
   // Fill the histograms
-  if (!tku_good && !tkd_good) return false;
-  double tku_mag =
-    sqrt(mom_tku.x()*mom_tku.x() + mom_tku.y()*mom_tku.y() + mom_tku.z()*mom_tku.z());
-  double tkd_mag =
-    sqrt(mom_tkd.x()*mom_tkd.x() + mom_tkd.y()*mom_tkd.y() + mom_tkd.z()*mom_tkd.z());
-  mHPUSDS->Fill(tku_mag, tkd_mag);
+  if (tku_good && tkd_good) {
+    double tku_mag =
+      sqrt(mom_tku.x()*mom_tku.x() + mom_tku.y()*mom_tku.y() + mom_tku.z()*mom_tku.z());
+    double tkd_mag =
+      sqrt(mom_tkd.x()*mom_tkd.x() + mom_tkd.y()*mom_tkd.y() + mom_tkd.z()*mom_tkd.z());
+    mHPUSDS->Fill(tku_mag, tkd_mag);
+  }
+
+  if (tku_good) mHPtPzTkU->Fill(sqrt(mom_tku.x()*mom_tku.x() + mom_tku.y()*mom_tku.y()), mom_tku.z());
+  if (tkd_good) mHPtPzTkD->Fill(sqrt(mom_tkd.x()*mom_tkd.x() + mom_tkd.y()*mom_tkd.y()), mom_tkd.z());
 
   return true;
 }
 
 bool AnalyserTrackerKFMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
+
+  aPad->Divide(2);
+  aPad->cd(1);
+  mHPtPzTkU->Draw("COLZ");
+  aPad->cd(2);
+  mHPtPzTkD->Draw("COLZ");
+  AddPad(aPad);
+
+  std::shared_ptr<TVirtualPad> padPUSDS = std::shared_ptr<TVirtualPad>(new TCanvas());
+  padPUSDS->cd();
   mHPUSDS->Draw("COLZ");
+  AddPad(padPUSDS);
 
   return true;
 }
