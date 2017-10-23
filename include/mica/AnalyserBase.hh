@@ -18,11 +18,13 @@
 namespace mica {
 
 /** @class AnalyserBase
- *    Base class for all analysers. Defines an interface via the draw and analyse
- *    functions, which must be overidden in daughter classes. Client code calls
- *    Draw and Analyse. Applies any cuts selected prior to passing events
- *    to daughter routines. All new user defined daughter classes should be registered
- *    with AnalyserFactory::CreateAnalyser.
+ *    Base class for all analysers. Defines a public interface via the Draw and Analyse
+ *    functions. These wrap the private draw and analyse respetively which must be overidden
+ *    in daughter classes (an example of the Non-Virtual Interface idiom).
+ *    Analyse applies any cuts selected prior to passing events to daughter routines.
+ *    An optional Merge function is also provided. Daughter classes which wish to implement this
+ *    should inherit from IAnalyser (a CRTP class), rather than AnalyserBase directly.
+ *    All new daughter classes should be registered with AnalyserFactory::CreateAnalyser.
  *  @author A. Dobbs
  */
 class AnalyserBase {
