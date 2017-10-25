@@ -80,10 +80,10 @@ bool AnalyserTrackerAngularMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
     return false;
   }
 
-  aPad->Divide(2, 1);
-  aPad->cd(1);
+  GetPads()[0]->Divide(2, 1);
+  GetPads()[0]->cd(1);
   mHAngMomTKU->Draw("COLZ");
-  aPad->cd(2);
+  GetPads()[0]->cd(2);
   mHAngMomTKD->Draw("COLZ");
 
   return true;

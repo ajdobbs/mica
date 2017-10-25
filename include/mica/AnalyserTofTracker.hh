@@ -41,17 +41,9 @@ class AnalyserTofTracker : public AnalyserBase {
     void SetAnalysisPlane(int aAnalysisPlane) { mAnalysisPlane = aAnalysisPlane; }
 
   private:
-    /** @brief Analyse the given event
-     *  @param aReconEvent The recon event
-     *  @param aMCEvent The corresponding MC event
-     *  @return Boolean indicating if the cuts passed and the analysis happened
-     */
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
-
-    /** @brief After analysing all the events, draw the results
-     *  @param aPad ROOT TPad to draw results on
-     */
     virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+    virtual void update() override;
 
     int mAnalysisStation; ///< The tracker station to calculate all values at (default 1)
     int mAnalysisPlane; ///< The tracker plane to calculate all values at (default 0)

@@ -44,13 +44,13 @@ bool AnalyserTrackerPRSeedResidual::analyse(MAUS::ReconEvent* const aReconEvent,
 
 bool AnalyserTrackerPRSeedResidual::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
-  aPad->Divide(5, 2);
+  GetPads()[0]->Divide(5, 2);
   for (int i = 0; i < 5; ++i) {
-    aPad->cd(i+1);
-    if (mLogScale) aPad->GetPad(i+1)->SetLogy(1);
+    GetPads()[0]->cd(i+1);
+    if (mLogScale) GetPads()[0]->GetPad(i+1)->SetLogy(1);
     mHResidualsTkU[i]->Draw();
-    aPad->cd(i+6);
-    if (mLogScale) aPad->GetPad(i+6)->SetLogy(1);
+    GetPads()[0]->cd(i+6);
+    if (mLogScale) GetPads()[0]->GetPad(i+6)->SetLogy(1);
     mHResidualsTkD[i]->Draw();
   }
   return true;

@@ -45,15 +45,15 @@ bool AnalyserTrackerKFStats::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::
 
 bool AnalyserTrackerKFStats::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
-  aPad->Divide(2, 2);
+  GetPads()[0]->Divide(2, 2);
 
-  aPad->cd(1);
+  GetPads()[0]->cd(1);
   mHChiSqTKU->Draw();
-  aPad->cd(2);
+  GetPads()[0]->cd(2);
   mHPValueTKU->Draw();
-  aPad->cd(3);
+  GetPads()[0]->cd(3);
   mHChiSqTKD->Draw();
-  aPad->cd(4);
+  GetPads()[0]->cd(4);
   mHPValueTKD->Draw();
 
   return true;

@@ -45,30 +45,30 @@ bool AnalyserTrackerPRStats::analyse(MAUS::ReconEvent* const aReconEvent, MAUS::
 
 bool AnalyserTrackerPRStats::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
-  aPad->Divide(4, 2);
+  GetPads()[0]->Divide(4, 2);
 
-  aPad->cd(1);
+  GetPads()[0]->cd(1);
   mHCircleChiSqTKU->Draw();
-  aPad->cd(2);
-  aPad->GetPad(2)->SetLogy(1);
+  GetPads()[0]->cd(2);
+  GetPads()[0]->GetPad(2)->SetLogy(1);
   mHCircleChiSqTKU->Draw();
 
-  aPad->cd(3);
+  GetPads()[0]->cd(3);
   mHSZChiSqTKU->Draw();
-  aPad->cd(4);
-  aPad->GetPad(4)->SetLogy(1);
+  GetPads()[0]->cd(4);
+  GetPads()[0]->GetPad(4)->SetLogy(1);
   mHSZChiSqTKU->Draw();
 
-  aPad->cd(5);
+  GetPads()[0]->cd(5);
   mHCircleChiSqTKD->Draw();
-  aPad->cd(6);
-  aPad->GetPad(6)->SetLogy(1);
+  GetPads()[0]->cd(6);
+  GetPads()[0]->GetPad(6)->SetLogy(1);
   mHCircleChiSqTKD->Draw();
 
-  aPad->cd(7);
+  GetPads()[0]->cd(7);
   mHSZChiSqTKD->Draw();
-  aPad->cd(8);
-  aPad->GetPad(8)->SetLogy(1);
+  GetPads()[0]->cd(8);
+  GetPads()[0]->GetPad(8)->SetLogy(1);
   mHSZChiSqTKD->Draw();
 
   return true;

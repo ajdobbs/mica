@@ -32,17 +32,17 @@ bool AnalyserTrackerMCPurity::analyse_recon(MAUS::ReconEvent* const aReconEvent)
 }
 
 bool AnalyserTrackerMCPurity::draw(std::shared_ptr<TVirtualPad> aPad) {
-  aPad->Divide(2);
-  aPad->cd(1);
+  GetPads()[0]->Divide(2);
+  GetPads()[0]->cd(1);
   TLatex tl;
   tl.SetTextSize(0.03);
   tl.DrawLatex(0.1, 0.8, "PatRec Purity");
-  aPad->cd();
+  GetPads()[0]->cd();
   tl.Draw();
-  aPad->Update();
-  aPad->cd(2);
+  GetPads()[0]->Update();
+  GetPads()[0]->cd(2);
   mHTracksMatched->Draw();
-  aPad->Update();
+  GetPads()[0]->Update();
 
   return true;
 }

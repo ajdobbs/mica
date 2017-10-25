@@ -18,6 +18,7 @@
 #include "mica/AnalyserTrackerSpacePoints.hh"
 #include "mica/AnalyserTrackerSpacePointSearch.hh"
 #include "mica/AnalyserTrackerSpacePointSearchStation.hh"
+#include "mica/AnalyserViewerRealSpace.hh"
 
 namespace mica {
 
@@ -37,6 +38,7 @@ AnalyserBase* AnalyserFactory::CreateAnalyser(const std::string& aName) {
   if (aName == "AnalyserTrackerSpacePointSearch") return new AnalyserTrackerSpacePointSearch();
   if (aName == "AnalyserTrackerSpacePointSearchStation")
     return new AnalyserTrackerSpacePointSearchStation();
+  if (aName == "AnalyserViewerRealSpace") return new AnalyserViewerRealSpace();
   return nullptr;
 }
 

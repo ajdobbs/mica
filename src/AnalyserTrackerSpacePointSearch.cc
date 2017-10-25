@@ -36,18 +36,18 @@ bool AnalyserTrackerSpacePointSearch::analyse(MAUS::ReconEvent* const aReconEven
 }
 
 bool AnalyserTrackerSpacePointSearch::draw(std::shared_ptr<TVirtualPad> aPad) {
-  aPad->Divide(3, 2);
-  aPad->cd(1);
+  GetPads()[0]->Divide(3, 2);
+  GetPads()[0]->cd(1);
   mHSeeds->Draw("COLZ");
-  aPad->cd(2);
+  GetPads()[0]->cd(2);
   mHSeeds->ProjectionX()->Draw();
-  aPad->cd(3);
+  GetPads()[0]->cd(3);
   mHSeeds->ProjectionY()->Draw();
-  aPad->cd(4);
+  GetPads()[0]->cd(4);
   mHAddOns->Draw("COLZ");
-  aPad->cd(5);
+  GetPads()[0]->cd(5);
   mHAddOns->ProjectionX()->Draw();
-  aPad->cd(6);
+  GetPads()[0]->cd(6);
   mHAddOns->ProjectionY()->Draw();
 
   return true;

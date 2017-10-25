@@ -47,11 +47,11 @@ bool AnalyserTrackerPRSeedNPEResidual::analyse(MAUS::ReconEvent* const aReconEve
 }
 
 bool AnalyserTrackerPRSeedNPEResidual::draw(std::shared_ptr<TVirtualPad> aPad) {
-  aPad->Divide(5, 2);
+  GetPads()[0]->Divide(5, 2);
   for (int i = 0; i < 5; ++i) {
-    aPad->cd(i+1);
+    GetPads()[0]->cd(i+1);
     mHResidualsTkU[i]->Draw("COLZ");
-    aPad->cd(i+6);
+    GetPads()[0]->cd(i+6);
     mHResidualsTkD[i]->Draw("COLZ");
   }
   return true;

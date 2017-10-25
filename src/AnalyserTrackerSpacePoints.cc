@@ -137,18 +137,18 @@ bool AnalyserTrackerSpacePoints::analyse(MAUS::ReconEvent* const aReconEvent,
 
 bool AnalyserTrackerSpacePoints::draw(std::shared_ptr<TVirtualPad> aPad) {
   // Draw the general spacepoint information plots
-  aPad->Divide(3, 2);
-  aPad->cd(1);
+  GetPads()[0]->Divide(3, 2);
+  GetPads()[0]->cd(1);
   mHXYTKU->Draw("COLZ");
-  aPad->cd(2);
+  GetPads()[0]->cd(2);
   mHStationNumTKU->Draw();
-  aPad->cd(3);
+  GetPads()[0]->cd(3);
   mHNpeTKU->Draw();
-  aPad->cd(4);
+  GetPads()[0]->cd(4);
   mHXYTKD->Draw("COLZ");
-  aPad->cd(5);
+  GetPads()[0]->cd(5);
   mHStationNumTKD->Draw();
-  aPad->cd(6);
+  GetPads()[0]->cd(6);
   mHNpeTKD->Draw();
 
   // Draw the real space plots per station
@@ -175,7 +175,6 @@ bool AnalyserTrackerSpacePoints::draw(std::shared_ptr<TVirtualPad> aPad) {
   }
 
   // Add the pads
-  AddPad(aPad);
   AddPad(padXY);
   AddPad(padXYTriplets);
   AddPad(padXYDoublets);

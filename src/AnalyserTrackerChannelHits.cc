@@ -79,7 +79,7 @@ bool AnalyserTrackerChannelHits::draw(std::shared_ptr<TVirtualPad> aPad) {
 
   // Set up the pads
   std::vector<std::shared_ptr<TVirtualPad>> pads_occ;
-  pads_occ.push_back(aPad);
+  pads_occ.push_back(GetPads()[0]);
   std::vector<std::shared_ptr<TVirtualPad>> pads_npe;
   pads_npe.push_back(std::shared_ptr<TVirtualPad>(new TCanvas()));
   for (int i = 1; i < nStations; ++i) {
@@ -105,7 +105,7 @@ bool AnalyserTrackerChannelHits::draw(std::shared_ptr<TVirtualPad> aPad) {
   }
 
   // Add the pads to the analyser internal store
-  for (int i = 0; i < nStations; ++i) {
+  for (int i = 1; i < nStations; ++i) { // 1 as don't want to add default canvas again
     AddPad(pads_occ[i]);
   }
   for (int i = 0; i < nStations; ++i) {

@@ -42,7 +42,8 @@ class AnalyserTrackerKFMomentum : public AnalyserBase {
 
   private:
     virtual bool analyse(MAUS::ReconEvent* const aReconEvent, MAUS::MCEvent* const aMCEvent) override;
-    virtual bool draw(std::shared_ptr<TVirtualPad> aPad)  override;
+    virtual bool draw(std::shared_ptr<TVirtualPad> aPad) override;
+    virtual void update() override;
 
     /** @brief Extract the momentum at the specified surface
      *  @param[in] trk The SciFiTrack

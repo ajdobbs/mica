@@ -292,9 +292,9 @@ bool AnalyserTrackerPREfficiency::draw(std::shared_ptr<TVirtualPad> aPad) {
   tl.DrawLatex(0.1, tline-sep*8, ("TkU 4-5pt Efficiency: " + std::to_string(tkd_4to5pt_eff) + "  ("
     + std::to_string(mTkD4to5ptTracks)+ "/" + std::to_string(mTkDGoodEvents) + ")").c_str());
 
-  aPad->cd();
+  GetPads()[0]->cd();
   tl.Draw();
-  aPad->Update();
+  GetPads()[0]->Update();
 
   return true;
 }

@@ -42,11 +42,9 @@ class AnalyserBase {
     /** @brief Create a new instance of the actual daughter class, returning a base pointer */
     // virtual AnalyserBase* Clone() = 0;
 
-    /** @brief Check to see if a valid pad has been supplied, if not make a new one,
-     *         then call draw
-     *  @param aPad ROOT TPad to draw results on
+    /** @brief Wraps draw(std::shared_ptr<TVirtualPad> aPad)
      */
-    std::shared_ptr<TVirtualPad> Draw(std::shared_ptr<TVirtualPad> aPad=nullptr);
+    std::shared_ptr<TVirtualPad> Draw();
 
     /** @brief Merge combines the data from a second analyser of the same concrete type into
       * into this analyser (generally by calling the Add method of the ROOT histogram members).
@@ -59,6 +57,9 @@ class AnalyserBase {
       * @return Boolean, was the merge sucessful or not
       */
     virtual bool Merge(AnalyserBase* aAnalyser) { return false; };
+
+    /** @brief Update the plots, with adding or altering the existing canvases */
+    void Update() { update(); }
 
     /** @brief Add a pad to the list of internal pad pointers */
     void AddPad(std::shared_ptr<TVirtualPad> aPad) { mPads.push_back(aPad); }
@@ -104,6 +105,9 @@ class AnalyserBase {
      *  @param aPad ROOT TPad to draw results on
      */
     virtual bool draw(std::shared_ptr<TVirtualPad> aPad) = 0;
+
+    /** @brief Update the plots, with adding or altering the existing canvases */
+    virtual void update() {};
 
     std::vector<std::shared_ptr<TVirtualPad>> mPads; ///< The canvas upon which the plots are drawn
     std::vector<CutsBase*> mCuts; ///< The cuts to apply before admitting an event for analysis

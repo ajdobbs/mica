@@ -35,6 +35,8 @@ AnalyserTrackerKFMomentum::AnalyserTrackerKFMomentum() : mAnalysisStation{1},
                                              nbins, 0, 100, nbins, 0, 300));
   mHPtPzTkD->GetXaxis()->SetTitle("pt (MeV/c)");
   mHPtPzTkD->GetYaxis()->SetTitle("pz (MeV/c)");
+
+
 }
 
 bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
@@ -79,20 +81,27 @@ bool AnalyserTrackerKFMomentum::analyse(MAUS::ReconEvent* const aReconEvent,
 
 bool AnalyserTrackerKFMomentum::draw(std::shared_ptr<TVirtualPad> aPad) {
   GetStyle()->SetOptStat(111111);
-
-  aPad->Divide(2);
-  aPad->cd(1);
-  mHPtPzTkU->Draw("COLZ");
-  aPad->cd(2);
-  mHPtPzTkD->Draw("COLZ");
-  AddPad(aPad);
-
-  std::shared_ptr<TVirtualPad> padPUSDS = std::shared_ptr<TVirtualPad>(new TCanvas());
-  padPUSDS->cd();
-  mHPUSDS->Draw("COLZ");
-  AddPad(padPUSDS);
+  if (GetPads().size() == 1) {
+    GetPads()[0]->Divide(2);
+    GetPads()[0]->Draw();
+    AddPad(std::shared_ptr<TVirtualPad>(new TCanvas()));
+  }
+  update();
 
   return true;
+}
+
+void AnalyserTrackerKFMomentum::update() {
+  auto pads = GetPads();
+  pads[0]->cd(1);
+  mHPtPzTkU->Draw("COLZ");
+  pads[0]->cd(2);
+  pads[0]->Update();
+  mHPtPzTkD->Draw("COLZ");
+
+  pads[1]->cd();
+  mHPUSDS->Draw("COLZ");
+  pads[1]->Update();
 }
 
 bool AnalyserTrackerKFMomentum::GetMomentum(const MAUS::SciFiTrack* const trk,
